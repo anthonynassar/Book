@@ -1,4 +1,6 @@
-﻿using System;
+﻿using PeopleApp.Abstractions;
+using PeopleApp.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,11 +11,14 @@ namespace PeopleApp
 {
 	public partial class App : Application
 	{
-		public App ()
+        public static ICloudService CloudService { get; set; }
+
+        public App ()
 		{
 			InitializeComponent();
 
-			MainPage = new PeopleApp.MainPage();
+            CloudService = new AzureCloudService();
+            MainPage = new PeopleApp.MainPage();
 		}
 
 		protected override void OnStart ()
