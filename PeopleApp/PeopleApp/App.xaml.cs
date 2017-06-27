@@ -18,8 +18,8 @@ namespace PeopleApp
 			InitializeComponent();
 
             CloudService = new AzureCloudService();
-            MainPage = new PeopleApp.MainPage();
-		}
+            MainPage = new NavigationPage(new Views.EntryPage());
+        }
 
 		protected override void OnStart ()
 		{
