@@ -9,6 +9,9 @@
     <Import_RootNamespace>PeopleApp</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Abstractions\ICloudService.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Abstractions\ICloudTable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Abstractions\TableData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
