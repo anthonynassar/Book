@@ -1,4 +1,5 @@
-﻿using PeopleApp.ViewModels;
+﻿using PeopleApp.Models;
+using PeopleApp.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,8 +14,8 @@ namespace PeopleApp.Views
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class TaskDetail : ContentPage
 	{
-		public TaskDetail ()
-		{
+		public TaskDetail (TodoItem item = null)
+        {
 			InitializeComponent ();
             BindingContext = new TaskDetailViewModel(item);
         }

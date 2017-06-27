@@ -1,5 +1,7 @@
 ﻿using PeopleApp.Abstractions;
 using PeopleApp.Models;
+using PeopleApp.ViewModels;
+using PeopleApp.Views;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -34,7 +36,7 @@ namespace PeopleApp.ViewModels
                 SetProperty(ref selectedItem, value, "SelectedItem");
                 if (selectedItem != null)
                 {
-                    Application.Current.MainPage.Navigation.PushAsync(new Pages.TaskDetail(selectedItem));
+                    Application.Current.MainPage.Navigation.PushAsync(new Views.TaskDetail(selectedItem));
                     SelectedItem = null;
                 }
             }
@@ -78,7 +80,7 @@ namespace PeopleApp.ViewModels
 
             try
             {
-                await Application.Current.MainPage.Navigation.PushAsync(new Pages.TaskDetail());
+                await Application.Current.MainPage.Navigation.PushAsync(new Views.TaskDetail());
             }
             catch (Exception ex)
             {

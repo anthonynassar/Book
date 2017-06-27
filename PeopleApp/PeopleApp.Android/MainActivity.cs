@@ -19,7 +19,8 @@ namespace PeopleApp.Droid
 
 			base.OnCreate (bundle);
 
-            Microsoft.WindowsAzure.MobileServices.CurrentPlatform.Init();
+            // useless for Android project
+            //Microsoft.WindowsAzure.MobileServices.CurrentPlatform.Init();
 
             global::Xamarin.Forms.Forms.Init (this, bundle);
 			LoadApplication (new PeopleApp.App ());

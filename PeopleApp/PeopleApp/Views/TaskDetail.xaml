@@ -20,5 +20,6 @@
                   Text="Delete" TextColor="White"/>
                 </StackLayout>
             </StackLayout>
+        </StackLayout>
     </ContentPage.Content>
 </ContentPage>
