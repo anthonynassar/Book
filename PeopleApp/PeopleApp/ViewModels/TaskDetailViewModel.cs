@@ -1,4 +1,5 @@
 ﻿using PeopleApp.Abstractions;
+using PeopleApp.Helpers;
 using PeopleApp.Models;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,10 @@ namespace PeopleApp.ViewModels
 
         public TaskDetailViewModel(TodoItem item = null)
         {
+
+            ICloudService cloudService = ServiceLocator.Instance.Resolve<ICloudService>();
+            Table = cloudService.GetTable<TodoItem>();
+
             if (item != null)
             {
                 Item = item;
@@ -26,12 +31,15 @@ namespace PeopleApp.ViewModels
                 Item = new TodoItem { Text = "New Item", Complete = false };
                 Title = "New Item";
             }
+
+            SaveCommand = new Command(async () => await ExecuteSaveCommand());
+            DeleteCommand = new Command(async () => await ExecuteDeleteCommand());
         }
 
         public TodoItem Item { get; set; }
-
-        Command cmdSave;
-        public Command SaveCommand => cmdSave ?? (cmdSave = new Command(async () => await ExecuteSaveCommand()));
+        public ICloudTable<TodoItem> Table { get; set; }
+        public Command SaveCommand { get; }
+        public Command DeleteCommand { get; }
 
         async Task ExecuteSaveCommand()
         {
@@ -55,15 +63,13 @@ namespace PeopleApp.ViewModels
             catch (Exception ex)
             {
                 Debug.WriteLine($"[TaskDetail] Save error: {ex.Message}");
+                await Application.Current.MainPage.DisplayAlert("Save Item Failed", ex.Message, "OK");
             }
             finally
             {
                 IsBusy = false;
             }
         }
-
-        Command cmdDelete;
-        public Command DeleteCommand => cmdDelete ?? (cmdDelete = new Command(async () => await ExecuteDeleteCommand()));
 
         async Task ExecuteDeleteCommand()
         {
@@ -83,6 +89,7 @@ namespace PeopleApp.ViewModels
             catch (Exception ex)
             {
                 Debug.WriteLine($"[TaskDetail] Save error: {ex.Message}");
+                await Application.Current.MainPage.DisplayAlert("Delete Item Failed", ex.Message, "OK");
             }
             finally
             {

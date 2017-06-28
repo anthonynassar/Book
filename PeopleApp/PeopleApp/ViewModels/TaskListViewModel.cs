@@ -1,10 +1,12 @@
 ﻿using PeopleApp.Abstractions;
+using PeopleApp.Helpers;
 using PeopleApp.Models;
 using PeopleApp.ViewModels;
 using PeopleApp.Views;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,10 +16,34 @@ namespace PeopleApp.ViewModels
 {
     public class TaskListViewModel : BaseViewModel
     {
+        ICloudService cloudService;
+
         public TaskListViewModel()
         {
+            Debug.WriteLine("In TaskListViewMOdel");
+            cloudService = ServiceLocator.Instance.Resolve<ICloudService>();
+            Table = cloudService.GetTable<TodoItem>();
+
+
             Title = "Task List";
-            RefreshList();
+            items.CollectionChanged += this.OnCollectionChanged;
+
+            RefreshCommand = new Command(async () => await ExecuteRefreshCommand());
+            AddNewItemCommand = new Command(async () => await ExecuteAddNewItemCommand());
+            LogoutCommand = new Command(async () => await ExecuteLogoutCommand());
+
+            // Execute the refresh command
+            RefreshCommand.Execute(null);
+        }
+
+        public ICloudTable<TodoItem> Table { get; set; }
+        public Command RefreshCommand { get; }
+        public Command AddNewItemCommand { get; }
+        public Command LogoutCommand { get; }
+
+        void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            Debug.WriteLine("[TaskList] OnCollectionChanged: Items have changed");
         }
 
         ObservableCollection<TodoItem> items = new ObservableCollection<TodoItem>();
@@ -41,9 +67,6 @@ namespace PeopleApp.ViewModels
                 }
             }
         }
-
-        Command refreshCmd;
-        public Command RefreshCommand => refreshCmd ?? (refreshCmd = new Command(async () => await ExecuteRefreshCommand()));
 
         async Task ExecuteRefreshCommand()
         {
@@ -69,9 +92,6 @@ namespace PeopleApp.ViewModels
             }
         }
 
-        Command addNewCmd;
-        public Command AddNewItemCommand => addNewCmd ?? (addNewCmd = new Command(async () => await ExecuteAddNewItemCommand()));
-
         async Task ExecuteAddNewItemCommand()
         {
             if (IsBusy)
@@ -85,6 +105,28 @@ namespace PeopleApp.ViewModels
             catch (Exception ex)
             {
                 Debug.WriteLine($"[TaskList] Error in AddNewItem: {ex.Message}");
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+        }
+
+        async Task ExecuteLogoutCommand()
+        {
+            if (IsBusy)
+                return;
+            IsBusy = true;
+
+            try
+            {
+                var cloudService = ServiceLocator.Instance.Resolve<ICloudService>();
+                await cloudService.LogoutAsync();
+                Application.Current.MainPage = new NavigationPage(new Views.EntryPage());
+            }
+            catch (Exception ex)
+            {
+                await Application.Current.MainPage.DisplayAlert("Logout Failed", ex.Message, "OK");
             }
             finally
             {

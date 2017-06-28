@@ -5,6 +5,6 @@ namespace PeopleApp.Abstractions
 {
     public interface ILoginProvider
     {
-        Task LoginAsync(MobileServiceClient client);
+        Task<MobileServiceUser> LoginAsync(MobileServiceClient client);
     }
 }
