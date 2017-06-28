@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.WindowsAzure.MobileServices;
 using PeopleApp.Abstractions;
 using Xamarin.Forms;
@@ -20,6 +21,11 @@ namespace PeopleApp.Services
         {
             var loginProvider = DependencyService.Get<ILoginProvider>();
             return loginProvider.LoginAsync(client);
+        }
+
+        public Task LogoutAsync()
+        {
+            throw new NotImplementedException();
         }
     }
 }

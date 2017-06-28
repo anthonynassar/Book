@@ -1,11 +1,12 @@
-﻿using System;
-
-using Android.App;
+﻿using Android.App;
 using Android.Content.PM;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Android.OS;
+using PeopleApp.Droid.Services;
+using Xamarin.Forms;
+using PeopleApp.Abstractions;
 
 namespace PeopleApp.Droid
 {
@@ -23,7 +24,10 @@ namespace PeopleApp.Droid
             //Microsoft.WindowsAzure.MobileServices.CurrentPlatform.Init();
 
             global::Xamarin.Forms.Forms.Init (this, bundle);
-			LoadApplication (new PeopleApp.App ());
+
+            ((DroidLoginProvider)DependencyService.Get<ILoginProvider>()).Init(this);
+
+            LoadApplication(new PeopleApp.App ());
 		}
 	}
 }

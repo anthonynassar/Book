@@ -22,14 +22,14 @@ namespace PeopleApp.Droid.Services
             this.context = context;
         }
 
-        public Task<MobileServiceUser> LoginAsync(MobileServiceClient client)
-        {
-            throw new NotImplementedException();
-        }
-
-        //public async Task<MobileServiceUser> LoginAsync(MobileServiceClient client)
+        //public Task<MobileServiceUser> LoginAsync(MobileServiceClient client)
         //{
-        //    //return await client.LoginAsync(MobileServiceAuthenticationProvider.Facebook);
+        //    throw new NotImplementedException();
         //}
+
+        public async Task<MobileServiceUser> LoginAsync(MobileServiceClient client)
+        {
+            return await client.LoginAsync(context, "facebook");
+        }
     }
 }
