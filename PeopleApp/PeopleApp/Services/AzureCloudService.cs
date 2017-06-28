@@ -1,5 +1,7 @@
-﻿using Microsoft.WindowsAzure.MobileServices;
+﻿using System.Threading.Tasks;
+using Microsoft.WindowsAzure.MobileServices;
 using PeopleApp.Abstractions;
+using Xamarin.Forms;
 
 namespace PeopleApp.Services
 {
@@ -12,9 +14,12 @@ namespace PeopleApp.Services
             client = new MobileServiceClient("https://peopleapp3.azurewebsites.net/");
         }
 
-        public ICloudTable<T> GetTable<T>() where T : TableData
+        public ICloudTable<T> GetTable<T>() where T : TableData => new AzureCloudTable<T>(client);
+
+        public Task LoginAsync()
         {
-            return new AzureCloudTable<T>(client);
+            var loginProvider = DependencyService.Get<ILoginProvider>();
+            return loginProvider.LoginAsync(client);
         }
     }
 }

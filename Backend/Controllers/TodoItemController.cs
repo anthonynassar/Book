@@ -31,12 +31,14 @@ namespace Backend.Controllers
         }
 
         // PATCH tables/TodoItem/48D68C86-6EA6-4C25-AA33-223FC9A27959
+        [Authorize]
         public Task<TodoItem> PatchTodoItem(string id, Delta<TodoItem> patch)
         {
             return UpdateAsync(id, patch);
         }
 
         // POST tables/TodoItem
+        [Authorize]
         public async Task<IHttpActionResult> PostTodoItem(TodoItem item)
         {
             TodoItem current = await InsertAsync(item);
@@ -44,6 +46,7 @@ namespace Backend.Controllers
         }
 
         // DELETE tables/TodoItem/48D68C86-6EA6-4C25-AA33-223FC9A27959
+        [Authorize]
         public Task DeleteTodoItem(string id)
         {
             return DeleteAsync(id);

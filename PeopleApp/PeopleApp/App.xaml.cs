@@ -1,4 +1,5 @@
 ﻿using PeopleApp.Abstractions;
+using PeopleApp.Helpers;
 using PeopleApp.Services;
 using System;
 using System.Collections.Generic;
@@ -17,7 +18,8 @@ namespace PeopleApp
 		{
 			InitializeComponent();
 
-            CloudService = new AzureCloudService();
+            //CloudService = new AzureCloudService();
+            ServiceLocator.Instance.Add<ICloudService, AzureCloudService>();
             MainPage = new NavigationPage(new Views.EntryPage());
         }
 
