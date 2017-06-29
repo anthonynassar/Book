@@ -81,6 +81,7 @@ namespace PeopleApp.ViewModels
             catch (Exception ex)
             {
                 Debug.WriteLine($"[TaskList] Error loading items: {ex.Message}");
+                await Application.Current.MainPage.DisplayAlert("Refresh problem", ex.Message, "OK");
             }
             finally
             {
