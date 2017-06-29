@@ -13,11 +13,8 @@ namespace PeopleApp.ViewModels
 {
     public class TaskDetailViewModel : BaseViewModel
     {
-        ICloudTable<TodoItem> table = App.CloudService.GetTable<TodoItem>();
-
         public TaskDetailViewModel(TodoItem item = null)
         {
-
             ICloudService cloudService = ServiceLocator.Instance.Resolve<ICloudService>();
             Table = cloudService.GetTable<TodoItem>();
 
@@ -51,11 +48,11 @@ namespace PeopleApp.ViewModels
             {
                 if (Item.Id == null)
                 {
-                    await table.CreateItemAsync(Item);
+                    await Table.CreateItemAsync(Item);
                 }
                 else
                 {
-                    await table.UpdateItemAsync(Item);
+                    await Table.UpdateItemAsync(Item);
                 }
                 MessagingCenter.Send<TaskDetailViewModel>(this, "ItemsChanged");
                 await Application.Current.MainPage.Navigation.PopAsync();
@@ -81,7 +78,7 @@ namespace PeopleApp.ViewModels
             {
                 if (Item.Id != null)
                 {
-                    await table.DeleteItemAsync(Item);
+                    await Table.DeleteItemAsync(Item);
                 }
                 MessagingCenter.Send<TaskDetailViewModel>(this, "ItemsChanged");
                 await Application.Current.MainPage.Navigation.PopAsync();

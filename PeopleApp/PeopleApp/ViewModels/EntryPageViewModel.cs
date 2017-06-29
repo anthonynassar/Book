@@ -1,4 +1,5 @@
 ﻿using PeopleApp.Abstractions;
+using PeopleApp.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -13,10 +14,10 @@ namespace PeopleApp.ViewModels
         public EntryPageViewModel()
         {
             Title = "Task List";
-        }
 
-        Command loginCmd;
-        public Command LoginCommand => loginCmd ?? (loginCmd = new Command(async () => await ExecuteLoginCommand().ConfigureAwait(false)));
+            LoginCommand = new Command(async () => await ExecuteLoginCommand());
+        }
+        public Command LoginCommand { get; }
 
         async Task ExecuteLoginCommand()
         {
@@ -26,11 +27,14 @@ namespace PeopleApp.ViewModels
 
             try
             {
+                var cloudService = ServiceLocator.Instance.Resolve<ICloudService>();
+                await cloudService.LoginAsync();
                 Application.Current.MainPage = new NavigationPage(new Views.TaskList());
             }
             catch (Exception ex)
             {
                 Debug.WriteLine($"[Login] Error = {ex.Message}");
+                await Application.Current.MainPage.DisplayAlert("Login Failed", ex.Message, "OK");
             }
             finally
             {

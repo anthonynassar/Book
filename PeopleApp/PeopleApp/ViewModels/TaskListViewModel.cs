@@ -1,11 +1,10 @@
-﻿using PeopleApp.Abstractions;
+﻿using MvvmHelpers;
+using PeopleApp.Abstractions;
 using PeopleApp.Helpers;
 using PeopleApp.Models;
 using PeopleApp.ViewModels;
 using PeopleApp.Views;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Text;
@@ -14,7 +13,7 @@ using Xamarin.Forms;
 
 namespace PeopleApp.ViewModels
 {
-    public class TaskListViewModel : BaseViewModel
+    public class TaskListViewModel : Abstractions.BaseViewModel
     {
         ICloudService cloudService;
 
@@ -46,8 +45,8 @@ namespace PeopleApp.ViewModels
             Debug.WriteLine("[TaskList] OnCollectionChanged: Items have changed");
         }
 
-        ObservableCollection<TodoItem> items = new ObservableCollection<TodoItem>();
-        public ObservableCollection<TodoItem> Items
+        ObservableRangeCollection<TodoItem> items = new ObservableRangeCollection<TodoItem>();
+        public ObservableRangeCollection<TodoItem> Items
         {
             get { return items; }
             set { SetProperty(ref items, value, "Items"); }
@@ -76,11 +75,8 @@ namespace PeopleApp.ViewModels
 
             try
             {
-                var table = App.CloudService.GetTable<TodoItem>();
-                var list = await table.ReadAllItemsAsync();
-                Items.Clear();
-                foreach (var item in list)
-                    Items.Add(item);
+                var list = await Table.ReadAllItemsAsync();
+                Items.ReplaceRange(list);
             }
             catch (Exception ex)
             {
@@ -105,6 +101,7 @@ namespace PeopleApp.ViewModels
             catch (Exception ex)
             {
                 Debug.WriteLine($"[TaskList] Error in AddNewItem: {ex.Message}");
+                await Application.Current.MainPage.DisplayAlert("Item Not Added", ex.Message, "OK");
             }
             finally
             {
