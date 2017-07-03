@@ -1,16 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
+﻿
+using System;
 using System.Linq;
 using System.Text;
-
-using Foundation;
-using UIKit;
 using System.Threading.Tasks;
+using Foundation;
 using Microsoft.WindowsAzure.MobileServices;
-using PeopleApp.Abstractions;
-using PeopleApp.iOS.Services;
-using Xamarin.Auth;
 using Newtonsoft.Json.Linq;
+using PeopleApp.Abstractions;
+using PeopleApp.Helpers;
+using PeopleApp.iOS.Services;
+using UIKit;
+using Xamarin.Auth;
+using PeopleApp.Services;
 
 [assembly: Xamarin.Forms.Dependency(typeof(iOSLoginProvider))]
 namespace PeopleApp.iOS.Services
@@ -21,9 +22,15 @@ namespace PeopleApp.iOS.Services
         //{
         //    return result =  await client.LoginAsync(RootView, "facebook");
         //}
-        
+
+        public UIViewController RootView => UIApplication.SharedApplication.KeyWindow.RootViewController;
 
         public AccountStore AccountStore { get; private set; }
+
+        public iOSLoginProvider()
+        {
+            AccountStore = AccountStore.Create();
+        }
 
         public async Task LoginAsync(MobileServiceClient client)
         {
@@ -37,7 +44,7 @@ namespace PeopleApp.iOS.Services
 
                     if (acct.Properties.TryGetValue("token", out token))
                     {
-                        if (!IsTokenExpired(token))
+                        if (!AzureCloudService.IsTokenExpired(token))
                         {
                             client.CurrentUser = new MobileServiceUser(acct.Username);
                             client.CurrentUser.MobileServiceAuthenticationToken = token;
@@ -56,41 +63,45 @@ namespace PeopleApp.iOS.Services
             AccountStore.Save(account, "tasklist");
         }
 
-        bool IsTokenExpired(string token)
+        public MobileServiceUser RetrieveTokenFromSecureStore()
         {
-            // Get just the JWT part of the token (without the signature).
-            var jwt = token.Split(new Char[] { '.' })[1];
-
-            // Undo the URL encoding.
-            jwt = jwt.Replace('-', '+').Replace('_', '/');
-            switch (jwt.Length % 4)
+            var accounts = AccountStore.FindAccountsForService("tasklist");
+            if (accounts != null)
             {
-                case 0: break;
-                case 2: jwt += "=="; break;
-                case 3: jwt += "="; break;
-                default:
-                    throw new ArgumentException("The token is not a valid Base64 string.");
+                foreach (var acct in accounts)
+                {
+                    string token;
+
+                    if (acct.Properties.TryGetValue("token", out token))
+                    {
+                        return new MobileServiceUser(acct.Username)
+                        {
+                            MobileServiceAuthenticationToken = token
+                        };
+                    }
+                }
             }
-
-            // Convert to a JSON String
-            var bytes = Convert.FromBase64String(jwt);
-            string jsonString = UTF8Encoding.UTF8.GetString(bytes, 0, bytes.Length);
-
-            // Parse as JSON object and get the exp field value,
-            // which is the expiration date as a JavaScript primative date.
-            JObject jsonObj = JObject.Parse(jsonString);
-            var exp = Convert.ToDouble(jsonObj["exp"].ToString());
-
-            // Calculate the expiration by adding the exp value (in seconds) to the
-            // base date of 1/1/1970.
-            DateTime minTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
-            var expire = minTime.AddSeconds(exp);
-            return (expire < DateTime.UtcNow);
+            return null;
         }
 
+        public void StoreTokenInSecureStore(MobileServiceUser user)
+        {
+            var account = new Account(user.UserId);
+            account.Properties.Add("token", user.MobileServiceAuthenticationToken);
+            AccountStore.Save(account, "tasklist");
+        }
 
-    
+        public void RemoveTokenFromSecureStore()
+        {
+            var accounts = AccountStore.FindAccountsForService("tasklist");
+            if (accounts != null)
+            {
+                foreach (var acct in accounts)
+                {
+                    AccountStore.Delete(acct, "tasklist");
+                }
+            }
+        }
 
-    public UIViewController RootView => UIApplication.SharedApplication.KeyWindow.RootViewController;
     }
 }

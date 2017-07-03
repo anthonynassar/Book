@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using Microsoft.WindowsAzure.MobileServices;
+using System.Threading.Tasks;
 
 namespace PeopleApp.Abstractions
 {
@@ -6,7 +7,10 @@ namespace PeopleApp.Abstractions
     {
         ICloudTable<T> GetTable<T>() where T : TableData;
 
-        Task LoginAsync();
+        Task<MobileServiceUser> LoginAsync();
+
         Task LogoutAsync();
+
+        //Task<AppServiceIdentity> GetIdentityAsync();
     }
 }

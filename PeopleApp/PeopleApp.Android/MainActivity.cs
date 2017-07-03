@@ -21,11 +21,12 @@ namespace PeopleApp.Droid
 			base.OnCreate (bundle);
 
             // useless for Android project
-            //Microsoft.WindowsAzure.MobileServices.CurrentPlatform.Init();
+            Microsoft.WindowsAzure.MobileServices.CurrentPlatform.Init();
 
             global::Xamarin.Forms.Forms.Init (this, bundle);
 
-            ((DroidLoginProvider)DependencyService.Get<ILoginProvider>()).Init(this);
+            var loginProvider = (DroidLoginProvider)DependencyService.Get<ILoginProvider>();
+            loginProvider.Init(this);
 
             LoadApplication(new PeopleApp.App ());
 		}
