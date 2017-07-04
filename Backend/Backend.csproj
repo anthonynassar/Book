@@ -160,12 +160,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\Startup.MobileApp.cs" />
+    <Compile Include="Controllers\ObjectController.cs" />
     <Compile Include="Controllers\TodoItemController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
+    <Compile Include="DataObjects\Object.cs" />
     <Compile Include="DataObjects\TodoItem.cs" />
     <Compile Include="Migrations\201707041007574_Initial.cs" />
     <Compile Include="Migrations\201707041007574_Initial.Designer.cs">
       <DependentUpon>201707041007574_Initial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201707041353340_AddObjectTable.cs" />
+    <Compile Include="Migrations\201707041353340_AddObjectTable.Designer.cs">
+      <DependentUpon>201707041353340_AddObjectTable.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\MobileServiceContext.cs" />
@@ -193,6 +199,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201707041007574_Initial.resx">
       <DependentUpon>201707041007574_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201707041353340_AddObjectTable.resx">
+      <DependentUpon>201707041353340_AddObjectTable.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
