@@ -28,12 +28,14 @@ namespace PeopleApp.ViewModels
             try
             {
                 var cloudService = ServiceLocator.Instance.Resolve<ICloudService>();
+                //await cloudService.LoginAsync(User);
                 await cloudService.LoginAsync();
                 Application.Current.MainPage = new NavigationPage(new Views.TaskList());
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"[Login] Error = {ex.Message}");
+                Debug.WriteLine("Error : " + ex.Message);
+                Debug.WriteLine("Error Full: ======/n" + ex);
                 await Application.Current.MainPage.DisplayAlert("Login Failed", ex.Message, "OK");
             }
             finally
