@@ -36,5 +36,7 @@ namespace Backend.Models
         }
 
         public System.Data.Entity.DbSet<Backend.DataObjects.Object> Objects { get; set; }
+
+        public System.Data.Entity.DbSet<Backend.DataObjects.SharingSpace> SharingSpaces { get; set; }
     }
 }
