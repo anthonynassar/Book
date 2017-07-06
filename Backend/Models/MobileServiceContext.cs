@@ -26,17 +26,19 @@ namespace Backend.Models
         {
         }
 
-        public DbSet<TodoItem> TodoItems { get; set; }
+        
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Conventions.Add(
                 new AttributeToColumnAnnotationConvention<TableColumnAttribute, string>(
                     "ServiceTableColumn", (property, attributes) => attributes.Single().ColumnType.ToString()));
+
+
         }
 
-        public System.Data.Entity.DbSet<Backend.DataObjects.Object> Objects { get; set; }
-
-        public System.Data.Entity.DbSet<Backend.DataObjects.SharingSpace> SharingSpaces { get; set; }
+        public DbSet<TodoItem> TodoItems { get; set; }
+        public DbSet<Object> Objects { get; set; }
+        public DbSet<SharingSpace> SharingSpaces { get; set; }
     }
 }
