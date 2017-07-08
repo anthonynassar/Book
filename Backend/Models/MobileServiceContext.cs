@@ -38,7 +38,8 @@ namespace Backend.Models
         }
 
         public DbSet<TodoItem> TodoItems { get; set; }
-        public DbSet<Object> Objects { get; set; }
         public DbSet<SharingSpace> SharingSpaces { get; set; }
+
+        public System.Data.Entity.DbSet<Backend.DataObjects.Object> Objects { get; set; }
     }
 }

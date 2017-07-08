@@ -7,13 +7,13 @@ namespace Backend.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class AddObjectTable : IMigrationMetadata
+    public sealed partial class AddDefaultValueTime : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(AddObjectTable));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(AddDefaultValueTime));
         
         string IMigrationMetadata.Id
         {
-            get { return "201707041353340_AddObjectTable"; }
+            get { return "201707081714525_AddDefaultValueTime"; }
         }
         
         string IMigrationMetadata.Source

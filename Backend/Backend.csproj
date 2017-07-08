@@ -171,21 +171,13 @@
     <Compile Include="Migrations\201707041007574_Initial.Designer.cs">
       <DependentUpon>201707041007574_Initial.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201707041353340_AddObjectTable.cs" />
-    <Compile Include="Migrations\201707041353340_AddObjectTable.Designer.cs">
-      <DependentUpon>201707041353340_AddObjectTable.cs</DependentUpon>
+    <Compile Include="Migrations\201707081701569_AddSSObjTables.cs" />
+    <Compile Include="Migrations\201707081701569_AddSSObjTables.Designer.cs">
+      <DependentUpon>201707081701569_AddSSObjTables.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201707050854460_AddSharingSpaceTable.cs" />
-    <Compile Include="Migrations\201707050854460_AddSharingSpaceTable.Designer.cs">
-      <DependentUpon>201707050854460_AddSharingSpaceTable.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201707061040014_AddRelationObjectSharingspace.cs" />
-    <Compile Include="Migrations\201707061040014_AddRelationObjectSharingspace.Designer.cs">
-      <DependentUpon>201707061040014_AddRelationObjectSharingspace.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201707061449568_FixSharingspace.cs" />
-    <Compile Include="Migrations\201707061449568_FixSharingspace.Designer.cs">
-      <DependentUpon>201707061449568_FixSharingspace.cs</DependentUpon>
+    <Compile Include="Migrations\201707081714525_AddDefaultValueTime.cs" />
+    <Compile Include="Migrations\201707081714525_AddDefaultValueTime.Designer.cs">
+      <DependentUpon>201707081714525_AddDefaultValueTime.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\MobileServiceContext.cs" />
@@ -214,17 +206,11 @@
     <EmbeddedResource Include="Migrations\201707041007574_Initial.resx">
       <DependentUpon>201707041007574_Initial.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201707041353340_AddObjectTable.resx">
-      <DependentUpon>201707041353340_AddObjectTable.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201707081701569_AddSSObjTables.resx">
+      <DependentUpon>201707081701569_AddSSObjTables.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201707050854460_AddSharingSpaceTable.resx">
-      <DependentUpon>201707050854460_AddSharingSpaceTable.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201707061040014_AddRelationObjectSharingspace.resx">
-      <DependentUpon>201707061040014_AddRelationObjectSharingspace.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201707061449568_FixSharingspace.resx">
-      <DependentUpon>201707061449568_FixSharingspace.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201707081714525_AddDefaultValueTime.resx">
+      <DependentUpon>201707081714525_AddDefaultValueTime.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

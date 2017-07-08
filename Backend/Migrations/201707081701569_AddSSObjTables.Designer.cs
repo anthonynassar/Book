@@ -7,13 +7,13 @@ namespace Backend.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class FixSharingspace : IMigrationMetadata
+    public sealed partial class AddSSObjTables : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(FixSharingspace));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(AddSSObjTables));
         
         string IMigrationMetadata.Id
         {
-            get { return "201707061449568_FixSharingspace"; }
+            get { return "201707081701569_AddSSObjTables"; }
         }
         
         string IMigrationMetadata.Source
