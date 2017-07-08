@@ -166,6 +166,7 @@
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="DataObjects\Object.cs" />
     <Compile Include="DataObjects\SharingSpace.cs" />
+    <Compile Include="DataObjects\SocialNetwork.cs" />
     <Compile Include="DataObjects\TodoItem.cs" />
     <Compile Include="DataObjects\User.cs" />
     <Compile Include="Migrations\201707041007574_Initial.cs" />
@@ -183,6 +184,10 @@
     <Compile Include="Migrations\201707081906400_AddUserTable.cs" />
     <Compile Include="Migrations\201707081906400_AddUserTable.Designer.cs">
       <DependentUpon>201707081906400_AddUserTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201707082004571_AddSNTable.cs" />
+    <Compile Include="Migrations\201707082004571_AddSNTable.Designer.cs">
+      <DependentUpon>201707082004571_AddSNTable.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\MobileServiceContext.cs" />
@@ -219,6 +224,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201707081906400_AddUserTable.resx">
       <DependentUpon>201707081906400_AddUserTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201707082004571_AddSNTable.resx">
+      <DependentUpon>201707082004571_AddSNTable.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

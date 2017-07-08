@@ -39,6 +39,8 @@ namespace Backend.Models
 
         public DbSet<TodoItem> TodoItems { get; set; }
         public DbSet<SharingSpace> SharingSpaces { get; set; }
+        public DbSet<User> User { get; set; }
+        public DbSet<SocialNetwork> SocialNetwork { get; set; }
 
         public System.Data.Entity.DbSet<Backend.DataObjects.Object> Objects { get; set; }
     }
