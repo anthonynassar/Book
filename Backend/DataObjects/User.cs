@@ -12,6 +12,7 @@ namespace Backend.DataObjects
         {
             Object = new List<Object>();
             SharingSpace = new List<SharingSpace>();
+            Subscription = new List<Subscription>();
         }
 
         //public long IdUser { get; set; }
@@ -23,6 +24,7 @@ namespace Backend.DataObjects
 
         public virtual ICollection<Object> Object { get; set; }
         public virtual ICollection<SharingSpace> SharingSpace { get; set; }
+        public virtual ICollection<Subscription> Subscription { get; set; }
     }
 
     
