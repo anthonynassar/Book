@@ -45,7 +45,7 @@ namespace Backend.Models
         public DbSet<Subscription> Subscriptions { get; set; }
         public DbSet<Preference> Preferences { get; set; }
         public DbSet<Interest> Interests { get; set; }
-
-        public System.Data.Entity.DbSet<Backend.DataObjects.Dimension> Dimensions { get; set; }
+        public DbSet<Dimension> Dimensions { get; set; }
+        public DbSet<Granularity> Granularities { get; set; }
     }
 }

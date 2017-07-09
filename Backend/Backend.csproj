@@ -161,6 +161,7 @@
   <ItemGroup>
     <Compile Include="App_Start\Startup.MobileApp.cs" />
     <Compile Include="Controllers\DimensionController.cs" />
+    <Compile Include="Controllers\GranularityController.cs" />
     <Compile Include="Controllers\ObjectController.cs" />
     <Compile Include="Controllers\PreferenceController.cs" />
     <Compile Include="Controllers\SharingSpaceController.cs" />
@@ -169,6 +170,7 @@
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="DataObjects\Dimension.cs" />
+    <Compile Include="DataObjects\Granularity.cs" />
     <Compile Include="DataObjects\Interest.cs" />
     <Compile Include="DataObjects\Object.cs" />
     <Compile Include="DataObjects\Preference.cs" />
@@ -212,6 +214,10 @@
     <Compile Include="Migrations\201707092047473_AddDimensionTable.cs" />
     <Compile Include="Migrations\201707092047473_AddDimensionTable.Designer.cs">
       <DependentUpon>201707092047473_AddDimensionTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201707092101077_AddGranularityTable.cs" />
+    <Compile Include="Migrations\201707092101077_AddGranularityTable.Designer.cs">
+      <DependentUpon>201707092101077_AddGranularityTable.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\MobileServiceContext.cs" />
@@ -263,6 +269,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201707092047473_AddDimensionTable.resx">
       <DependentUpon>201707092047473_AddDimensionTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201707092101077_AddGranularityTable.resx">
+      <DependentUpon>201707092101077_AddGranularityTable.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
