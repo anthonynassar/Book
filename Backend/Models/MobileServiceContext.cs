@@ -47,7 +47,8 @@ namespace Backend.Models
         public DbSet<Interest> Interests { get; set; }
         public DbSet<Dimension> Dimensions { get; set; }
         public DbSet<Granularity> Granularities { get; set; }
-
-        public System.Data.Entity.DbSet<Backend.DataObjects.Datatype> Datatypes { get; set; }
+        public DbSet<Datatype> Datatypes { get; set; }
+        public DbSet<DimDatatype> DimDatatypes { get; set; }
+        
     }
 }

@@ -8,7 +8,13 @@ namespace Backend.DataObjects
 {
     public class Datatype : EntityData
     {
+        public Datatype()
+        {
+            DimDatatype = new List<DimDatatype>();
+        }
         public string Type { get; set; }
         public string Domain { get; set; }
+
+        public virtual ICollection<DimDatatype> DimDatatype { get; set; }
     }
 }

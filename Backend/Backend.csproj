@@ -171,6 +171,7 @@
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="DataObjects\Datatype.cs" />
+    <Compile Include="DataObjects\DimDatatype.cs" />
     <Compile Include="DataObjects\Dimension.cs" />
     <Compile Include="DataObjects\Granularity.cs" />
     <Compile Include="DataObjects\Interest.cs" />
@@ -224,6 +225,10 @@
     <Compile Include="Migrations\201707092130579_AddDatatypeTable.cs" />
     <Compile Include="Migrations\201707092130579_AddDatatypeTable.Designer.cs">
       <DependentUpon>201707092130579_AddDatatypeTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201707092138299_AddDimDatatypeTable.cs" />
+    <Compile Include="Migrations\201707092138299_AddDimDatatypeTable.Designer.cs">
+      <DependentUpon>201707092138299_AddDimDatatypeTable.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\MobileServiceContext.cs" />
@@ -281,6 +286,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201707092130579_AddDatatypeTable.resx">
       <DependentUpon>201707092130579_AddDatatypeTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201707092138299_AddDimDatatypeTable.resx">
+      <DependentUpon>201707092138299_AddDimDatatypeTable.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

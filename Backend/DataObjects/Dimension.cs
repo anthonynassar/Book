@@ -11,10 +11,12 @@ namespace Backend.DataObjects
         public Dimension()
         {
             Granularity = new List<Granularity>();
+            DimDatatype = new List<DimDatatype>();
         }
         // the id property is the label of the dimension
         public bool? Interval { get; set; }
 
         public virtual ICollection<Granularity> Granularity { get; set; }
+        public virtual ICollection<DimDatatype> DimDatatype { get; set; }
     }
 }
