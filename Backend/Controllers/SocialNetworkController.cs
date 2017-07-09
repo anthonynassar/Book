@@ -15,7 +15,7 @@ namespace Backend.Controllers
         {
             base.Initialize(controllerContext);
             MobileServiceContext context = new MobileServiceContext();
-            DomainManager = new EntityDomainManager<SocialNetwork>(context, Request);
+            DomainManager = new EntityDomainManager<SocialNetwork>(context, Request, enableSoftDelete: true);
         }
 
         // GET tables/SocialNetwork

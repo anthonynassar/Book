@@ -44,6 +44,6 @@ namespace Backend.Models
         public DbSet<SocialNetwork> SocialNetworks { get; set; }
         public DbSet<Subscription> Subscriptions { get; set; }
 
-
+        public System.Data.Entity.DbSet<Backend.DataObjects.Preference> Preferences { get; set; }
     }
 }
