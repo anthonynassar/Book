@@ -160,6 +160,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\Startup.MobileApp.cs" />
+    <Compile Include="Controllers\DatatypeController.cs" />
     <Compile Include="Controllers\DimensionController.cs" />
     <Compile Include="Controllers\GranularityController.cs" />
     <Compile Include="Controllers\ObjectController.cs" />
@@ -169,6 +170,7 @@
     <Compile Include="Controllers\TodoItemController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
+    <Compile Include="DataObjects\Datatype.cs" />
     <Compile Include="DataObjects\Dimension.cs" />
     <Compile Include="DataObjects\Granularity.cs" />
     <Compile Include="DataObjects\Interest.cs" />
@@ -218,6 +220,10 @@
     <Compile Include="Migrations\201707092101077_AddGranularityTable.cs" />
     <Compile Include="Migrations\201707092101077_AddGranularityTable.Designer.cs">
       <DependentUpon>201707092101077_AddGranularityTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201707092130579_AddDatatypeTable.cs" />
+    <Compile Include="Migrations\201707092130579_AddDatatypeTable.Designer.cs">
+      <DependentUpon>201707092130579_AddDatatypeTable.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\MobileServiceContext.cs" />
@@ -272,6 +278,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201707092101077_AddGranularityTable.resx">
       <DependentUpon>201707092101077_AddGranularityTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201707092130579_AddDatatypeTable.resx">
+      <DependentUpon>201707092130579_AddDatatypeTable.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
