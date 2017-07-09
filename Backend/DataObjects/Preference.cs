@@ -8,6 +8,14 @@ namespace Backend.DataObjects
 {
     public class Preference : EntityData
     {
+        public Preference()
+        {
+            Interest = new List<Interest>();
+        }
         public string Tag { get; set; }
+
+        public virtual ICollection<Interest> Interest { get; set; }
     }
+
+   
 }

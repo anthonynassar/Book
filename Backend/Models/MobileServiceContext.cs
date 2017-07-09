@@ -43,7 +43,7 @@ namespace Backend.Models
         public DbSet<User> Users { get; set; }
         public DbSet<SocialNetwork> SocialNetworks { get; set; }
         public DbSet<Subscription> Subscriptions { get; set; }
-
-        public System.Data.Entity.DbSet<Backend.DataObjects.Preference> Preferences { get; set; }
+        public DbSet<Preference> Preferences { get; set; }
+        public DbSet<Interest> Interests { get; set; }
     }
 }
