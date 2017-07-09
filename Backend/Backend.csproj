@@ -162,7 +162,9 @@
     <Compile Include="App_Start\Startup.MobileApp.cs" />
     <Compile Include="Controllers\ObjectController.cs" />
     <Compile Include="Controllers\SharingSpaceController.cs" />
+    <Compile Include="Controllers\SocialNetworkController.cs" />
     <Compile Include="Controllers\TodoItemController.cs" />
+    <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="DataObjects\Object.cs" />
     <Compile Include="DataObjects\SharingSpace.cs" />
