@@ -176,6 +176,7 @@
     <Compile Include="DataObjects\Datatype.cs" />
     <Compile Include="DataObjects\DimDatatype.cs" />
     <Compile Include="DataObjects\Dimension.cs" />
+    <Compile Include="DataObjects\Event.cs" />
     <Compile Include="DataObjects\Granularity.cs" />
     <Compile Include="DataObjects\Interest.cs" />
     <Compile Include="DataObjects\Object.cs" />
@@ -240,6 +241,10 @@
     <Compile Include="Migrations\201707101013352_AddConstraintTable.cs" />
     <Compile Include="Migrations\201707101013352_AddConstraintTable.Designer.cs">
       <DependentUpon>201707101013352_AddConstraintTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201707101200204_AddEventTable.cs" />
+    <Compile Include="Migrations\201707101200204_AddEventTable.Designer.cs">
+      <DependentUpon>201707101200204_AddEventTable.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\MobileServiceContext.cs" />
@@ -306,6 +311,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201707101013352_AddConstraintTable.resx">
       <DependentUpon>201707101013352_AddConstraintTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201707101200204_AddEventTable.resx">
+      <DependentUpon>201707101200204_AddEventTable.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

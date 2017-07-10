@@ -12,6 +12,7 @@ namespace Backend.DataObjects
         public SharingSpace()
         {
             Object = new List<Object>();
+            Event = new List<Event>();
         }
 
         //public long IdSs { get; set; }
@@ -24,5 +25,6 @@ namespace Backend.DataObjects
         public string CreationLocation { get; set; }
 
         public virtual ICollection<Object> Object { get; set; }
+        public virtual ICollection<Event> Event { get; set; }
     }
 }

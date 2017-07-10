@@ -51,5 +51,6 @@ namespace Backend.Models
         public DbSet<DimDatatype> DimDatatypes { get; set; }
         public DbSet<Attribute> Attributes { get; set; }
         public DbSet<Constraint> Constraints { get; set; }
+        public DbSet<Event> Events { get; set; }
     }
 }
