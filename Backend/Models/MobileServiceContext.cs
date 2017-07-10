@@ -50,6 +50,6 @@ namespace Backend.Models
         public DbSet<Datatype> Datatypes { get; set; }
         public DbSet<DimDatatype> DimDatatypes { get; set; }
         public DbSet<Attribute> Attributes { get; set; }
-
+        public DbSet<Constraint> Constraints { get; set; }
     }
 }
