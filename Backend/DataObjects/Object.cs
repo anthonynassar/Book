@@ -9,6 +9,11 @@ namespace Backend.DataObjects
 {
     public class Object : EntityData
     {
+        public Object()
+        {
+            Attribute = new List<Attribute>();
+        }
+
         //public long IdObject { get; set; }
         [MaxLength(128)]
         public string UserId { get; set; }
@@ -21,6 +26,8 @@ namespace Backend.DataObjects
         [MaxLength(128)]
         public string SharingSpaceId { get; set; }
         public virtual SharingSpace SharingSpace { get; set; }
+
+        public virtual ICollection<Attribute> Attribute { get; set; }
 
     }
 }
