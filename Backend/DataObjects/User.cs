@@ -19,7 +19,7 @@ namespace Backend.DataObjects
         //public long IdUser { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
-        public long? Address { get; set; }
+        public string Address { get; set; }
         public string Profession { get; set; }
         public string Privilege { get; set; }
 
