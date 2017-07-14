@@ -11,7 +11,7 @@ namespace PeopleApp.Abstractions
 
         void RemoveTokenFromSecureStore();
 
-        //Task<MobileServiceUser> LoginAsync(MobileServiceClient client);
-        Task LoginAsync(MobileServiceClient client);
+        Task<MobileServiceUser> LoginAsync(MobileServiceClient client, string provider);
+        //Task LoginAsync(MobileServiceClient client);
     }
 }

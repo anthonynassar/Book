@@ -7,6 +7,8 @@ using Microsoft.Azure.Mobile.Server;
 using Backend.DataObjects;
 using Backend.Models;
 using System.Security.Claims;
+using System.Net;
+using Backend.Extensions;
 
 namespace Backend.Controllers
 {
@@ -22,22 +24,33 @@ namespace Backend.Controllers
 
         public string UserId => ((ClaimsPrincipal)User).FindFirst(ClaimTypes.NameIdentifier).Value;
 
+        public void ValidateOwner(string id)
+        {
+            var result = Lookup(id).Queryable.PerUserFilter(UserId).FirstOrDefault<TodoItem>();
+            if (result == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+        }
+
         // GET tables/TodoItem
         public IQueryable<TodoItem> GetAllTodoItems()
         {
-            return Query();
+            return Query().PerUserFilter(UserId);
         }
 
         // GET tables/TodoItem/48D68C86-6EA6-4C25-AA33-223FC9A27959
         public SingleResult<TodoItem> GetTodoItem(string id)
         {
-            return Lookup(id);
+            //return Lookup(id);
+            return new SingleResult<TodoItem>(Lookup(id).Queryable.PerUserFilter(UserId));
         }
 
         // PATCH tables/TodoItem/48D68C86-6EA6-4C25-AA33-223FC9A27959
         //[Authorize]
         public Task<TodoItem> PatchTodoItem(string id, Delta<TodoItem> patch)
         {
+            ValidateOwner(id);
             return UpdateAsync(id, patch);
         }
 
@@ -54,6 +67,7 @@ namespace Backend.Controllers
         //[Authorize]
         public Task DeleteTodoItem(string id)
         {
+            ValidateOwner(id);
             return DeleteAsync(id);
         }
     }

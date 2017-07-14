@@ -1,10 +1,8 @@
 ﻿using PeopleApp.Abstractions;
 using PeopleApp.Helpers;
 using PeopleApp.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using PeopleApp.ViewModels;
+using PeopleApp.Views;
 
 using Xamarin.Forms;
 
@@ -20,10 +18,31 @@ namespace PeopleApp
 
             //CloudService = new AzureCloudService();
             ServiceLocator.Instance.Add<ICloudService, AzureCloudService>();
-            MainPage = new NavigationPage(new Views.EntryPage());
+
+            SetMainPage();
+            //MainPage = new NavigationPage(new Views.EntryPage());
         }
 
-		protected override void OnStart ()
+        private void SetMainPage()
+        {
+            if (!string.IsNullOrEmpty(Settings.AccessToken))
+            {
+                if (AzureCloudService.IsTokenExpired(Settings.AccessToken))
+                {
+                    var vm = new EntryPageViewModel();
+                    vm.LoginCommand.Execute(null);
+                }
+                MainPage = new NavigationPage(new TaskList());
+            }
+
+            //else if (!string.IsNullOrEmpty(Settings.Username) && !string.IsNullOrEmpty(Settings.Password))
+            //    MainPage = new NavigationPage(new LoginPage());
+            else
+                MainPage = new NavigationPage(new EntryPage());
+        }
+
+
+        protected override void OnStart ()
 		{
 			// Handle when your app starts
 		}
@@ -35,7 +54,7 @@ namespace PeopleApp
 
 		protected override void OnResume ()
 		{
-			// Handle when your app resumes
-		}
+            // Handle when your app resumes
+        }
 	}
 }

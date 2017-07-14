@@ -7,7 +7,7 @@ namespace PeopleApp.Abstractions
     {
         ICloudTable<T> GetTable<T>() where T : TableData;
 
-        Task<MobileServiceUser> LoginAsync();
+        Task<MobileServiceUser> LoginAsync(string provider);
 
         Task LogoutAsync();
 
