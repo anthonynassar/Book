@@ -251,6 +251,10 @@
     <Compile Include="Migrations\201707130852491_FixUserTodoTable.Designer.cs">
       <DependentUpon>201707130852491_FixUserTodoTable.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201707142003358_AddPropertyDimension.cs" />
+    <Compile Include="Migrations\201707142003358_AddPropertyDimension.Designer.cs">
+      <DependentUpon>201707142003358_AddPropertyDimension.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\MobileServiceContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -322,6 +326,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201707130852491_FixUserTodoTable.resx">
       <DependentUpon>201707130852491_FixUserTodoTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201707142003358_AddPropertyDimension.resx">
+      <DependentUpon>201707142003358_AddPropertyDimension.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

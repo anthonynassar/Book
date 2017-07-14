@@ -14,7 +14,8 @@ namespace Backend.DataObjects
             DimDatatype = new List<DimDatatype>();
             Event = new List<Event>();
         }
-        // the id property is the label of the dimension
+        
+        public string Label { get; set; }
         public bool? Interval { get; set; }
 
         public virtual ICollection<Granularity> Granularity { get; set; }
