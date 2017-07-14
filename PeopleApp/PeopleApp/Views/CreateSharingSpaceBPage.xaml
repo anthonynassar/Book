@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="PeopleApp.Views.CreateSharingSpaceBPage"
+             xmlns:dltag="clr-namespace:DLToolkit.Forms.Controls;assembly=DLToolkit.Forms.Controls.TagEntryView"
+             xmlns:vm="clr-namespace:PeopleApp.ViewModels"
+             Title="Create Event - More details">
+    <ContentPage.BindingContext>
+        <vm:CreateSharingSpaceBViewModel/>
+    </ContentPage.BindingContext>
+    <ContentPage.Content>
+        <StackLayout>
+            <TableView HasUnevenRows="True">
+                <TableRoot >
+                    <TableSection Title="Topic">
+                        <TextCell Text="Describe your event with tags"/>
+                        <ViewCell >
+                            <dltag:TagEntryView TagItems="{Binding Items}"
+                                                TagTappedCommand="{Binding RemoveTagCommand}"
+                                                TagValidatorFactory="{StaticResource TagValidatorFactory}">
+                                <dltag:TagEntryView.TagItemTemplate>
+                                    <DataTemplate>
+                                        <Frame BackgroundColor="#60b8ff" OutlineColor="Transparent" Padding="10" HasShadow="false">
+                                            <Label Text="{Binding Name}"/>
+                                        </Frame>
+                                    </DataTemplate>
+                                </dltag:TagEntryView.TagItemTemplate>
+                            </dltag:TagEntryView>
+                        </ViewCell>
+                    </TableSection>
+                    <TableSection Title="Social - The potential participants">
+                        <!--<TextCell Text="Choose your participants from your circles"/>-->
+                        <ViewCell Tapped="HandleNavigation_Tapped">
+                            <StackLayout Orientation="Horizontal" Padding="13, 5">
+                                <Label Text="Participants" VerticalOptions="Center"/>
+                                <Label x:Name="participantsCategories"
+                                       VerticalOptions="Center"
+                                       HorizontalOptions="EndAndExpand"
+                                       Text="None"
+                                       TextColor="Gray"/>
+                            </StackLayout>
+                        </ViewCell>
+
+                    </TableSection>
+                </TableRoot>
+            </TableView>
+            <Button Text="Submit" Clicked="SubmitButton_Clicked"/>
+        </StackLayout>
+
+        <!--<StackLayout Padding="15" Spacing="10">
+            <Label Text="Describe your event with tags"/>
+            <dltag:TagEntryView TagItems="{Binding Items}" TagTappedCommand="{Binding RemoveTagCommand}" TagValidatorFactory="{StaticResource TagValidatorFactory}">
+                <dltag:TagEntryView.TagItemTemplate>
+                    <DataTemplate>
+                        <Frame BackgroundColor="#2196F3" OutlineColor="Transparent" Padding="10" HasShadow="false">
+                            <Label Text="{Binding Name}"/>
+                        </Frame>
+                    </DataTemplate>
+                </dltag:TagEntryView.TagItemTemplate>
+            </dltag:TagEntryView>
+        </StackLayout>-->
+
+    </ContentPage.Content>
+</ContentPage>

@@ -18,5 +18,10 @@ namespace PeopleApp.Views
 			InitializeComponent ();
             BindingContext = new EntryPageViewModel();
         }
-	}
+
+        private async void Button_ClickedAsync(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new CreateSharingSpaceAPage());
+        }
+    }
 }

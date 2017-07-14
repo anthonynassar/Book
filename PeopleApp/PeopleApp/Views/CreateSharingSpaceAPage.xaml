@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="PeopleApp.Views.CreateSharingSpaceAPage"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:viewModels="clr-namespace:PeopleApp.ViewModels"
+             Title="Create Event">
+    <ContentPage.BindingContext>
+        <viewModels:CreateSharingSpaceAViewModel/>
+    </ContentPage.BindingContext>
+    <StackLayout>
+        <TableView Intent="Form">
+            <TableRoot>
+                <TableSection Title="Time">
+                    <EntryCell Label="Event Name" Placeholder="(eg Birthday)" Keyboard="Text"/>
+                    <ViewCell>
+                        <StackLayout Orientation="Horizontal" Padding="13, 0">
+                            <Label Text="Starts" VerticalOptions="Center"/>
+                            <DatePicker HorizontalOptions="EndAndExpand" Date="{x:Static sys:DateTime.Now}" Format="dd MMM yyyy" MinimumDate="Jan 1 2017" MaximumDate="Dec 31 2050"/>
+                            <TimePicker Time="12:00" HorizontalOptions="End"/>
+                        </StackLayout>
+                    </ViewCell>
+                    <ViewCell>
+                        <StackLayout Orientation="Horizontal" Padding="13, 0">
+                            <Label Text="Ends" VerticalOptions="Center"/>
+                            <DatePicker HorizontalOptions="EndAndExpand" Date="{x:Static sys:DateTime.Now}" Format="dd MMM yyyy" MinimumDate="Jan 1 2017" MaximumDate="Dec 31 2050"/>
+                            <TimePicker Time="12:00" HorizontalOptions="End"/>
+                        </StackLayout>
+                    </ViewCell>
+                </TableSection>
+                <TableSection Title="Location">
+                    <TextCell x:Name="LongitudeLabel" Text="Longitude" Detail="Loading..."/>
+                    <TextCell x:Name="LatitudeLabel" Text="Latitude" Detail="Loading..."/>
+                    <TextCell x:Name="AddressLabel" Text="Full address" Detail="Loading..."/>
+                    <ViewCell>
+                        <StackLayout Orientation="Horizontal" Padding="13, 0">
+                            <Label HorizontalOptions="Start" VerticalOptions="Center" Text="{Binding Source={x:Reference mySlider}, Path=Value, StringFormat='Range: {0:N0} km'}" x:Name="txtResult" FontSize="15"/>
+                            <Slider HorizontalOptions="FillAndExpand" x:Name="mySlider" Minimum="0" Maximum="100" Value="50"/>
+                        </StackLayout>
+                    </ViewCell>
+                </TableSection>
+            </TableRoot>
+        </TableView>
+        <Button Text="Next" Clicked="Button_Clicked"/>
+    </StackLayout>
+
+</ContentPage>

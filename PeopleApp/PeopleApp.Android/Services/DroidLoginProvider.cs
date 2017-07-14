@@ -53,10 +53,10 @@ namespace PeopleApp.Droid.Services
         //}
         #endregion
 
-        public async Task<MobileServiceUser> LoginAsync(MobileServiceClient client)
+        public async Task<MobileServiceUser> LoginAsync(MobileServiceClient client, string provider)
         {
             // Server Flow
-            return await client.LoginAsync(RootView, "aad");
+            return await client.LoginAsync(RootView, provider);
         }
 
         public Context RootView { get; private set; }
@@ -81,9 +81,9 @@ namespace PeopleApp.Droid.Services
             }
         }
 
-        async Task ILoginProvider.LoginAsync(MobileServiceClient client)
-        {
-            await client.LoginAsync(RootView, "aad");
-        }
+        //async Task ILoginProvider.LoginAsync(MobileServiceClient client)
+        //{
+        //    await client.LoginAsync(RootView, "aad");
+        //}
     }
 }

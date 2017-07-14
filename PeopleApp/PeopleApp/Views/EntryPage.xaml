@@ -9,9 +9,19 @@
                      VerticalOptions="Center">
             <Button BackgroundColor="Teal"
                     BorderRadius="10"
+                    Command="{Binding FbLoginCommand}"
+                    Text="Facebook Login"
+                    TextColor="White" />
+            <Button BackgroundColor="Teal"
+                    BorderRadius="10"
                     Command="{Binding LoginCommand}"
                     Text="Login"
                     TextColor="White" />
+            <Button BackgroundColor="Teal"
+                    BorderRadius="10"
+                    Text="Create Sharing Space"
+                    TextColor="White" 
+                    Clicked="Button_ClickedAsync"/>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
