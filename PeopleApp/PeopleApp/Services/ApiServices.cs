@@ -2,6 +2,7 @@
 using PeopleApp.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -62,7 +63,8 @@ namespace PeopleApp.Services
             content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
             content.Headers.Add("ZUMO-API-VERSION", "2.0.0");
 
-            var response = await client.PostAsync(Constants.BaseApiAddress + "tables/event", content);
+            var response = await client.PostAsync(Constants.BaseApiAddress + "api/event", content);
+            Debug.WriteLine(response.Content);
         }
     }
 }

@@ -22,7 +22,8 @@ namespace Backend
             var mobileConfig = new MobileAppConfiguration();
 
             mobileConfig
-                .AddTablesWithEntityFramework()
+                .AddTablesWithEntityFramework()     /* /tables endpoints */
+                .MapApiControllers()                /* /api endpoints */
                 //.UseDefaultConfiguration()
                 .ApplyTo(config);
 

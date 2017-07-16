@@ -52,21 +52,21 @@ namespace PeopleApp.Views
             Models.Constraint constraint3 = new Models.Constraint { Operator = "range", Value = "50"};
             var constraintList1 = new List<Models.Constraint> { constraint1, constraint2 };
             var constraintList2 = new List<Models.Constraint> { constraint3 };
-            List<Dimension> dimensions = new List<Dimension>
+            List<DimensionLocal> dimensions = new List<DimensionLocal>
             {
-                new Dimension { Label = "Time", Interval = true, ConstraintList = constraintList1},
-                new Dimension { Label = "Location", Interval = true, ConstraintList = constraintList2}
+                new DimensionLocal { Label = "Time", Interval = true, ConstraintList = constraintList1},
+                new DimensionLocal { Label = "Location", Interval = true, ConstraintList = constraintList2}
             };
 
             foreach (var dimension in dimensions)
             {
-                dimension.Id = Utilities.NewGuid();
-                await _apiServices.PostDimensionAsync(dimension);
+                var dimensionId = Utilities.NewGuid();
+                await _apiServices.PostDimensionAsync(new Dimension { Id = dimensionId, Interval = dimension.Interval, Label = dimension.Label });
                 foreach (var constraint in dimension.ConstraintList)
                 {
                     constraint.Id = Utilities.NewGuid();
                     await _apiServices.PostConstraintAsync(constraint);
-                    await _apiServices.PostEventAsync(new Event { ConstraintId = constraint.Id , DimensionId = dimension.Id, });
+                    await _apiServices.PostEventAsync(new Event { ConstraintId = constraint.Id , DimensionId = dimensionId, SharingSpaceId = sharingSpaceId});
                 }
             }
         }

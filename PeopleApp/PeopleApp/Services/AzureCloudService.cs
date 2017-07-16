@@ -25,7 +25,7 @@ namespace PeopleApp.Services
 
         public ICloudTable<T> GetTable<T>() where T : TableData => new AzureCloudTable<T>(client);
 
-        public async Task<MobileServiceUser> LoginAsync()
+        public async Task<MobileServiceUser> LoginAsync(string provider)
         {
             var loginProvider = DependencyService.Get<ILoginProvider>();
 
@@ -55,12 +55,14 @@ namespace PeopleApp.Services
             }
 
             // We need to ask for credentials at this point
-            await loginProvider.LoginAsync(client);
+            await loginProvider.LoginAsync(client, provider);
             if (client.CurrentUser != null)
             {
                 // We were able to successfully log in
                 loginProvider.StoreTokenInSecureStore(client.CurrentUser);
             }
+            // add user to database -- client.CurrentUser.UserId
+            Settings.AccessToken = client.CurrentUser.MobileServiceAuthenticationToken;
             return client.CurrentUser;
         }
 
@@ -113,6 +115,7 @@ namespace PeopleApp.Services
 
             // Remove the token from the cache
             DependencyService.Get<ILoginProvider>().RemoveTokenFromSecureStore();
+            Settings.AccessToken = "";
 
             // Remove the token from the MobileServiceClient
             await client.LogoutAsync();
