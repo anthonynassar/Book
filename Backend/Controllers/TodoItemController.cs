@@ -22,7 +22,11 @@ namespace Backend.Controllers
             DomainManager = new EntityDomainManager<TodoItem>(context, Request);
         }
 
-        public string UserId => ((ClaimsPrincipal)User).FindFirst(ClaimTypes.NameIdentifier).Value;
+        public string UserId => IdentityProvider + ":" + NameIdentifier;
+
+        public string NameIdentifier => ((ClaimsPrincipal)User).FindFirst(ClaimTypes.NameIdentifier).Value;
+
+        public string IdentityProvider => ((ClaimsPrincipal)User).FindFirst("http://schemas.microsoft.com/identity/claims/identityprovider").Value;
 
         public void ValidateOwner(string id)
         {

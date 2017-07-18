@@ -163,6 +163,7 @@
     <Compile Include="Controllers\ConstraintController.cs" />
     <Compile Include="Controllers\DatatypeController.cs" />
     <Compile Include="Controllers\DimensionController.cs" />
+    <Compile Include="Controllers\EventController.cs" />
     <Compile Include="Controllers\GranularityController.cs" />
     <Compile Include="Controllers\ObjectController.cs" />
     <Compile Include="Controllers\PreferenceController.cs" />
