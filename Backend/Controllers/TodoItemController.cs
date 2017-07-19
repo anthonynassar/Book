@@ -12,7 +12,7 @@ using Backend.Extensions;
 
 namespace Backend.Controllers
 {
-    //[Authorize]
+    [Authorize]
     public class TodoItemController : TableController<TodoItem>
     {
         protected override void Initialize(HttpControllerContext controllerContext)
@@ -22,9 +22,9 @@ namespace Backend.Controllers
             DomainManager = new EntityDomainManager<TodoItem>(context, Request);
         }
 
-        public string UserId => IdentityProvider + ":" + NameIdentifier;
+        public string UserId => IdentityProvider + "_" + NameIdentifier;
 
-        public string NameIdentifier => ((ClaimsPrincipal)User).FindFirst(ClaimTypes.NameIdentifier).Value;
+        public string NameIdentifier => ((ClaimsPrincipal)User).FindFirst(ClaimTypes.NameIdentifier).Value.Split(':')[1];
 
         public string IdentityProvider => ((ClaimsPrincipal)User).FindFirst("http://schemas.microsoft.com/identity/claims/identityprovider").Value;
 

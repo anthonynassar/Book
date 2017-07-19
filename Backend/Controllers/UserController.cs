@@ -6,17 +6,25 @@ using System.Web.Http.OData;
 using Microsoft.Azure.Mobile.Server;
 using Backend.DataObjects;
 using Backend.Models;
+using System.Security.Claims;
 
 namespace Backend.Controllers
 {
     public class UserController : TableController<User>
     {
+        [Authorize]
         protected override void Initialize(HttpControllerContext controllerContext)
         {
             base.Initialize(controllerContext);
             MobileServiceContext context = new MobileServiceContext();
             DomainManager = new EntityDomainManager<User>(context, Request, enableSoftDelete: true);
         }
+
+        public string UserId => IdentityProvider + "_" + NameIdentifier;
+
+        public string NameIdentifier => ((ClaimsPrincipal)User).FindFirst(ClaimTypes.NameIdentifier).Value.Split(':')[1];
+
+        public string IdentityProvider => ((ClaimsPrincipal)User).FindFirst("http://schemas.microsoft.com/identity/claims/identityprovider").Value;
 
         // GET tables/User
         public IQueryable<User> GetAllUser()
@@ -39,6 +47,7 @@ namespace Backend.Controllers
         // POST tables/User
         public async Task<IHttpActionResult> PostUser(User item)
         {
+            item.Id = UserId;
             User current = await InsertAsync(item);
             return CreatedAtRoute("Tables", new { id = current.Id }, current);
         }
