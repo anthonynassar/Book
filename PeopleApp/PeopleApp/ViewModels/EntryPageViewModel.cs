@@ -1,6 +1,8 @@
 ﻿using Microsoft.WindowsAzure.MobileServices;
 using PeopleApp.Abstractions;
 using PeopleApp.Helpers;
+using PeopleApp.Models;
+using PeopleApp.Services;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -12,6 +14,8 @@ namespace PeopleApp.ViewModels
 {
     public class EntryPageViewModel : BaseViewModel
     {
+        ApiServices _apiServices = new ApiServices();
+
         public EntryPageViewModel()
         {
             Title = "Task List";
@@ -34,13 +38,15 @@ namespace PeopleApp.ViewModels
                 //await cloudService.LoginAsync(User);
                 
                 MobileServiceUser user = await cloudService.LoginAsync("aad");
-                Debug.WriteLine("User ID: " + user.UserId);
+                User currentUser = new User();
+                // add user to db
+                await _apiServices.PostUserAsync(currentUser, user.MobileServiceAuthenticationToken);
                 Settings.IdentityProvider = "aad";
-                Application.Current.MainPage = new NavigationPage(new Views.TaskList());
+                Application.Current.MainPage = new NavigationPage(new Views.EventList());
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("Error : " + ex.Message);
+                Debug.WriteLine("Error: " + ex.Message);
                 Debug.WriteLine("Error Full: ======/n" + ex);
                 await Application.Current.MainPage.DisplayAlert("Login Failed", ex.Message, "OK");
             }
@@ -62,13 +68,15 @@ namespace PeopleApp.ViewModels
                 //await cloudService.LoginAsync(User);
 
                 MobileServiceUser user = await cloudService.LoginAsync("facebook");
-                Debug.WriteLine("User ID: " + user.UserId);
+                User currentUser = new User();
+                // add user to db
+                await _apiServices.PostUserAsync(currentUser, user.MobileServiceAuthenticationToken);
                 Settings.IdentityProvider = "facebook";
-                Application.Current.MainPage = new NavigationPage(new Views.TaskList());
+                Application.Current.MainPage = new NavigationPage(new Views.EventList());
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("Error : " + ex.Message);
+                Debug.WriteLine("Error: " + ex.Message);
                 Debug.WriteLine("Error Full: ======/n" + ex);
                 await Application.Current.MainPage.DisplayAlert("Login Failed", ex.Message, "OK");
             }

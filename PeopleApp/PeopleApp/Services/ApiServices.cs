@@ -12,6 +12,20 @@ namespace PeopleApp.Services
 {
     class ApiServices
     {
+        public async Task PostUserAsync(User user, string token)
+        {
+            var client = new HttpClient();
+            //client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+
+            var json = JsonConvert.SerializeObject(user);
+            HttpContent content = new StringContent(json);
+            content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+            content.Headers.Add("ZUMO-API-VERSION", "2.0.0");
+            content.Headers.Add("X-ZUMO-AUTH", token);
+
+            var response = await client.PostAsync(Constants.BaseApiAddress + "tables/user", content);
+        }
+
         //public async Task PostSharingSpaceAsync(Idea idea, string accessToken)
         public async Task<HttpResponseMessage> PostSharingSpaceAsync(SharingSpace sharingSpace)
         {
