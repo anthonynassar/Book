@@ -11,17 +11,12 @@ using Xamarin.Forms.Xaml;
 namespace PeopleApp.Views
 {
 	[XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class EntryPage : ContentPage
+	public partial class EventHistoryPage : ContentPage
 	{
-		public EntryPage ()
+		public EventHistoryPage ()
 		{
 			InitializeComponent ();
-            BindingContext = new EntryPageViewModel();
+            BindingContext = new EventHistoryViewModel();
         }
-
-        private async void Button_ClickedAsync(object sender, EventArgs e)
-        {
-            await Navigation.PushAsync(new MenuPage());
-        }
-    }
+	}
 }

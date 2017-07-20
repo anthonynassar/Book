@@ -3,7 +3,7 @@ using PeopleApp.Helpers;
 using PeopleApp.Services;
 using PeopleApp.ViewModels;
 using PeopleApp.Views;
-
+using DLToolkit.Forms.Controls;
 using Xamarin.Forms;
 
 namespace PeopleApp
@@ -11,15 +11,18 @@ namespace PeopleApp
 	public partial class App : Application
 	{
         public static ICloudService CloudService { get; set; }
+        public static NavigationPage NavPage { get; private set; }
 
         public App ()
 		{
 			InitializeComponent();
 
+            FlowListView.Init();
             //CloudService = new AzureCloudService();
             ServiceLocator.Instance.Add<ICloudService, AzureCloudService>();
 
             SetMainPage();
+            
             //MainPage = new NavigationPage(new Views.EntryPage());
         }
 
@@ -32,7 +35,8 @@ namespace PeopleApp
                     var vm = new EntryPageViewModel();
                     vm.LoginCommand.Execute(null);
                 }
-                MainPage = new NavigationPage(new EventList());
+                NavPage = new NavigationPage(new MenuPage());
+                MainPage = NavPage;
             }
 
             //else if (!string.IsNullOrEmpty(Settings.Username) && !string.IsNullOrEmpty(Settings.Password))

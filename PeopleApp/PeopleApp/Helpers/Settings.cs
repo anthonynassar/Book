@@ -98,5 +98,17 @@ namespace PeopleApp.Helpers
                 AppSettings.AddOrUpdateValue("AccessTokenExpiration", value);
             }
         }
+
+        public static string PhotoAlbumPath
+        {
+            get
+            {
+                return AppSettings.GetValueOrDefault("PhotoAlbumPath", "/storage/emulated/0/Pictures/PeopleApp");
+            }
+            set
+            {
+                AppSettings.AddOrUpdateValue("PhotoAlbumPath", value);
+            }
+        }
     }
 }

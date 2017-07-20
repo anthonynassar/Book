@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="PeopleApp.Views.AboutPage"
+             Padding="20,0">
+    <ContentPage.Content>
+        <StackLayout VerticalOptions="Center">
+            <Label FontSize="25" Text="People App" VerticalOptions="Center" HorizontalOptions="Center" />
+            <Label FontSize="12" Text="Version 1.0a"  HorizontalOptions="Center"/>
+            <Image Margin="0,20,0,0" Source="icon.png"/>
+            <Label Margin="0,20,0,0" Text="© 2016 - 2017 LIUPPA" HorizontalOptions="Center" />
+            <Label Margin="0,-5,0,0" Text="All rights reserved." HorizontalOptions="Center" />
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
