@@ -41,7 +41,7 @@ namespace PeopleApp.Views
 
         protected override bool OnBackButtonPressed()
         {
-            App.NavPage.BarTextColor = Color.Black; // turn the status bar back to black
+            //App.NavPage.BarTextColor = Color.Black; // turn the status bar back to black
             return base.OnBackButtonPressed();
         }
 
@@ -125,7 +125,7 @@ namespace PeopleApp.Views
                 Children = { label, separator }
             };
 
-            backButton = new Button { Text = "Back", WidthRequest = 80, HeightRequest = 40, TextColor = MyAppStyle.whiteColor, FontAttributes = FontAttributes.Bold };
+            backButton = new Button { Text = "Back", WidthRequest = 80, HeightRequest = 40, BackgroundColor = MyAppStyle.whiteColor, TextColor = MyAppStyle.blackColor, FontAttributes = FontAttributes.Bold };
             backButton.Clicked += (object sender, EventArgs e) => { OnBackButtonPressed(); Navigation.PopAsync(); };
 
             indexLabel = new Label
