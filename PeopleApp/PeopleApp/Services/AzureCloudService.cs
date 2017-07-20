@@ -61,8 +61,7 @@ namespace PeopleApp.Services
                 // We were able to successfully log in
                 loginProvider.StoreTokenInSecureStore(client.CurrentUser);
             }
-            // add user to database -- client.CurrentUser.UserId
-            Settings.AccessToken = client.CurrentUser.MobileServiceAuthenticationToken;
+            
             return client.CurrentUser;
         }
 

@@ -32,7 +32,7 @@ namespace PeopleApp
                     var vm = new EntryPageViewModel();
                     vm.LoginCommand.Execute(null);
                 }
-                MainPage = new NavigationPage(new TaskList());
+                MainPage = new NavigationPage(new EventList());
             }
 
             //else if (!string.IsNullOrEmpty(Settings.Username) && !string.IsNullOrEmpty(Settings.Password))

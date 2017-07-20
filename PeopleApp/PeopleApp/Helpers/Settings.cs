@@ -39,6 +39,18 @@ namespace PeopleApp.Helpers
             }
         }
 
+        public static string UserId
+        {
+            get
+            {
+                return AppSettings.GetValueOrDefault("UserId", "");
+            }
+            set
+            {
+                AppSettings.AddOrUpdateValue("UserId", value);
+            }
+        }
+
         public static string Password
         {
             get

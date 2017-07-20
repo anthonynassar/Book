@@ -9,22 +9,23 @@
         <viewModels:CreateSharingSpaceAViewModel/>
     </ContentPage.BindingContext>
     <StackLayout>
+        <Entry x:Name="eventDescriptor" Text="Event Name"/>
         <TableView Intent="Form">
             <TableRoot>
                 <TableSection Title="Time">
-                    <EntryCell Label="Event Name" Placeholder="(eg Birthday)" Keyboard="Text"/>
+                    <!--<EntryCell Label="Event Name" Placeholder="(eg Birthday)" Keyboard="Text"/>-->
                     <ViewCell>
                         <StackLayout Orientation="Horizontal" Padding="13, 0">
                             <Label Text="Starts" VerticalOptions="Center"/>
-                            <DatePicker HorizontalOptions="EndAndExpand" Date="{x:Static sys:DateTime.Now}" Format="dd MMM yyyy" MinimumDate="Jan 1 2017" MaximumDate="Dec 31 2050"/>
-                            <TimePicker Time="12:00" HorizontalOptions="End"/>
+                            <DatePicker x:Name="dateStart" HorizontalOptions="EndAndExpand" Date="{x:Static sys:DateTime.Now}" Format="dd MMM yyyy" MinimumDate="Jan 1 2017" MaximumDate="Dec 31 2050"/>
+                            <TimePicker x:Name="timeStart" Time="12:00" HorizontalOptions="End"/>
                         </StackLayout>
                     </ViewCell>
                     <ViewCell>
                         <StackLayout Orientation="Horizontal" Padding="13, 0">
                             <Label Text="Ends" VerticalOptions="Center"/>
-                            <DatePicker HorizontalOptions="EndAndExpand" Date="{x:Static sys:DateTime.Now}" Format="dd MMM yyyy" MinimumDate="Jan 1 2017" MaximumDate="Dec 31 2050"/>
-                            <TimePicker Time="12:00" HorizontalOptions="End"/>
+                            <DatePicker x:Name="dateEnd" HorizontalOptions="EndAndExpand" Date="{x:Static sys:DateTime.Now}" Format="dd MMM yyyy" MinimumDate="Jan 1 2017" MaximumDate="Dec 31 2050"/>
+                            <TimePicker x:Name="timeEnd" Time="12:00" HorizontalOptions="End"/>
                         </StackLayout>
                     </ViewCell>
                 </TableSection>
@@ -35,13 +36,13 @@
                     <ViewCell>
                         <StackLayout Orientation="Horizontal" Padding="13, 0">
                             <Label HorizontalOptions="Start" VerticalOptions="Center" Text="{Binding Source={x:Reference mySlider}, Path=Value, StringFormat='Range: {0:N0} km'}" x:Name="txtResult" FontSize="15"/>
-                            <Slider HorizontalOptions="FillAndExpand" x:Name="mySlider" Minimum="0" Maximum="100" Value="50"/>
+                            <Slider HorizontalOptions="FillAndExpand" x:Name="mySlider" Minimum="0" Maximum="20" Value="5"/>
                         </StackLayout>
                     </ViewCell>
                 </TableSection>
             </TableRoot>
         </TableView>
-        <Button Text="Next" Clicked="Button_Clicked"/>
+        <Button Text="Next" Clicked="NextButton_Clicked"/>
     </StackLayout>
 
 </ContentPage>

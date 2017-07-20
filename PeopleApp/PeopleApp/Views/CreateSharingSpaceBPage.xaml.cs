@@ -18,9 +18,18 @@ namespace PeopleApp.Views
 	public partial class CreateSharingSpaceBPage : ContentPage
 	{
         ApiServices _apiServices = new ApiServices();
+        public SharingSpace sharingSpace { get; set; }
+        public List<DimensionLocal> dimensions { get; set; }
 
         public CreateSharingSpaceBPage()
         {
+            
+        }
+
+        public CreateSharingSpaceBPage(SharingSpace sharingSpace, List<DimensionLocal> dimensions)
+        {
+            this.sharingSpace = sharingSpace;
+            this.dimensions = dimensions;
             Resources = new ResourceDictionary();
             Resources.Add("TagValidatorFactory", new Func<string, object>(
                 (arg) => (BindingContext as CreateSharingSpaceBViewModel)?.ValidateAndReturn(arg)));
@@ -32,33 +41,10 @@ namespace PeopleApp.Views
         {
             //receive an object with everything list of dimension constraint
 
-            // Post to SS table ( call SS controller)
-            var userid = "08955621-0afc-4d7a-9830-7d4e02444c66";
-            var sharingSpaceId = Utilities.NewGuid();
-            SharingSpace sharingSpace = new SharingSpace
-            {
-                Id = sharingSpaceId,
-                CreationDate = DateTime.Now,
-                CreationLocation = "Anglet",
-                Descriptor = "A manual sharing space",
-                UserId = userid
-            };
-            var response = await _apiServices.PostSharingSpaceAsync(sharingSpace);
+            var response = await _apiServices.PostSharingSpaceAsync(this.sharingSpace, Settings.AccessToken);
            
 
-            // post dimensions
-            Models.Constraint constraint1 = new Models.Constraint { Operator = "begin", Value = DateTime.Now.ToString() };
-            Models.Constraint constraint2 = new Models.Constraint { Operator = "end", Value = DateTime.Now.AddDays(2).ToString() };
-            Models.Constraint constraint3 = new Models.Constraint { Operator = "range", Value = "50"};
-            var constraintList1 = new List<Models.Constraint> { constraint1, constraint2 };
-            var constraintList2 = new List<Models.Constraint> { constraint3 };
-            List<DimensionLocal> dimensions = new List<DimensionLocal>
-            {
-                new DimensionLocal { Label = "Time", Interval = true, ConstraintList = constraintList1},
-                new DimensionLocal { Label = "Location", Interval = true, ConstraintList = constraintList2}
-            };
-
-            foreach (var dimension in dimensions)
+            foreach (var dimension in this.dimensions)
             {
                 var dimensionId = Utilities.NewGuid();
                 await _apiServices.PostDimensionAsync(new Dimension { Id = dimensionId, Interval = dimension.Interval, Label = dimension.Label });
@@ -66,7 +52,7 @@ namespace PeopleApp.Views
                 {
                     constraint.Id = Utilities.NewGuid();
                     await _apiServices.PostConstraintAsync(constraint);
-                    await _apiServices.PostEventAsync(new Event { ConstraintId = constraint.Id , DimensionId = dimensionId, SharingSpaceId = sharingSpaceId});
+                    await _apiServices.PostEventAsync(new Event { ConstraintId = constraint.Id , DimensionId = dimensionId, SharingSpaceId = this.sharingSpace.Id});
                 }
             }
         }

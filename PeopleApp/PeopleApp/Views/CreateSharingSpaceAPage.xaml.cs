@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using Plugin.Geolocator;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using PeopleApp.Models;
+using PeopleApp.Helpers;
 
 namespace PeopleApp.Views
 {
@@ -68,15 +70,36 @@ namespace PeopleApp.Views
                 AddressLabel.Detail = "Unable to get address at this moment!";
                 Debug.WriteLine("Unable to get address: " + e);
             }
-
-
         }
 
-        
-
-        private async void Button_Clicked(object sender, EventArgs e)
+        private async void NextButton_Clicked(object sender, EventArgs e)
         {
-            await Navigation.PushAsync(new CreateSharingSpaceBPage());
+            // save sharing space and constraints
+            SharingSpace sharingSpace = new SharingSpace
+            {
+                CreationDate = DateTime.Now,
+                CreationLocation = LatitudeLabel.Detail + ", " + LongitudeLabel.Detail,
+                Descriptor = eventDescriptor.Text,
+                Id = Utilities.NewGuid(),
+                UserId = Settings.UserId
+            };
+
+            DateTime startDate = dateStart.Date + timeStart.Time;
+            DateTime endDate = dateEnd.Date + timeEnd.Time;
+
+            Models.Constraint timeConstraint1 = new Models.Constraint { Operator = "begin", Value = startDate.ToString() };
+            Models.Constraint timeConstraint2 = new Models.Constraint { Operator = "end", Value = endDate.ToString() };
+            Models.Constraint locationConstraint = new Models.Constraint { Operator = "range", Value = mySlider.Value.ToString() };
+            var timeConstraintList = new List<Models.Constraint> { timeConstraint1, timeConstraint2 };
+            var locationConstraintList = new List<Models.Constraint> { locationConstraint };
+            List<DimensionLocal> dimensions = new List<DimensionLocal>
+            {
+                new DimensionLocal { Label = "Time", Interval = true, ConstraintList = timeConstraintList},
+                new DimensionLocal { Label = "Location", Interval = true, ConstraintList = locationConstraintList}
+            };
+
+
+            await Navigation.PushAsync(new CreateSharingSpaceBPage(sharingSpace, dimensions));
         }
     }
 }

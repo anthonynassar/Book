@@ -27,7 +27,7 @@ namespace PeopleApp.Services
         }
 
         //public async Task PostSharingSpaceAsync(Idea idea, string accessToken)
-        public async Task<HttpResponseMessage> PostSharingSpaceAsync(SharingSpace sharingSpace)
+        public async Task<HttpResponseMessage> PostSharingSpaceAsync(SharingSpace sharingSpace, string token)
         {
             var client = new HttpClient();
             //client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
@@ -36,6 +36,7 @@ namespace PeopleApp.Services
             HttpContent content = new StringContent(json);
             content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
             content.Headers.Add("ZUMO-API-VERSION", "2.0.0");
+            content.Headers.Add("X-ZUMO-AUTH", token);
 
             var response = await client.PostAsync(Constants.BaseApiAddress + "tables/sharingspace", content);
             return response;

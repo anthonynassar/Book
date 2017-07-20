@@ -41,7 +41,9 @@ namespace PeopleApp.ViewModels
                 User currentUser = new User();
                 // add user to db
                 await _apiServices.PostUserAsync(currentUser, user.MobileServiceAuthenticationToken);
+                Settings.AccessToken = user.MobileServiceAuthenticationToken;
                 Settings.IdentityProvider = "aad";
+                Settings.UserId = "aad" + "_" + user.UserId.Split(':')[1];
                 Application.Current.MainPage = new NavigationPage(new Views.EventList());
             }
             catch (Exception ex)
@@ -71,7 +73,9 @@ namespace PeopleApp.ViewModels
                 User currentUser = new User();
                 // add user to db
                 await _apiServices.PostUserAsync(currentUser, user.MobileServiceAuthenticationToken);
+                Settings.AccessToken = user.MobileServiceAuthenticationToken;
                 Settings.IdentityProvider = "facebook";
+                Settings.UserId = "facebook" + "_" + user.UserId.Split(':')[1];
                 Application.Current.MainPage = new NavigationPage(new Views.EventList());
             }
             catch (Exception ex)
