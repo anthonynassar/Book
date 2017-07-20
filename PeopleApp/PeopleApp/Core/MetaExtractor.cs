@@ -48,6 +48,7 @@ namespace PeopleApp.Core
 
         private static List<PhotoModel> extractMetadata(string path)
         {
+            List<PhotoModel> photoLocations = new List<PhotoModel>();
             // reading from directory
             string[] files = System.IO.Directory.GetFiles(path, "*.jp*g");
             foreach (var item in files)
@@ -60,9 +61,9 @@ namespace PeopleApp.Core
                 Environment.Exit(1);
             }
 
-            Dictionary<string, string> hm = new Dictionary<string, string>();
+            
             PhotoModel ds = new PhotoModel();
-            List<PhotoModel> photoLocations = new List<PhotoModel>();
+            
 
             // extracting metadata for each file
             foreach (string file in files)
@@ -118,80 +119,89 @@ namespace PeopleApp.Core
 #endif
 
 #if Android
-                // read all metadata from the image
-                Stream stream = File.OpenRead(file);
-
-                var directories = ImageMetadataReader.ReadMetadata(stream);
-
-                stream.Close();
-                // interrogate exifIFD0 meta
-
-                var exifIfd0Directory = directories.OfType<ExifIfd0Directory>();
-                foreach (var item in exifIfd0Directory)
-                {
-                    //string model = exifIfd0Directory.
-                    string model = item?.GetDescription(ExifIfd0Directory.TagModel);
-                    string make = item?.GetDescription(ExifIfd0Directory.TagMake);
-                    string artist = item?.GetDescription(ExifIfd0Directory.TagArtist);
-                    hm.Clear();
-
-                    if (!String.IsNullOrEmpty(artist))
-                    {
-                        hm.Add("owner", artist);
-                    }
-                    else
-                    {
-                        hm.Add("owner", make + " " + model);
-                    }
-                }
-                // interrogate exifIFD0 meta
-
-                var subIfdDirectory = directories.OfType<ExifSubIfdDirectory>();
-
-                foreach (var item in subIfdDirectory)
-                {
-                    var dateTime = item?.GetDescription(ExifDirectoryBase.TagDateTimeOriginal);
-                    if (dateTime != null)
-                    {
-                        hm.Add("date", dateTime.ToString());
-                    }
-                    else
-                    {
-                        hm.Add("date", "");
-                    }
-
-                }
-                // See whether it has GPS data
-                var gpsDirectories = directories.OfType<GpsDirectory>();
-                foreach (var item in gpsDirectories)
-                {
-                    GeoLocation geoLocation = item.GetGeoLocation();
-                    if (geoLocation != null && !geoLocation.IsZero)
-                    {
-                        // reverse geocoding processing
-                        Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US"); // This is used to have a decimal point rather than comma in decimal numbers
-                        hm.Add("premise", "");
-                        hm.Add("streetNumber", "");
-                        hm.Add("route", "");
-                        hm.Add("locality", "");
-                        hm.Add("sublocality", "");
-                        hm.Add("adminArea", "");
-                        hm.Add("adminArea3", "");
-                        hm.Add("country", "");
-                        hm.Add("postalCode", "");
-                        string coordinate = geoLocation.ToString();
-                        string[] latlng = coordinate.Split(',');
-                        hm.Add("lat", latlng[0]);
-                        hm.Add("lng", latlng[1].TrimStart());
-
-                        ReverseGeocode(hm, coordinate);
-                        // Add to our collection for use below
-                        photoLocations.Add(new PhotoModel(Double.Parse(latlng[0]), Double.Parse(latlng[1]), file, hm));
-
-                        break; // get out of the for loop
-                    }
-                }
+                photoLocations = ExtractMetadataPerPhoto(file);
 #endif
+            }
+            return photoLocations;
+        }
+
+        private static List<PhotoModel> ExtractMetadataPerPhoto(string file)
+        {
+            Dictionary<string, string> hm = new Dictionary<string, string>();
+            List<PhotoModel> photoLocations = new List<PhotoModel>();
+
+            // read all metadata from the image
+            Stream stream = File.OpenRead(file);
+
+            var directories = ImageMetadataReader.ReadMetadata(stream);
+
+            stream.Close();
+            // interrogate exifIFD0 meta
+
+            var exifIfd0Directory = directories.OfType<ExifIfd0Directory>();
+            foreach (var item in exifIfd0Directory)
+            {
+                //string model = exifIfd0Directory.
+                string model = item?.GetDescription(ExifIfd0Directory.TagModel);
+                string make = item?.GetDescription(ExifIfd0Directory.TagMake);
+                string artist = item?.GetDescription(ExifIfd0Directory.TagArtist);
+                hm.Clear();
+
+                if (!String.IsNullOrEmpty(artist))
+                {
+                    hm.Add("owner", artist);
+                }
+                else
+                {
+                    hm.Add("owner", make + " " + model);
+                }
+            }
+            // interrogate exifIFD0 meta
+
+            var subIfdDirectory = directories.OfType<ExifSubIfdDirectory>();
+
+            foreach (var item in subIfdDirectory)
+            {
+                var dateTime = item?.GetDescription(ExifDirectoryBase.TagDateTimeOriginal);
+                if (dateTime != null)
+                {
+                    hm.Add("date", dateTime.ToString());
+                }
+                else
+                {
+                    hm.Add("date", "");
+                }
+
+            }
+            // See whether it has GPS data
+            var gpsDirectories = directories.OfType<GpsDirectory>();
+            foreach (var item in gpsDirectories)
+            {
+                GeoLocation geoLocation = item.GetGeoLocation();
+                if (geoLocation != null && !geoLocation.IsZero)
+                {
+                    // reverse geocoding processing
+                    Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US"); // This is used to have a decimal point rather than comma in decimal numbers
+                    hm.Add("premise", "");
+                    hm.Add("streetNumber", "");
+                    hm.Add("route", "");
+                    hm.Add("locality", "");
+                    hm.Add("sublocality", "");
+                    hm.Add("adminArea", "");
+                    hm.Add("adminArea3", "");
+                    hm.Add("country", "");
+                    hm.Add("postalCode", "");
+                    string coordinate = geoLocation.ToString();
+                    string[] latlng = coordinate.Split(',');
+                    hm.Add("lat", latlng[0]);
+                    hm.Add("lng", latlng[1].TrimStart());
+
+                    ReverseGeocode(hm, coordinate);
+                    // Add to our collection for use below
+                    photoLocations.Add(new PhotoModel(Double.Parse(latlng[0]), Double.Parse(latlng[1]), file, hm));
+
+                    break; // get out of the for loop
+                }
             }
             return photoLocations;
         }
