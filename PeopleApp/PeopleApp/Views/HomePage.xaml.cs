@@ -15,6 +15,7 @@ namespace PeopleApp.Views
 		public HomePage ()
 		{
 			InitializeComponent ();
+            NavigationPage.SetHasNavigationBar(this, false);  // Hide nav bar
             welcomeText.Text = "Hello USER!!";
         }
 

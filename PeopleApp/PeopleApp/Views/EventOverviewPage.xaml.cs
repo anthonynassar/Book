@@ -17,7 +17,8 @@ namespace PeopleApp.Views
 		public EventOverviewPage ()
 		{
 			InitializeComponent ();
-		}
+            NavigationPage.SetHasNavigationBar(this, false);  // Hide nav bar
+        }
 
         private async void PhotoItemTappedAsync(object sender, ItemTappedEventArgs e)
         {
@@ -28,6 +29,7 @@ namespace PeopleApp.Views
             var photo = e.Item as Photo;
 
             await Navigation.PushAsync(new FullScreenImagePage(photo.ImageUrl, "This is a description text", photo.Index, vm.Count));
+            //NavigationPage.SetHasNavigationBar(this, false);
         }
     }
 }

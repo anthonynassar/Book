@@ -44,7 +44,7 @@ namespace PeopleApp.ViewModels
                 Settings.AccessToken = user.MobileServiceAuthenticationToken;
                 Settings.IdentityProvider = "aad";
                 Settings.UserId = "aad" + "_" + user.UserId.Split(':')[1];
-                Application.Current.MainPage = new NavigationPage(new Views.EventList());
+                Application.Current.MainPage = new NavigationPage(new Views.MenuPage());
             }
             catch (Exception ex)
             {
@@ -76,7 +76,7 @@ namespace PeopleApp.ViewModels
                 Settings.AccessToken = user.MobileServiceAuthenticationToken;
                 Settings.IdentityProvider = "facebook";
                 Settings.UserId = "facebook" + "_" + user.UserId.Split(':')[1];
-                Application.Current.MainPage = new NavigationPage(new Views.EventList());
+                Application.Current.MainPage = new NavigationPage(new Views.MenuPage());
             }
             catch (Exception ex)
             {

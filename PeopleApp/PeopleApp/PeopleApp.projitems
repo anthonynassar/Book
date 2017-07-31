@@ -31,9 +31,12 @@
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Models\Constraint.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Datatype.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\DimDatatype.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Dimension.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\DimensionLocal.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Event.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Object.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\SharingSpace.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\TodoItem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\User.cs" />
@@ -72,6 +75,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Views\EventList.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Views\EventLoadingPage.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Views\EventOverviewPage.xaml.cs">
@@ -174,6 +180,11 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\AboutPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\EventLoadingPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>

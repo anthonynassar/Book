@@ -125,7 +125,7 @@ namespace PeopleApp.Core
             return photoLocations;
         }
 
-        private static List<PhotoModel> ExtractMetadataPerPhoto(string file)
+        public static List<PhotoModel> ExtractMetadataPerPhoto(string file)
         {
             Dictionary<string, string> hm = new Dictionary<string, string>();
             List<PhotoModel> photoLocations = new List<PhotoModel>();
@@ -198,7 +198,7 @@ namespace PeopleApp.Core
 
                     ReverseGeocode(hm, coordinate);
                     // Add to our collection for use below
-                    photoLocations.Add(new PhotoModel(Double.Parse(latlng[0]), Double.Parse(latlng[1]), file, hm));
+                    photoLocations.Add(new PhotoModel(file, hm));
 
                     break; // get out of the for loop
                 }
@@ -353,8 +353,8 @@ namespace PeopleApp.Core
     class PhotoModel
     {
         //public readonly GeoLocation location;
-        public double latitude;
-        public double longitude;
+        //public double latitude;
+        //public double longitude;
         public readonly string file;
         public readonly Dictionary<string, string> map;
 
@@ -368,11 +368,11 @@ namespace PeopleApp.Core
         //    this.location = location;
         //    this.file = file;
         //}
-        public PhotoModel(double latitude, double longitude, string file, Dictionary<string, string> map)
+        public PhotoModel(string file, Dictionary<string, string> map)
         {
             this.map = new Dictionary<string, string>(map);
-            this.latitude = latitude;
-            this.longitude = longitude;
+            //this.latitude = latitude;
+            //this.longitude = longitude;
             this.file = file;
         }
 

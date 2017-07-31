@@ -110,5 +110,42 @@ namespace PeopleApp.Helpers
                 AppSettings.AddOrUpdateValue("PhotoAlbumPath", value);
             }
         }
+
+        public static string CurrentSharingSpace
+        {
+            get
+            {
+                return AppSettings.GetValueOrDefault("CurrentSharingSpace", "");
+            }
+            set
+            {
+                AppSettings.AddOrUpdateValue("CurrentSharingSpace", value);
+            }
+        }
+
+        public static int SharingSpaceCount
+        {
+            get
+            {
+                return AppSettings.GetValueOrDefault("SharingSpaceCount", -1);
+            }
+            set
+            {
+                AppSettings.AddOrUpdateValue("SharingSpaceCount", value);
+            }
+        }
+
+        public static void ResetAll()
+        {
+            CurrentSharingSpace = "";
+            PhotoAlbumPath = "";
+            IdentityProvider = "";
+            AccessToken = "";
+            AccessTokenExpiration = DateTime.Now.AddDays(-60);
+            UserId = "";
+            Username = "";
+            Password = "";
+            SharingSpaceCount = -1;
+        }
     }
 }

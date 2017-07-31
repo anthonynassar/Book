@@ -17,11 +17,11 @@
                     Command="{Binding LoginCommand}"
                     Text="Login"
                     TextColor="White" />
-            <Button BackgroundColor="Teal"
+            <!--<Button BackgroundColor="Teal"
                     BorderRadius="10"
                     Text="Create Sharing Space"
                     TextColor="White" 
-                    Clicked="Button_ClickedAsync"/>
+                    Clicked="Button_ClickedAsync"/>-->
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

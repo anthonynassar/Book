@@ -18,12 +18,17 @@ using System.Diagnostics;
 using System.Collections.ObjectModel;
 using PeopleApp.Models.ViewsRelated;
 using PeopleApp.Core;
+using PeopleApp.Services;
 
 namespace PeopleApp.ViewModels
 {
     public class EventOverviewViewModel
     {
+        ApiServices _apiServices = new ApiServices();
+
         public ObservableCollection<Photo> Items { get; set; }
+
+        public string SharingSpaceId { get; set; }
 
         public string AlbumPath { get; set; }
 
@@ -66,7 +71,6 @@ namespace PeopleApp.ViewModels
                     if (file == null)
                         return;
 
-                    //PathLabel.Text = file.AlbumPath;
                     // public path
                     AlbumPath = file.AlbumPath;
                     // private path
@@ -79,14 +83,12 @@ namespace PeopleApp.ViewModels
                         Settings.PhotoAlbumPath = Path.GetDirectoryName(AlbumPath);
                     }
 
-                    //MainImage.Source = ImageSource.FromStream(() =>
                     ImageSource = ImageSource.FromStream(() =>
                     {
                         var stream = file.GetStream();
                         file.Dispose();
                         return stream;
                     });
-
 
                     //PhotoModel newPhoto = new PhotoModel();
                     var item = new Photo()
@@ -95,6 +97,37 @@ namespace PeopleApp.ViewModels
                         FileName = filename
                     };
                     Items.Add(item);
+
+                    // create the object (photo) to upload 
+                    Models.Object obj = new Models.Object
+                    {
+                        CreationLocation = "",
+                        CreationDate = DateTime.Now,
+                        UserId = Settings.UserId,
+                        SharingSpaceId = SharingSpaceId,
+                        Type = "photo"
+                        // storedLocally = "true",
+                        // storedRemotely = "false",
+                        // localPath = "the local path",
+                        // remotePath = ""
+                    };
+                    await _apiServices.PostObjectAsync(obj); // post this at the end with attriutes
+                    // write a function that extracts metadata from a photo (async) and then save it in the table of attributes
+                    List<PhotoModel> photoInfo = MetaExtractor.ExtractMetadataPerPhoto(AlbumPath);
+
+                    // time
+                    // get id of time dimension apiservices and then datatype
+
+                    var date = photoInfo.FirstOrDefault().map["date"];
+                    // post in attribute table
+                    // location
+                    // get id of location dimension apiservices and then datatype
+                    var lat = photoInfo.FirstOrDefault().map["lat"];
+                    var lng = photoInfo.FirstOrDefault().map["lng"];
+                    // post in attribute table
+                    //social
+                    //var owner = photoInfo.FirstOrDefault().map["owner"];
+
                 });
             }
         }
@@ -118,8 +151,6 @@ namespace PeopleApp.ViewModels
                     MetaExtractor me = new MetaExtractor(path);
                     string xmlData = me.Extract();
                     Debug.WriteLine(xmlData);
-
-                    //XMLdata.Text = xmlData;
 
                     // temporarly turn off this functionality and maybe change its place to after taking a photo
                     //await UploadToCloud();
@@ -173,6 +204,8 @@ namespace PeopleApp.ViewModels
         {
             Items = new ObservableCollection<Photo>();
             var list = new ObservableCollection<Photo>();
+
+            SharingSpaceId = Settings.CurrentSharingSpace;
 
             //// get photos from directory
             var documentsDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);

@@ -119,6 +119,7 @@ namespace PeopleApp.ViewModels
             {
                 var cloudService = ServiceLocator.Instance.Resolve<ICloudService>();
                 await cloudService.LogoutAsync();
+                Settings.ResetAll();
                 Application.Current.MainPage = new NavigationPage(new Views.EntryPage());
             }
             catch (Exception ex)

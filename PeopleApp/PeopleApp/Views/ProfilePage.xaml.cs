@@ -15,7 +15,8 @@ namespace PeopleApp.Views
 		public ProfilePage ()
 		{
 			InitializeComponent ();
-		}
+            NavigationPage.SetHasNavigationBar(this, false);  // Hide nav bar
+        }
 
         public override string ToString()
         {

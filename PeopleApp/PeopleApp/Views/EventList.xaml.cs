@@ -7,16 +7,22 @@ using System.Threading.Tasks;
 
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using PeopleApp.Models;
 
 namespace PeopleApp.Views
 {
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class EventList : ContentPage
 	{
-		public EventList ()
-		{
-			InitializeComponent ();
+        private List<SharingSpace> sharingSpaces;
+
+
+        public EventList(List<SharingSpace> sharingSpaces = null)
+        {
+            this.sharingSpaces = sharingSpaces;
+            InitializeComponent();
+            // BindingContext = new EventListViewModel(sharingSpaces);
             BindingContext = new EventListViewModel();
         }
-	}
+    }
 }

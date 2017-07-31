@@ -5,9 +5,9 @@
     <ContentPage.Content>
         <StackLayout Padding="10" Spacing="10">
             <Label Text="What should I be doing?"/>
-            <Entry Text="{Binding Item.Descriptor}"/>
+            <Entry Text="{Binding SharingSpace.Descriptor}"/>
             <Label Text="Completed?"/>
-            <Switch IsToggled="{Binding Item.CreationLocation}"/>
+            <Switch IsToggled="{Binding SharingSpace.CreationLocation}"/>
             <StackLayout VerticalOptions="CenterAndExpand"/>
             <StackLayout Orientation="Vertical" VerticalOptions="End">
                 <StackLayout HorizontalOptions="Center" Orientation="Horizontal">

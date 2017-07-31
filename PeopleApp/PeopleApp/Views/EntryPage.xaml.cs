@@ -19,9 +19,9 @@ namespace PeopleApp.Views
             BindingContext = new EntryPageViewModel();
         }
 
-        private async void Button_ClickedAsync(object sender, EventArgs e)
-        {
-            await Navigation.PushAsync(new MenuPage());
-        }
+        //private async void Button_ClickedAsync(object sender, EventArgs e)
+        //{
+        //    await Navigation.PushAsync(new MenuPage());
+        //}
     }
 }

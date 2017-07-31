@@ -12,15 +12,23 @@ namespace PeopleApp.ViewModels
 {
     public class EventDetailViewModel : Abstractions.BaseViewModel
     {
-        public EventDetailViewModel(SharingSpace item = null)
+        public SharingSpace SharingSpace { get; set; }
+        public ICloudTable<SharingSpace> Table { get; set; }
+        public Command SaveCommand { get; }
+        public Command DeleteCommand { get; }
+
+        public EventDetailViewModel(SharingSpace sharingSpace = null)
         {
+            // save the id of current sharing space
+            Settings.CurrentSharingSpace = sharingSpace.Id;
+
             ICloudService cloudService = ServiceLocator.Instance.Resolve<ICloudService>();
             Table = cloudService.GetTable<SharingSpace>();
 
-            if (item != null)
+            if (sharingSpace != null)
             {
-                SharingSpace = item;
-                Title = item.Descriptor;
+                SharingSpace = sharingSpace;
+                Title = "Event Description";
             }
             else
             {
@@ -31,11 +39,6 @@ namespace PeopleApp.ViewModels
             SaveCommand = new Command(async () => await ExecuteSaveCommand());
             DeleteCommand = new Command(async () => await ExecuteDeleteCommand());
         }
-
-        public SharingSpace SharingSpace { get; set; }
-        public ICloudTable<SharingSpace> Table { get; set; }
-        public Command SaveCommand { get; }
-        public Command DeleteCommand { get; }
 
         async Task ExecuteSaveCommand()
         {
