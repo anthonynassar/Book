@@ -43,6 +43,14 @@ namespace Backend.Controllers
             return Query().PerUserFilter(UserId);
         }
 
+        //// GET: tables/SharingSpace/Count
+        //[Route("tables/SharingSpace/Count")]
+        //[HttpGet]
+        //public int GetSharingSpaceCount()
+        //{
+        //    return Query().PerUserFilter(UserId).ToList<SharingSpace>().Count();
+        //}
+
         // GET tables/SharingSpace/48D68C86-6EA6-4C25-AA33-223FC9A27959
         public SingleResult<SharingSpace> GetSharingSpace(string id)
         {
