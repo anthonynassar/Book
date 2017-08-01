@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using PeopleApp.Models;
+using PeopleApp.Models.ViewsRelated;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -12,6 +13,28 @@ namespace PeopleApp.Services
 {
     class ApiServices
     {
+        public async Task<List<UserInfo>> GetUserInfoAsync(string token)
+        {
+            var client = new HttpClient();
+
+            client.DefaultRequestHeaders.Add("ZUMO-API-VERSION", "2.0.0");
+            client.DefaultRequestHeaders.Add("X-ZUMO-AUTH", token);
+
+            var json = await client.GetStringAsync(Constants.BaseApiAddress + ".auth/me");
+            try
+            {
+                var userInfo = JsonConvert.DeserializeObject<List<UserInfo>>(json);
+
+                return userInfo;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Error: "+ex.Message);
+                Debug.WriteLine("Error: " + ex);
+                return null;
+            }
+        }
+
         public async Task PostUserAsync(User user, string token)
         {
             var client = new HttpClient();
