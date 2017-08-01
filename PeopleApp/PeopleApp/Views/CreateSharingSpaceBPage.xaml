@@ -5,11 +5,11 @@
              xmlns:dltag="clr-namespace:DLToolkit.Forms.Controls;assembly=DLToolkit.Forms.Controls.TagEntryView"
              xmlns:vm="clr-namespace:PeopleApp.ViewModels"
              Title="Create Event - More details">
-    <ContentPage.BindingContext>
+    <!--<ContentPage.BindingContext>
         <vm:CreateSharingSpaceBViewModel/>
-    </ContentPage.BindingContext>
+    </ContentPage.BindingContext>-->
     <ContentPage.Content>
-        <AbsoluteLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+        <AbsoluteLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Padding="0,15">
 
             <StackLayout AbsoluteLayout.LayoutFlags="All" 
                          AbsoluteLayout.LayoutBounds="0,0,1,1">

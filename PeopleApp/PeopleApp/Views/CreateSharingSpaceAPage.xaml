@@ -8,8 +8,8 @@
     <ContentPage.BindingContext>
         <viewModels:CreateSharingSpaceAViewModel/>
     </ContentPage.BindingContext>
-    <StackLayout>
-        <Entry x:Name="eventDescriptor" Text="Event Name"/>
+    <StackLayout Padding="0,15">
+        <Entry x:Name="eventDescriptor" Placeholder="Insert event name here (eg Birthday)"/>
         <TableView Intent="Form">
             <TableRoot>
                 <TableSection Title="Time">

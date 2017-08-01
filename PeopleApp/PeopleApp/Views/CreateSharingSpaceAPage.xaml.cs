@@ -18,7 +18,8 @@ namespace PeopleApp.Views
 		public CreateSharingSpaceAPage ()
 		{
 			InitializeComponent ();
-		}
+            NavigationPage.SetHasNavigationBar(this, false);  // Hide nav bar
+        }
 
         protected override async void OnAppearing()
         {

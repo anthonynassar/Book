@@ -19,18 +19,19 @@ namespace PeopleApp.ViewModels
     public class CreateSharingSpaceBViewModel : BaseViewModel
     {
         ApiServices _apiServices = new ApiServices();
-        public SharingSpace sharingSpace { get; set; }
-        public List<DimensionLocal> dimensions { get; set; }
+        public SharingSpace SharingSpace { get; set; }
+        public List<DimensionLocal> Dimensions { get; set; }
 
         public CreateSharingSpaceBViewModel() 
         {
-            
+            //ReloadTags();
+            //RemoveTagCommand = new BaseCommand<TagItem>((arg) => RemoveTag(arg));
         }
 
         public CreateSharingSpaceBViewModel(SharingSpace sharingSpace, List<DimensionLocal> dimensions)
         {
-            this.sharingSpace = sharingSpace;
-            this.dimensions = dimensions;
+            this.SharingSpace = sharingSpace;
+            this.Dimensions = dimensions;
             ReloadTags();
             RemoveTagCommand = new BaseCommand<TagItem>((arg) => RemoveTag(arg));
         }
@@ -88,8 +89,19 @@ namespace PeopleApp.ViewModels
 
             var tagString = tag.StartsWith("#") ? tag : "#" + tag;
 
-            if (Items.Any(v => v.Name.Equals(tagString, StringComparison.OrdinalIgnoreCase)))
+            try
+            {
+                if (Items.Any(v => v.Name.Equals(tagString, StringComparison.OrdinalIgnoreCase)))
+                    return null;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Error: " + ex.Message);
+                Debug.WriteLine("Error Full: " + ex);
                 return null;
+            }
+
+            
 
             var newTag = new TagItem()
             {
@@ -112,9 +124,9 @@ namespace PeopleApp.ViewModels
             try
             {
                 IsBusy = true;
-                var response = await _apiServices.PostSharingSpaceAsync(this.sharingSpace, Settings.AccessToken);
+                var response = await _apiServices.PostSharingSpaceAsync(this.SharingSpace, Settings.AccessToken);
 
-                foreach (var dimension in this.dimensions)
+                foreach (var dimension in this.Dimensions)
                 {
                     var dimensionId = Utilities.NewGuid();
                     var dataypeId = Utilities.NewGuid();
@@ -125,10 +137,10 @@ namespace PeopleApp.ViewModels
                     {
                         constraint.Id = Utilities.NewGuid();
                         await _apiServices.PostConstraintAsync(constraint);
-                        await _apiServices.PostEventAsync(new Event { ConstraintId = constraint.Id, DimensionId = dimensionId, SharingSpaceId = this.sharingSpace.Id });
+                        await _apiServices.PostEventAsync(new Event { ConstraintId = constraint.Id, DimensionId = dimensionId, SharingSpaceId = this.SharingSpace.Id });
                     }
                 }
-               // navigate to event detail (overview) with sharing space in constructor
+               // navigate to event detail (overview) with sharing space in constructor and save the ID
                //Application.Current.MainPage.Navigation.PushAsync(new Views.Event(selectedItem));
             }
             catch (Exception ex)
@@ -139,7 +151,7 @@ namespace PeopleApp.ViewModels
             }
             finally
             {
-                IsBusy = true;
+                IsBusy = false;
             }
         }
 

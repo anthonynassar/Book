@@ -26,9 +26,11 @@ namespace PeopleApp.Views
         {
             BindingContext = vm = new CreateSharingSpaceBViewModel(sharingSpace, dimensions);
             Resources = new ResourceDictionary();
+            //Resources.Add("TagValidatorFactory", new Func<string, object>((arg) => (BindingContext as CreateSharingSpaceBViewModel)?.ValidateAndReturn(arg)));
             Resources.Add("TagValidatorFactory", new Func<string, object>(
-                (arg) => (BindingContext as CreateSharingSpaceBViewModel)?.ValidateAndReturn(arg)));
+                (arg) => vm?.ValidateAndReturn(arg)));
             InitializeComponent();
+            NavigationPage.SetHasNavigationBar(this, false);  // Hide nav bar
         }
 
         //private async Task SubmitButton_ClickedAsync(object sender, EventArgs e)

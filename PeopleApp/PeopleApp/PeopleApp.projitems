@@ -42,6 +42,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Models\User.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\ViewsRelated\MasterPageItem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\ViewsRelated\Photo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\ViewsRelated\UserInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Multiselect\CheckItem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Multiselect\SelectMultipleBasePage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\ApiServices.cs" />
@@ -91,6 +92,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Views\MenuPage.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Views\ProfileLoadingPage.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Views\ProfilePage.xaml.cs">
@@ -185,6 +189,11 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\EventLoadingPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\ProfileLoadingPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>
