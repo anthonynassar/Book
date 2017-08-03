@@ -6,10 +6,11 @@
              Title="Personal Organiser">
     <ContentPage.Content>
         <StackLayout VerticalOptions="FillAndExpand">
+            <Label HorizontalOptions="Center" Text="Event Sharing App" FontSize="Large" TextColor="Black"/>
             <ListView x:Name="listView" VerticalOptions="FillAndExpand" SeparatorVisibility="None">
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <ImageCell Text="{Binding Title}" ImageSource="{Binding IconSource}" />
+                        <ImageCell TextColor="Gray" Text="{Binding Title}" ImageSource="{Binding IconSource}" />
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>

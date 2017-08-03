@@ -17,7 +17,7 @@ namespace PeopleApp.Views
 		public EventOverviewPage ()
 		{
 			InitializeComponent ();
-            NavigationPage.SetHasNavigationBar(this, false);  // Hide nav bar
+            //NavigationPage.SetHasNavigationBar(this, false);  // Hide nav bar
         }
 
         private async void PhotoItemTappedAsync(object sender, ItemTappedEventArgs e)

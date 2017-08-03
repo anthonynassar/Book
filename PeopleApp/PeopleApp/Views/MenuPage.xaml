@@ -2,13 +2,18 @@
 <MasterDetailPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="PeopleApp.Views.MenuPage"
-             xmlns:local="clr-namespace:PeopleApp.Views">
+             xmlns:local="clr-namespace:PeopleApp.Views"
+                  Title="This is a title">
     
     <MasterDetailPage.Master>
         <local:MasterPage x:Name="masterPage" />
     </MasterDetailPage.Master>
     <MasterDetailPage.Detail>
-        <local:HomePage />
+        <NavigationPage>
+            <x:Arguments>
+                <local:HomePage />
+            </x:Arguments>
+        </NavigationPage>
     </MasterDetailPage.Detail>
     
 </MasterDetailPage>

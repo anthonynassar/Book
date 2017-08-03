@@ -2,6 +2,7 @@
 using PeopleApp.Helpers;
 using PeopleApp.Models;
 using PeopleApp.Services;
+using PeopleApp.Views;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -21,6 +22,7 @@ namespace PeopleApp.ViewModels
         ApiServices _apiServices = new ApiServices();
         public SharingSpace SharingSpace { get; set; }
         public List<DimensionLocal> Dimensions { get; set; }
+        private ContentPage _page;
 
         public CreateSharingSpaceBViewModel() 
         {
@@ -28,10 +30,11 @@ namespace PeopleApp.ViewModels
             //RemoveTagCommand = new BaseCommand<TagItem>((arg) => RemoveTag(arg));
         }
 
-        public CreateSharingSpaceBViewModel(SharingSpace sharingSpace, List<DimensionLocal> dimensions)
+        public CreateSharingSpaceBViewModel(SharingSpace sharingSpace, List<DimensionLocal> dimensions, CreateSharingSpaceBPage page)
         {
             this.SharingSpace = sharingSpace;
             this.Dimensions = dimensions;
+            _page = page;
             ReloadTags();
             RemoveTagCommand = new BaseCommand<TagItem>((arg) => RemoveTag(arg));
         }
@@ -140,8 +143,12 @@ namespace PeopleApp.ViewModels
                         await _apiServices.PostEventAsync(new Event { ConstraintId = constraint.Id, DimensionId = dimensionId, SharingSpaceId = this.SharingSpace.Id });
                     }
                 }
-               // navigate to event detail (overview) with sharing space in constructor and save the ID
-               //Application.Current.MainPage.Navigation.PushAsync(new Views.Event(selectedItem));
+                // navigate to event detail (overview) with sharing space in constructor and save the ID
+                Settings.CurrentSharingSpace = SharingSpace.Id;
+                Application.Current.MainPage.Navigation.InsertPageBefore(new EventOverviewPage(), _page);
+                
+                await Application.Current.MainPage.Navigation.PopAsync();
+                //Application.Current.MainPage.Navigation.PushAsync(new Views.Event(selectedItem));
             }
             catch (Exception ex)
             {

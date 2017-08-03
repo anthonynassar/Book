@@ -2,7 +2,8 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="PeopleApp.Views.AboutPage"
-             Padding="20,0">
+             Padding="20,0"
+             Title="About page">
     <ContentPage.Content>
         <StackLayout VerticalOptions="Center">
             <Label FontSize="25" Text="People App" VerticalOptions="Center" HorizontalOptions="Center" />

@@ -22,7 +22,6 @@ namespace PeopleApp.Views
         public ProfilePage(UserInfo userInfo)
         {
             InitializeComponent();
-            NavigationPage.SetHasNavigationBar(this, false);  // Hide nav bar
             //this.userInfo = userInfo;
             username.Text = userInfo.UserId;
             // load user profile on application launch then activate this
@@ -45,6 +44,11 @@ namespace PeopleApp.Views
         public override string ToString()
         {
             return this.Title;
+        }
+
+        private void Logout_Clicked(object sender, EventArgs e)
+        {
+
         }
     }
 }

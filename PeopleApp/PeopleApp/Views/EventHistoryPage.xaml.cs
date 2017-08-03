@@ -16,7 +16,7 @@ namespace PeopleApp.Views
 		public EventHistoryPage ()
 		{
 			InitializeComponent ();
-            NavigationPage.SetHasNavigationBar(this, false);  // Hide nav bar
+            //NavigationPage.SetHasNavigationBar(this, false);  // Hide nav bar
             BindingContext = new EventHistoryViewModel();
         }
 	}

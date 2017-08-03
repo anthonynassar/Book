@@ -24,13 +24,13 @@ namespace PeopleApp.Views
 
         public CreateSharingSpaceBPage(SharingSpace sharingSpace, List<DimensionLocal> dimensions)
         {
-            BindingContext = vm = new CreateSharingSpaceBViewModel(sharingSpace, dimensions);
+            BindingContext = vm = new CreateSharingSpaceBViewModel(sharingSpace, dimensions, this);
             Resources = new ResourceDictionary();
             //Resources.Add("TagValidatorFactory", new Func<string, object>((arg) => (BindingContext as CreateSharingSpaceBViewModel)?.ValidateAndReturn(arg)));
             Resources.Add("TagValidatorFactory", new Func<string, object>(
                 (arg) => vm?.ValidateAndReturn(arg)));
             InitializeComponent();
-            NavigationPage.SetHasNavigationBar(this, false);  // Hide nav bar
+            //NavigationPage.SetHasNavigationBar(this, false);  // Hide nav bar
         }
 
         //private async Task SubmitButton_ClickedAsync(object sender, EventArgs e)

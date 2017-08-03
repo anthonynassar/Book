@@ -35,14 +35,15 @@ namespace PeopleApp
                     var vm = new EntryPageViewModel();
                     vm.LoginCommand.Execute(null);
                 }
-                NavPage = new NavigationPage(new MenuPage());
-                MainPage = NavPage;
+                //NavPage = new NavigationPage(new MenuPage());
+                //MainPage = NavPage;
+                MainPage = new MenuPage();
             }
 
             //else if (!string.IsNullOrEmpty(Settings.Username) && !string.IsNullOrEmpty(Settings.Password))
             //    MainPage = new NavigationPage(new LoginPage());
             else
-                MainPage = new NavigationPage(new EntryPage());
+                MainPage = new EntryPage();
         }
 
 

@@ -2,7 +2,7 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="PeopleApp.Views.EventHistoryPage"
-             Title="{Binding Title}">
+             Title="Your history">
     <ContentPage.ToolbarItems>
         <ToolbarItem Name="Logout"
                      Command="{Binding LogoutCommand}"
