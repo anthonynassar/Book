@@ -58,13 +58,13 @@ namespace PeopleApp.Views
                 if (!showEverything)
                 {
                     // hide the status bar by turning it black
-                    App.NavPage.BarTextColor = Color.Black;
+                    MenuPage.NavPage.BarTextColor = Color.Black;
                     imageContainer.GestureRecognizers.Add(panGesture);
                 }
                 else
                 {
                     // show the status bar by turning it white
-                    App.NavPage.BarTextColor = Color.White;
+                    MenuPage.NavPage.BarTextColor = Color.White;
                     imageContainer.GestureRecognizers.Remove(panGesture);
                 }
             }

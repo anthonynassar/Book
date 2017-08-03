@@ -5,12 +5,30 @@
              Padding="0,40,0,0"
              Title="Personal Organiser">
     <ContentPage.Content>
-        <StackLayout VerticalOptions="FillAndExpand">
-            <Label HorizontalOptions="Center" Text="Event Sharing App" FontSize="Large" TextColor="Black"/>
+        <StackLayout Spacing="30" VerticalOptions="FillAndExpand">
+            <Label Margin="50,0" HorizontalOptions="Center" Text="Event Sharing App" FontSize="Large" TextColor="Black"/>
             <ListView x:Name="listView" VerticalOptions="FillAndExpand" SeparatorVisibility="None">
                 <ListView.ItemTemplate>
-                    <DataTemplate>
+                    <!--<DataTemplate>
                         <ImageCell TextColor="Gray" Text="{Binding Title}" ImageSource="{Binding IconSource}" />
+                    </DataTemplate>-->
+                    <DataTemplate>
+                        <ViewCell>
+                            <StackLayout Padding="15,10"
+                                     VerticalOptions="FillAndExpand"
+                                     Orientation="Horizontal"
+                                     Spacing="20">
+                                <Image Source="{Binding IconSource}"
+                                   WidthRequest="45"
+                                   HeightRequest="45"
+                                   VerticalOptions="Center" />
+                                <Label VerticalOptions="Center" 
+                                   VerticalTextAlignment="Center" 
+                                   Text="{Binding Title}"
+                                   FontSize="Medium"
+                                   TextColor="Black"/>
+                            </StackLayout>
+                        </ViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>

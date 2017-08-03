@@ -26,7 +26,7 @@ namespace PeopleApp.Views
             username.Text = userInfo.UserId;
             // load user profile on application launch then activate this
             //Settings.Username = userInfo.UserId;
-            firstname.Text = userInfo.UserClaims.Where(item => item.Type.Equals("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname")).FirstOrDefault<UserClaim>().Value;
+            firstname.Text = userInfo.UserClaims.Where(item => item.Type.Equals("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname")).FirstOrDefault<UserClaim>().Value;
             lastname.Text = userInfo.UserClaims.Where(item => item.Type.Equals("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname")).FirstOrDefault<UserClaim>().Value;
             email.Text = userInfo.UserClaims.Where(item => item.Type.Equals("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress") || item.Type.Equals("emails")).FirstOrDefault<UserClaim>().Value;
             //gender.Text = userInfo.UserClaims.Where(item => item.Type.Equals("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/gender")).FirstOrDefault<UserClaim>().Value;

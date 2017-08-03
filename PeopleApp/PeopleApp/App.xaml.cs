@@ -11,7 +11,7 @@ namespace PeopleApp
 	public partial class App : Application
 	{
         public static ICloudService CloudService { get; set; }
-        public static NavigationPage NavPage { get; private set; }
+        //public static NavigationPage NavPage { get; private set; }
 
         public App ()
 		{

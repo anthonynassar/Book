@@ -12,8 +12,9 @@ namespace PeopleApp.Views
 	public partial class MenuPage : MasterDetailPage
     {
         ApiServices _apiServices = new ApiServices();
+        public static NavigationPage NavPage { get; private set; }
 
-		public MenuPage ()
+        public MenuPage ()
 		{
 			InitializeComponent ();
             this.Title = "Event sharing app";
@@ -32,7 +33,10 @@ namespace PeopleApp.Views
                 // option 1
                 //Detail = (Page)Activator.CreateInstance(item.TargetType);
                 // option 2
-                Detail = new NavigationPage((Page)Activator.CreateInstance(item.TargetType));
+                NavPage = new NavigationPage((Page)Activator.CreateInstance(item.TargetType));
+                Detail = NavPage;
+                //Detail = new NavigationPage((Page)Activator.CreateInstance(item.TargetType));
+
                 //NavigationPage.SetHasNavigationBar(this, false);
                 //Detail.BindingContext to pass data like constructor
                 masterPage.ListView.SelectedItem = null;

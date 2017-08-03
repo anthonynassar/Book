@@ -35,7 +35,7 @@ namespace PeopleApp.Views
             masterPageItems.Add(new MasterPageItem
             {
                 Title = "History",
-                IconSource = "ic_event_black_48dp.png",
+                IconSource = "ic_history_black_48dp.png",
                 TargetType = typeof(EventHistoryPage)
             });
             masterPageItems.Add(new MasterPageItem
