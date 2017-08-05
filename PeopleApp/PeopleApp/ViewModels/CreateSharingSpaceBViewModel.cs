@@ -47,12 +47,12 @@ namespace PeopleApp.ViewModels
             set { SetProperty(ref items, value); }
         }
 
-        private bool isReallyBusy;
-        public bool IsReallyBusy
-        {
-            get { return isReallyBusy; }
-            set { SetProperty(ref isReallyBusy, value); }
-        }
+        //private bool isDone;
+        //public bool IsDone
+        //{
+        //    get { return isDone; }
+        //    set { SetProperty(ref isDone, value); }
+        //}
 
         //string loadingMessage;
         //public string LoadingMessage
@@ -127,6 +127,7 @@ namespace PeopleApp.ViewModels
             try
             {
                 IsBusy = true;
+                Settings.CurrentSharingSpace = this.SharingSpace.Id;
                 var response = await _apiServices.PostSharingSpaceAsync(this.SharingSpace, Settings.AccessToken);
 
                 foreach (var dimension in this.Dimensions)
@@ -135,7 +136,7 @@ namespace PeopleApp.ViewModels
                     var dataypeId = Utilities.NewGuid();
                     await _apiServices.PostDimensionAsync(new Dimension { Id = dimensionId, Interval = dimension.Interval, Label = dimension.Label });
                     await _apiServices.PostDatatypeAsync(new Datatype { Id = dataypeId, Type = "string", Domain = "" });
-                    await _apiServices.PostDimDatatypeAsync(new DimDatatype { DatatypeId = dataypeId, DimensionId = dimensionId});
+                    await _apiServices.PostDimDatatypeAsync(new DimDatatype { DatatypeId = dataypeId, DimensionId = dimensionId });
                     foreach (var constraint in dimension.ConstraintList)
                     {
                         constraint.Id = Utilities.NewGuid();
@@ -143,12 +144,8 @@ namespace PeopleApp.ViewModels
                         await _apiServices.PostEventAsync(new Event { ConstraintId = constraint.Id, DimensionId = dimensionId, SharingSpaceId = this.SharingSpace.Id });
                     }
                 }
-                // navigate to event detail (overview) with sharing space in constructor and save the ID
-                Settings.CurrentSharingSpace = SharingSpace.Id;
-                Application.Current.MainPage.Navigation.InsertPageBefore(new EventOverviewPage(), _page);
+                // navigate to event detail (overview) 
                 
-                await Application.Current.MainPage.Navigation.PopAsync();
-                //Application.Current.MainPage.Navigation.PushAsync(new Views.Event(selectedItem));
             }
             catch (Exception ex)
             {

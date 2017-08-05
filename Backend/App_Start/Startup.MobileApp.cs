@@ -18,6 +18,7 @@ namespace Backend
         public static void ConfigureMobileApp(IAppBuilder app)
         {
             HttpConfiguration config = new HttpConfiguration();
+            config.MapHttpAttributeRoutes();   // enable attribute routing
 
             var mobileConfig = new MobileAppConfiguration();
 

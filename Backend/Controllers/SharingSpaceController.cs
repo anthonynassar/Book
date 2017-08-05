@@ -9,24 +9,22 @@ using Backend.Models;
 using System.Security.Claims;
 using System.Net;
 using Backend.Extensions;
+using Backend.Helpers;
 
 namespace Backend.Controllers
 {
     [Authorize]
     public class SharingSpaceController : TableController<SharingSpace>
     {
+        string UserId = "";
+
         protected override void Initialize(HttpControllerContext controllerContext)
         {
             base.Initialize(controllerContext);
             MobileServiceContext context = new MobileServiceContext();
             DomainManager = new EntityDomainManager<SharingSpace>(context, Request, enableSoftDelete: true);
+            UserId = Settings.GetUserId(User);
         }
-
-        public string UserId => IdentityProvider + "_" + NameIdentifier;
-
-        public string NameIdentifier => ((ClaimsPrincipal)User).FindFirst(ClaimTypes.NameIdentifier).Value.Split(':')[1];
-
-        public string IdentityProvider => ((ClaimsPrincipal)User).FindFirst("http://schemas.microsoft.com/identity/claims/identityprovider").Value;
 
         public void ValidateOwner(string id)
         {

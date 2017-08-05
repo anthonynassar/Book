@@ -46,7 +46,7 @@
                         </TableSection>
                     </TableRoot>
                 </TableView>
-                <Button IsEnabled="{Binding IsNotBusy}" Text="Submit" Command="{Binding CreateEventCommand}"/><!--Clicked="SubmitButton_ClickedAsync"/>-->
+                <Button IsEnabled="{Binding IsNotBusy}" Text="Submit" Command="{Binding CreateEventCommand}" Clicked="SubmitButton_ClickedAsync"/>
             </StackLayout>
             <StackLayout IsVisible="{Binding IsBusy}"
                      Padding="32"

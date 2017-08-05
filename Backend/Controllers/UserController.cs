@@ -63,7 +63,7 @@ namespace Backend.Controllers
             }
             catch (System.Exception)
             {
-                return StatusCode(HttpStatusCode.Conflict);
+                return Ok(item);
             }
             //return CreatedAtRoute("Tables", new { id = current.Id }, current);
             

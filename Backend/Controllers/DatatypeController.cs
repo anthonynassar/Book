@@ -11,10 +11,11 @@ namespace Backend.Controllers
 {
     public class DatatypeController : TableController<Datatype>
     {
+        MobileServiceContext context;
         protected override void Initialize(HttpControllerContext controllerContext)
         {
             base.Initialize(controllerContext);
-            MobileServiceContext context = new MobileServiceContext();
+            context = new MobileServiceContext();
             DomainManager = new EntityDomainManager<Datatype>(context, Request);
         }
 
@@ -22,6 +23,23 @@ namespace Backend.Controllers
         public IQueryable<Datatype> GetAllDatatype()
         {
             return Query(); 
+        }
+
+        // GET tables/Datatype/Special/{sharingSpaceId}
+        [HttpGet]
+        [Route("tables/datatype/special/{sharingSpaceId}")]
+        public IQueryable<SpecialDatatype> GetDatatypesBySharingSpace(string sharingSpaceId)
+        {
+            var result = context.Events.Where(e => e.SharingSpaceId == sharingSpaceId).Join(context.Dimensions,
+            e => e.DimensionId,
+            d => d.Id,
+            (e, d) => new { e.DimensionId, d.Label }).Join(context.DimDatatypes,
+                                                        d => d.DimensionId,
+                                                        dd => dd.DimensionId,
+                                                        (d, dd) => new SpecialDatatype { DatatypeId = dd.DatatypeId, Label = d.Label })
+                                                      .Distinct();
+
+            return result.AsQueryable();
         }
 
         // GET tables/Datatype/48D68C86-6EA6-4C25-AA33-223FC9A27959
@@ -48,5 +66,11 @@ namespace Backend.Controllers
         {
              return DeleteAsync(id);
         }
+    }
+
+    public class SpecialDatatype
+    {
+        public string DatatypeId { get; set; }
+        public string Label { get; set; }
     }
 }

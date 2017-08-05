@@ -99,8 +99,10 @@ namespace PeopleApp.ViewModels
                     Items.Add(item);
 
                     // create the object (photo) to upload 
+                    var objectId = Utilities.NewGuid();
                     Models.Object obj = new Models.Object
                     {
+                        Id = objectId,
                         CreationLocation = "",
                         CreationDate = DateTime.Now,
                         UserId = Settings.UserId,
@@ -111,22 +113,38 @@ namespace PeopleApp.ViewModels
                         // localPath = "the local path",
                         // remotePath = ""
                     };
-                    await _apiServices.PostObjectAsync(obj); // post this at the end with attriutes
-                    // write a function that extracts metadata from a photo (async) and then save it in the table of attributes
+                    await _apiServices.PostObjectAsync(obj); // post this at the end with attributes
+                    // extract metadata from single photo
                     List<PhotoModel> photoInfo = MetaExtractor.ExtractMetadataPerPhoto(AlbumPath);
 
-                    // time
-                    // get id of time dimension apiservices and then datatype
 
-                    var date = photoInfo.FirstOrDefault().map["date"];
                     // post in attribute table
-                    // location
-                    // get id of location dimension apiservices and then datatype
-                    var lat = photoInfo.FirstOrDefault().map["lat"];
-                    var lng = photoInfo.FirstOrDefault().map["lng"];
-                    // post in attribute table
-                    //social
-                    //var owner = photoInfo.FirstOrDefault().map["owner"];
+                    var datatypeList = await _apiServices.GetDatatypesAsync(Settings.CurrentSharingSpace);
+                    // datatype = { datatypeId, label }
+                    foreach (var datatype in datatypeList)
+                    {
+                        string value = "";
+                        if (datatype.Label.Equals("Time"))
+                        {
+                            value = photoInfo.FirstOrDefault().map["date"];
+                        }
+                        else if (datatype.Label.Equals("Location"))
+                        {
+                            value = photoInfo.FirstOrDefault().map["lat"] + ", " + photoInfo.FirstOrDefault().map["lng"];
+                        }
+                        else if (datatype.Label.Equals("Social"))
+                        {
+                            value = photoInfo.FirstOrDefault().map["owner"];
+                        }
+                        else if (datatype.Label.Equals("Topic"))
+                        {
+                            value = "keywords";
+                        }
+
+                        await _apiServices.PostAttributeAsync(new Models.Attribute { ObjectId = objectId, Value = value, DatatypeId = datatype.DatatypeId });
+                    }
+
+
 
                 });
             }

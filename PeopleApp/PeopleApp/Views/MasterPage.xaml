@@ -6,7 +6,7 @@
              Title="Personal Organiser">
     <ContentPage.Content>
         <StackLayout Spacing="30" VerticalOptions="FillAndExpand">
-            <Label Margin="50,0" HorizontalOptions="Center" Text="Event Sharing App" FontSize="Large" TextColor="Black"/>
+            <Label Margin="50,0" HorizontalOptions="Center" Text="Event Sharing App" FontSize="Large" TextColor="Gray"/>
             <ListView x:Name="listView" VerticalOptions="FillAndExpand" SeparatorVisibility="None">
                 <ListView.ItemTemplate>
                     <!--<DataTemplate>

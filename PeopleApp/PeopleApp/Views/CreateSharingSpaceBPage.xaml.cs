@@ -33,9 +33,11 @@ namespace PeopleApp.Views
             //NavigationPage.SetHasNavigationBar(this, false);  // Hide nav bar
         }
 
-        //private async Task SubmitButton_ClickedAsync(object sender, EventArgs e)
-        //{
-        //}
+        private async Task SubmitButton_ClickedAsync(object sender, EventArgs e)
+        {
+            Navigation.InsertPageBefore(new EventOverviewPage(), Navigation.NavigationStack.FirstOrDefault());
+            await Navigation.PopToRootAsync();
+        }
 
         SelectMultipleBasePage<CheckItem> multiPage;
 

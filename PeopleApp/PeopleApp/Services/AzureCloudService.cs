@@ -115,6 +115,7 @@ namespace PeopleApp.Services
             // Remove the token from the cache
             DependencyService.Get<ILoginProvider>().RemoveTokenFromSecureStore();
             Settings.AccessToken = "";
+            Settings.ResetAll();
 
             // Remove the token from the MobileServiceClient
             await client.LogoutAsync();

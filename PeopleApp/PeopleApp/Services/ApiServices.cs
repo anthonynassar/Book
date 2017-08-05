@@ -4,6 +4,7 @@ using PeopleApp.Models.ViewsRelated;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -35,7 +36,7 @@ namespace PeopleApp.Services
             }
         }
 
-        public async Task PostUserAsync(User user, string token)
+        public async Task<User> PostUserAsync(User user, string token)
         {
             var client = new HttpClient();
 
@@ -46,6 +47,27 @@ namespace PeopleApp.Services
             content.Headers.Add("X-ZUMO-AUTH", token);
 
             var response = await client.PostAsync(Constants.BaseApiAddress + "tables/user", content);
+
+            if (response.StatusCode.Equals(HttpStatusCode.OK))
+            {
+                try
+                {
+                    var returnedObjects = response.Content.ReadAsStringAsync().Result;
+                    var returnedUser = (User)JsonConvert.DeserializeObject(returnedObjects, typeof(User));
+
+                    return returnedUser;
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine("Error: " + ex.Message);
+                    Debug.WriteLine("Error: " + ex);
+                    return null;
+                }
+            } else
+            {
+                return null;
+            }
+            
         }
 
         //public  Task GetSSCountAsync()
@@ -119,6 +141,19 @@ namespace PeopleApp.Services
             Debug.WriteLine(response.Content);
         }
 
+        public async Task<List<SpecialDatatype>> GetDatatypesAsync(string sharingSpaceId)
+        {
+            var client = new HttpClient();
+
+            client.DefaultRequestHeaders.Add("ZUMO-API-VERSION", "2.0.0");
+
+            var json = await client.GetStringAsync(Constants.BaseApiAddress + "tables/datatype/special/" + sharingSpaceId);
+
+            var datatypes = JsonConvert.DeserializeObject<List<SpecialDatatype>>(json);
+
+            return datatypes;
+        }
+
         public async Task PostObjectAsync(Models.Object obj)
         {
             var client = new HttpClient();
@@ -130,6 +165,18 @@ namespace PeopleApp.Services
 
             var response = await client.PostAsync(Constants.BaseApiAddress + "tables/object", content);
             //Debug.WriteLine(response.Content);
+        }
+
+        public async Task PostAttributeAsync(Models.Attribute attribute)
+        {
+            var client = new HttpClient();
+
+            var json = JsonConvert.SerializeObject(attribute);
+            HttpContent content = new StringContent(json);
+            content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+            content.Headers.Add("ZUMO-API-VERSION", "2.0.0");
+
+            var response = await client.PostAsync(Constants.BaseApiAddress + "api/attribute", content);
         }
 
         public async Task PostDimDatatypeAsync(DimDatatype dimDatatype)
@@ -156,6 +203,13 @@ namespace PeopleApp.Services
 
             var response = await client.PostAsync(Constants.BaseApiAddress + "tables/datatype", content);
 
+        }
+
+        // Data class
+        public class SpecialDatatype
+        {
+            public string DatatypeId { get; set; }
+            public string Label { get; set; }
         }
     }
 }
