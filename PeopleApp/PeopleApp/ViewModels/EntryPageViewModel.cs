@@ -40,11 +40,20 @@ namespace PeopleApp.ViewModels
                 MobileServiceUser user = await cloudService.LoginAsync("aad");
                 User currentUser = new User();
                 // add user to db
-                await _apiServices.PostUserAsync(currentUser, user.MobileServiceAuthenticationToken);
-                Settings.AccessToken = user.MobileServiceAuthenticationToken;
-                Settings.IdentityProvider = "aad";
-                Settings.UserId = "aad" + "_" + user.UserId.Split(':')[1];
-                Application.Current.MainPage = new Views.MenuPage();
+                currentUser = await _apiServices.PostUserAsync(currentUser, user.MobileServiceAuthenticationToken);
+                if (currentUser != null && currentUser.Id != null)
+                {
+                    Settings.AccessToken = user.MobileServiceAuthenticationToken;
+                    Settings.IdentityProvider = "aad";
+                    //Settings.UserId = "aad" + "_" + user.UserId.Split(':')[1];
+                    Settings.UserId = currentUser.Id;
+                    Application.Current.MainPage = new Views.MenuPage();
+                }
+                else
+                {
+                    Application.Current.MainPage = new Views.MenuPage();
+                }
+                
             }
             catch (Exception ex)
             {

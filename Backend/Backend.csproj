@@ -190,6 +190,7 @@
     <Compile Include="DataObjects\User.cs" />
     <Compile Include="Extensions\SharingSpaceExtensions.cs" />
     <Compile Include="Extensions\TodoItemExtensions.cs" />
+    <Compile Include="Helpers\Settings.cs" />
     <Compile Include="Migrations\201707041007574_Initial.cs" />
     <Compile Include="Migrations\201707041007574_Initial.Designer.cs">
       <DependentUpon>201707041007574_Initial.cs</DependentUpon>

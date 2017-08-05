@@ -7,6 +7,10 @@ using Microsoft.Azure.Mobile.Server;
 using Backend.DataObjects;
 using Backend.Models;
 using System.Security.Claims;
+using System.Security.Principal;
+using Backend.Helpers;
+using System.Net;
+using System.Web.Http.Description;
 
 namespace Backend.Controllers
 {
@@ -45,11 +49,24 @@ namespace Backend.Controllers
         }
 
         // POST tables/User
+        //public async Task<IHttpActionResult> PostUser(User item)
+        [ResponseType(typeof(User))]
         public async Task<IHttpActionResult> PostUser(User item)
         {
-            item.Id = UserId;
-            User current = await InsertAsync(item);
-            return CreatedAtRoute("Tables", new { id = current.Id }, current);
+            //item.Id = UserId;
+            item.Id = Settings.GetUserId(User);
+            //item.Email = Settings.GetUserEmail(User);
+            try
+            {
+                User current = await InsertAsync(item);
+                return Ok(current);
+            }
+            catch (System.Exception)
+            {
+                return StatusCode(HttpStatusCode.Conflict);
+            }
+            //return CreatedAtRoute("Tables", new { id = current.Id }, current);
+            
         }
 
         // DELETE tables/User/48D68C86-6EA6-4C25-AA33-223FC9A27959
@@ -57,5 +74,6 @@ namespace Backend.Controllers
         {
              return DeleteAsync(id);
         }
+
     }
 }
