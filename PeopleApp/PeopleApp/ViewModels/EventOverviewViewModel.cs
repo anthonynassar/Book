@@ -214,14 +214,12 @@ namespace PeopleApp.ViewModels
                 //await CloudService.AddObject(obj);
                 var table = await CloudService.GetTableAsync<Models.Object>();
                 await table.CreateItemAsync(obj);
+
+                await CloudService.SyncOfflineCacheAsync();
             }
             catch (Exception ex)
             {
                 Debug.WriteLine("Error :" + ex.Message);
-            }
-            finally
-            {
-                await CloudService.SyncOfflineCacheAsync();
             }
 
             // extract metadata from single photo

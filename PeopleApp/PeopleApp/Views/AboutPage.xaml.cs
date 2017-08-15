@@ -16,5 +16,10 @@ namespace PeopleApp.Views
 		{
 			InitializeComponent ();
         }
-	}
+
+        private void LearnMore_Clicked(object sender, EventArgs e)
+        {
+            Device.OpenUri(new Uri("http://spider.sigappfr.org/"));
+        }
+    }
 }

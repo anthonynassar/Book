@@ -8,9 +8,10 @@
         <StackLayout VerticalOptions="Center">
             <Label FontSize="25" Text="People App" VerticalOptions="Center" HorizontalOptions="Center" />
             <Label FontSize="12" Text="Version 1.0a"  HorizontalOptions="Center"/>
-            <Image Margin="0,20,0,0" Source="icon.png"/>
+            <Image Margin="0,20,0,0" Source="Icon.png"/>
             <Label Margin="0,20,0,0" Text="© 2016 - 2017 LIUPPA" HorizontalOptions="Center" />
             <Label Margin="0,-5,0,0" Text="All rights reserved." HorizontalOptions="Center" />
+            <Button Margin="0, 20" Text="Learn More" HorizontalOptions="Center" Clicked="LearnMore_Clicked"/>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
