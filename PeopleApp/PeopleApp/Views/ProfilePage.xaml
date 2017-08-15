@@ -1,9 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
              x:Class="PeopleApp.Views.ProfilePage"
-             Title="Profile page">
+             Title="Your profile">
     <ContentPage.ToolbarItems>
+        <ToolbarItem Name="Update"
+                     Clicked="Update_Clicked"
+                     Text="update"
+                     Order="Primary"
+                     Priority="0" />
         <ToolbarItem Name="Logout"
                      Clicked="Logout_Clicked"
                      Text="logout"
@@ -11,33 +17,44 @@
                      Priority="0" />
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
-        <ScrollView>
+        <ScrollView Orientation="Horizontal" VerticalOptions="FillAndExpand">
             <StackLayout Spacing="0" Padding="0" BackgroundColor="White">
-                <BoxView HorizontalOptions="FillAndExpand" HeightRequest="100" VerticalOptions="Start" Color="Gray" />
-                <Button BorderRadius="30" HeightRequest="60" WidthRequest="60" BackgroundColor="Red" HorizontalOptions="Center" VerticalOptions="Start" />
+                <!--<BoxView HorizontalOptions="FillAndExpand" HeightRequest="100" VerticalOptions="Start" Color="Gray" />-->
+                <Button Image="Icon.png" BorderRadius="20"  HeightRequest="72" WidthRequest="72" BackgroundColor="Red" HorizontalOptions="Center" VerticalOptions="Start">
+                    <!--<Button.BorderRadius>
+                         HACK: fixes a bug where border doesn't get draw unless there is a radius. 
+                        <OnPlatform x:TypeArguments="x:Int32">
+                            <OnPlatform.Android>1</OnPlatform.Android>
+                        </OnPlatform>
+                    </Button.BorderRadius>-->
+                </Button>
                 <StackLayout HeightRequest="100" VerticalOptions="Start" HorizontalOptions="FillAndExpand" Spacing="20" BackgroundColor="White">
-                    <Label x:Name="username" Text="User Name" FontSize="28" HorizontalOptions="Center" VerticalOptions="Center" FontAttributes="Bold" />
+                    <Label x:Name="username" TextColor="Black" Text="User Name" FontSize="28" HorizontalOptions="Center" VerticalOptions="Center" FontAttributes="Bold" />
                     <Entry Text="Bio + Hashtags" HorizontalOptions="FillAndExpand" VerticalOptions="CenterAndExpand" />
                 </StackLayout>
                 <StackLayout Orientation="Horizontal">
-                    <Label FontSize="14" Text="Email:" HorizontalOptions="Start" VerticalOptions="Center" WidthRequest="100" />
-                    <Entry x:Name="email" HorizontalOptions="FillAndExpand" />
-                </StackLayout>
-                <StackLayout Orientation="Horizontal">
-                    <Label FontSize="14" Text="First Name:" HorizontalOptions="Start" VerticalOptions="Center" WidthRequest="100" />
-                    <Entry x:Name="firstname" HorizontalOptions="FillAndExpand" />
-                </StackLayout>
-                <StackLayout Orientation="Horizontal">
-                    <Label FontSize="14" Text="Last Name:" HorizontalOptions="Start" VerticalOptions="Center" WidthRequest="100" />
-                    <Entry x:Name="lastname" HorizontalOptions="FillAndExpand" />
-                </StackLayout>
-                <StackLayout Orientation="Horizontal">
-                    <Label FontSize="14" Text="Gender:" HorizontalOptions="Start" VerticalOptions="Center" WidthRequest="100" />
-                    <Entry x:Name="gender" HorizontalOptions="FillAndExpand" />
-                </StackLayout>
-                <StackLayout Orientation="Horizontal">
-                    <Label FontSize="14" Text="Birth date:" HorizontalOptions="Start" VerticalOptions="Center" WidthRequest="100" />
-                    <Entry x:Name="birthdate" HorizontalOptions="FillAndExpand" />
+                    <TableView Intent="Form">
+                        <TableRoot>
+                            <TableSection Title="Basics">
+                                <EntryCell x:Name="firstName" Label="First name" Keyboard="Text" />
+                                <EntryCell x:Name="lastName" Label="Last name" Keyboard="Text" />
+                                <TextCell x:Name="email" TextColor="Gray" Text="Email" Detail="" />
+                                <!--<EntryCell x:Name="email" Label="Email" Keyboard="Text" />-->
+                                <!--<EntryCell x:Name="birthdate" Label="Birthday" Keyboard="Text" />-->
+                                <ViewCell>
+                                    <StackLayout Orientation="Horizontal" Padding="13, 0">
+                                        <Label Text="Birthday" TextColor="Gray" VerticalOptions="Center"/>
+                                        <DatePicker x:Name="birthdate" HorizontalOptions="EndAndExpand" Date="{x:Static sys:DateTime.Now}" Format="dd MMM yyyy" MinimumDate="Jan 1 1950" MaximumDate="Dec 31 2050"/>
+                                    </StackLayout>
+                                    </ViewCell>
+                                <EntryCell x:Name="gender" Label="Gender" Keyboard="Text" />
+                            </TableSection>
+                            <TableSection Title="Address">
+                                <EntryCell x:Name="city" Label="City" />
+                                <EntryCell x:Name="country" Label="Country" />
+                            </TableSection>
+                        </TableRoot>
+                    </TableView>
                 </StackLayout>
             </StackLayout>
         </ScrollView>

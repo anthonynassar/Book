@@ -16,7 +16,6 @@ namespace PeopleApp.Views
 	{
         private List<SharingSpace> sharingSpaces;
 
-
         public EventList(List<SharingSpace> sharingSpaces = null)
         {
             this.sharingSpaces = sharingSpaces;
@@ -24,5 +23,11 @@ namespace PeopleApp.Views
             // BindingContext = new EventListViewModel(sharingSpaces);
             BindingContext = new EventListViewModel();
         }
+
+        //public EventList()
+        //{
+        //    InitializeComponent();
+        //    BindingContext = new EventListViewModel();
+        //}
     }
 }

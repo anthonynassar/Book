@@ -5,23 +5,27 @@ using System.Text;
 
 namespace PeopleApp.Models.ViewsRelated
 {
-    public class UserInfo
+    public class AppServiceIdentity
     {
-        [JsonProperty("id_token")]
+        [JsonProperty(PropertyName = "id_token")]
         public string IdToken { get; set; }
-        [JsonProperty("provider_name")]
+
+        [JsonProperty(PropertyName = "provider_name")]
         public string ProviderName { get; set; }
-        [JsonProperty("user_claims")]
-        public List<UserClaim> UserClaims { get; set; }
-        [JsonProperty("user_id")]
+
+        [JsonProperty(PropertyName = "user_id")]
         public string UserId { get; set; }
+
+        [JsonProperty(PropertyName = "user_claims")]
+        public List<UserClaim> UserClaims { get; set; }
     }
 
     public class UserClaim
     {
-        [JsonProperty("typ")]
+        [JsonProperty(PropertyName = "typ")]
         public string Type { get; set; }
-        [JsonProperty("val")]
+
+        [JsonProperty(PropertyName = "val")]
         public string Value { get; set; }
     }
 }

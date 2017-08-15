@@ -1,49 +1,59 @@
-﻿using MvvmHelpers;
-using PeopleApp.Abstractions;
+﻿using PeopleApp.Abstractions;
 using PeopleApp.Helpers;
 using PeopleApp.Models;
+using PeopleApp.Models.ViewsRelated;
 using PeopleApp.ViewModels;
 using PeopleApp.Views;
 using System;
 using System.Collections.Specialized;
 using System.Diagnostics;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using Xamarin.Forms;
 
 namespace PeopleApp.ViewModels
 {
     public class TaskListViewModel : Abstractions.BaseViewModel
     {
-        ICloudService cloudService;
+        bool hasMoreItems = true;
 
         public TaskListViewModel()
         {
-            Debug.WriteLine("In TaskListViewMOdel");
-            cloudService = ServiceLocator.Instance.Resolve<ICloudService>();
-            Table = cloudService.GetTable<TodoItem>();
-
-
             Title = "Task List";
-            items.CollectionChanged += this.OnCollectionChanged;
+            //Table = await CloudService.GetTableAsync<TodoItem>();
+            //items.CollectionChanged += this.OnCollectionChanged;
 
-            RefreshCommand = new Command(async () => await ExecuteRefreshCommand());
-            AddNewItemCommand = new Command(async () => await ExecuteAddNewItemCommand());
-            LogoutCommand = new Command(async () => await ExecuteLogoutCommand());
+            RefreshCommand = new Command(async () => await Refresh());
+            AddNewItemCommand = new Command(async () => await AddNewItem());
+            LogoutCommand = new Command(async () => await Logout());
+            //TagsCommand = new Command(async () => await NavigateToTags());
+            //LoadMoreCommand = new Command<TodoItem>(async (TodoItem item) => await LoadMore(item));
+
+            // Subscribe to events from the Task Detail Page
+            MessagingCenter.Subscribe<TaskDetailViewModel>(this, "ItemsChanged", async (sender) =>
+            {
+                await Refresh();
+            });
 
             // Execute the refresh command
             RefreshCommand.Execute(null);
         }
 
+        public ICloudService CloudService => ServiceLocator.Get<ICloudService>();
+        public ILoginProvider PlatformProvider => DependencyService.Get<ILoginProvider>();
         public ICloudTable<TodoItem> Table { get; set; }
-        public Command RefreshCommand { get; }
-        public Command AddNewItemCommand { get; }
-        public Command LogoutCommand { get; }
+        public ICommand RefreshCommand { get; }
+        public ICommand AddNewItemCommand { get; }
+        public ICommand LogoutCommand { get; }
+        public ICommand LoadMoreCommand { get; }
+        public ICommand TagsCommand { get; }
 
-        void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            Debug.WriteLine("[TaskList] OnCollectionChanged: Items have changed");
-        }
+        //void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        //{
+        //    Debug.WriteLine("[TaskList] OnCollectionChanged: Items have changed");
+        //}
 
         ObservableRangeCollection<TodoItem> items = new ObservableRangeCollection<TodoItem>();
         public ObservableRangeCollection<TodoItem> Items
@@ -67,7 +77,7 @@ namespace PeopleApp.ViewModels
             }
         }
 
-        async Task ExecuteRefreshCommand()
+        async Task Refresh()
         {
             if (IsBusy)
                 return;
@@ -75,13 +85,21 @@ namespace PeopleApp.ViewModels
 
             try
             {
-                var list = await Table.ReadAllItemsAsync();
+                await CloudService.SyncOfflineCacheAsync();
+                var identity = await CloudService.GetIdentityAsync();
+                if (identity != null)
+                {
+                    var name = identity.UserClaims.FirstOrDefault(c => c.Type.Equals("name")).Value;
+                    Title = $"Tasks for {name}";
+                }
+                var table = await CloudService.GetTableAsync<TodoItem>();
+                var list = await table.ReadItemsAsync(0, 20);
                 Items.ReplaceRange(list);
+                hasMoreItems = true; // Reset for refresh
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"[TaskList] Error loading items: {ex.Message}");
-                await Application.Current.MainPage.DisplayAlert("Refresh problem", ex.Message, "OK");
+                await Application.Current.MainPage.DisplayAlert("Items Not Loaded", ex.Message, "OK");
             }
             finally
             {
@@ -89,7 +107,8 @@ namespace PeopleApp.ViewModels
             }
         }
 
-        async Task ExecuteAddNewItemCommand()
+
+        async Task AddNewItem()
         {
             if (IsBusy)
                 return;
@@ -110,7 +129,7 @@ namespace PeopleApp.ViewModels
             }
         }
 
-        async Task ExecuteLogoutCommand()
+        async Task Logout()
         {
             if (IsBusy)
                 return;
@@ -118,8 +137,7 @@ namespace PeopleApp.ViewModels
 
             try
             {
-                var cloudService = ServiceLocator.Instance.Resolve<ICloudService>();
-                await cloudService.LogoutAsync();
+                await CloudService.LogoutAsync();
                 Application.Current.MainPage = new NavigationPage(new Views.EntryPage());
             }
             catch (Exception ex)
@@ -131,14 +149,52 @@ namespace PeopleApp.ViewModels
                 IsBusy = false;
             }
         }
-
-        async Task RefreshList()
+        async Task LoadMore(TodoItem item)
         {
-            await ExecuteRefreshCommand();
-            MessagingCenter.Subscribe<TaskDetailViewModel>(this, "ItemsChanged", async (sender) =>
+            if (IsBusy)
             {
-                await ExecuteRefreshCommand();
-            });
+                Debug.WriteLine($"LoadMore: bailing because IsBusy = true");
+                return;
+            }
+
+            // If we are not displaying the last one in the list, then return.
+            if (!Items.Last().Id.Equals(item.Id))
+            {
+                Debug.WriteLine($"LoadMore: bailing because this id is not the last id in the list");
+                return;
+            }
+
+            // If we don't have more items, return
+            if (!hasMoreItems)
+            {
+                Debug.WriteLine($"LoadMore: bailing because we don't have any more items");
+                return;
+            }
+
+            IsBusy = true;
+            var table = await CloudService.GetTableAsync<TodoItem>();
+            try
+            {
+                var list = await table.ReadItemsAsync(Items.Count, 20);
+                if (list.Count > 0)
+                {
+                    Debug.WriteLine($"LoadMore: got {list.Count} more items");
+                    Items.AddRange(list);
+                }
+                else
+                {
+                    Debug.WriteLine($"LoadMore: no more items: setting hasMoreItems= false");
+                    hasMoreItems = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                await Application.Current.MainPage.DisplayAlert("LoadMore Failed", ex.Message, "OK");
+            }
+            finally
+            {
+                IsBusy = false;
+            }
         }
     }
 }

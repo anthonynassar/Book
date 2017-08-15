@@ -12,13 +12,14 @@
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <StackLayout>
-            <ListView BackgroundColor="#7F7F7F"
+            <ListView x:Name="listView" BackgroundColor="#7F7F7F"
                 CachingStrategy="RecycleElement"
                 IsPullToRefreshEnabled="True"
                 IsRefreshing="{Binding IsBusy, Mode=OneWay}"
                 ItemsSource="{Binding Items}"
                 RefreshCommand="{Binding RefreshCommand}"
                 RowHeight="50"
+                ItemSelected="ListView_ItemSelected"
                 SelectedItem="{Binding SelectedItem, Mode=TwoWay}">
                 <ListView.ItemTemplate>
                     <DataTemplate>

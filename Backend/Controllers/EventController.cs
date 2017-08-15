@@ -43,12 +43,12 @@ namespace Backend.Controllers
         }
 
         // GET api/Event/Special
-        [Route(Name = "api/Event/Special")]
-        [HttpGet]
-        public IQueryable<Event> GetSomething()
-        {
-            return context.Events;
-        }
+        //[Route(Name = "api/Event/Special")]
+        //[HttpGet]
+        //public IQueryable<Event> GetSomething()
+        //{
+        //    return context.Events;
+        //}
         // GET tables/Event
         //public IQueryable<Event> GetAllEvent()
         //{

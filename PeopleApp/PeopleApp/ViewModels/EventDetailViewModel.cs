@@ -12,35 +12,57 @@ namespace PeopleApp.ViewModels
 {
     public class EventDetailViewModel : Abstractions.BaseViewModel
     {
-        public SharingSpace SharingSpace { get; set; }
-        public ICloudTable<SharingSpace> Table { get; set; }
-        public Command SaveCommand { get; }
-        public Command DeleteCommand { get; }
-
         public EventDetailViewModel(SharingSpace sharingSpace = null)
         {
             // save the id of current sharing space
             Settings.CurrentSharingSpace = sharingSpace.Id;
 
-            ICloudService cloudService = ServiceLocator.Instance.Resolve<ICloudService>();
-            Table = cloudService.GetTable<SharingSpace>();
+            SaveCommand = new Command(async () => await SaveAsync());
+            DeleteCommand = new Command(async () => await DeleteAsync());
 
             if (sharingSpace != null)
             {
-                SharingSpace = sharingSpace;
+                CurrentSharingSpace = sharingSpace;
                 Title = "Event Description";
             }
             else
             {
-                SharingSpace = new SharingSpace { Descriptor = "New Item", CreationLocation = "Anglet", CreationDate = DateTime.UtcNow };
+                CurrentSharingSpace = new SharingSpace { Descriptor = "New Item", CreationLocation = "Anglet", CreationDate = DateTime.UtcNow };
                 Title = "New Item";
             }
 
-            SaveCommand = new Command(async () => await ExecuteSaveCommand());
-            DeleteCommand = new Command(async () => await ExecuteDeleteCommand());
         }
 
-        async Task ExecuteSaveCommand()
+        public ICloudService CloudService => ServiceLocator.Get<ICloudService>();
+        public ILoginProvider LoginProvider => DependencyService.Get<ILoginProvider>();
+        public Command SaveCommand { get; }
+        public Command DeleteCommand { get; }
+        public Command RefreshCommand { get; }
+
+        SharingSpace currentSharingSpace;
+        public SharingSpace CurrentSharingSpace
+        {
+            get { return currentSharingSpace; }
+            set { SetProperty(ref currentSharingSpace, value, "CurrentTask"); }
+        }
+
+
+        public string Descriptor
+        {
+            get
+            {
+                return CurrentSharingSpace.Descriptor;
+            }
+            set
+            {
+                var cText = CurrentSharingSpace.Descriptor;
+                SetProperty(ref cText, value, "Text");
+                CurrentSharingSpace.Descriptor = cText;
+            }
+        }
+
+
+        async Task SaveAsync()
         {
             if (IsBusy)
                 return;
@@ -48,20 +70,14 @@ namespace PeopleApp.ViewModels
 
             try
             {
-                if (SharingSpace.Id == null)
-                {
-                    await Table.CreateItemAsync(SharingSpace);
-                }
-                else
-                {
-                    await Table.UpdateItemAsync(SharingSpace);
-                }
+                var table = await CloudService.GetTableAsync<SharingSpace>();
+                await table.UpsertItemAsync(CurrentSharingSpace);
+                await CloudService.SyncOfflineCacheAsync();
                 MessagingCenter.Send<EventDetailViewModel>(this, "ItemsChanged");
                 await Application.Current.MainPage.Navigation.PopAsync();
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"[TaskDetail] Save error: {ex.Message}");
                 await Application.Current.MainPage.DisplayAlert("Save Item Failed", ex.Message, "OK");
             }
             finally
@@ -70,7 +86,7 @@ namespace PeopleApp.ViewModels
             }
         }
 
-        async Task ExecuteDeleteCommand()
+        async Task DeleteAsync()
         {
             if (IsBusy)
                 return;
@@ -78,16 +94,17 @@ namespace PeopleApp.ViewModels
 
             try
             {
-                if (SharingSpace.Id != null)
+                if (CurrentSharingSpace.Id != null)
                 {
-                    await Table.DeleteItemAsync(SharingSpace);
+                    var table = await CloudService.GetTableAsync<SharingSpace>();
+                    await table.DeleteItemAsync(CurrentSharingSpace);
+                    await CloudService.SyncOfflineCacheAsync();
+                    MessagingCenter.Send<EventDetailViewModel>(this, "ItemsChanged");
                 }
-                MessagingCenter.Send<EventDetailViewModel>(this, "ItemsChanged");
                 await Application.Current.MainPage.Navigation.PopAsync();
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"[TaskDetail] Save error: {ex.Message}");
                 await Application.Current.MainPage.DisplayAlert("Delete Item Failed", ex.Message, "OK");
             }
             finally

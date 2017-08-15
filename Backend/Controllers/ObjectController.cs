@@ -11,10 +11,11 @@ namespace Backend.Controllers
 {
     public class ObjectController : TableController<Object>
     {
+        MobileServiceContext context;
         protected override void Initialize(HttpControllerContext controllerContext)
         {
             base.Initialize(controllerContext);
-            MobileServiceContext context = new MobileServiceContext();
+            context = new MobileServiceContext();
             DomainManager = new EntityDomainManager<Object>(context, Request, enableSoftDelete: true);
         }
 
@@ -28,6 +29,16 @@ namespace Backend.Controllers
         public SingleResult<Object> GetObject(string id)
         {
             return Lookup(id);
+        }
+
+        // GET tables/Object/Special/{sharingSpaceId}
+        [HttpGet]
+        [Route("tables/object/special/{sharingSpaceId}")]
+        public IQueryable<Object> GetObjectsBySharingSpace(string sharingSpaceId)
+        {
+            var result = context.Objects.Where(o => o.SharingSpaceId == sharingSpaceId);
+
+            return result.AsQueryable();
         }
 
         // PATCH tables/Object/48D68C86-6EA6-4C25-AA33-223FC9A27959

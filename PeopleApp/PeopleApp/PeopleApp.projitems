@@ -24,6 +24,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\AuthenticationDelegatingHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\Locations.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\MyAppStyle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\ObservableRangeCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\ServiceLocator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\Settings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\Utilities.cs" />
@@ -43,7 +44,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Models\User.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\ViewsRelated\MasterPageItem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\ViewsRelated\Photo.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Models\ViewsRelated\UserInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\ViewsRelated\AppServiceIdentity.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Multiselect\CheckItem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Multiselect\SelectMultipleBasePage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\ApiServices.cs" />

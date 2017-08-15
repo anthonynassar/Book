@@ -1,4 +1,5 @@
 ﻿using MvvmHelpers;
+using PeopleApp.Abstractions;
 using PeopleApp.Helpers;
 using PeopleApp.Models;
 using PeopleApp.Services;
@@ -17,9 +18,10 @@ using Xamvvm;
 
 namespace PeopleApp.ViewModels
 {
-    public class CreateSharingSpaceBViewModel : BaseViewModel
+    public class CreateSharingSpaceBViewModel : MvvmHelpers.BaseViewModel
     {
         ApiServices _apiServices = new ApiServices();
+        public ICloudService CloudService => ServiceLocator.Get<ICloudService>();
         public SharingSpace SharingSpace { get; set; }
         public List<DimensionLocal> Dimensions { get; set; }
         private ContentPage _page;
@@ -124,9 +126,10 @@ namespace PeopleApp.ViewModels
         {
             if (IsBusy)
                 return;
+
+            IsBusy = true;
             try
             {
-                IsBusy = true;
                 Settings.CurrentSharingSpace = this.SharingSpace.Id;
                 var response = await _apiServices.PostSharingSpaceAsync(this.SharingSpace, Settings.AccessToken);
 
@@ -144,7 +147,10 @@ namespace PeopleApp.ViewModels
                         await _apiServices.PostEventAsync(new Event { ConstraintId = constraint.Id, DimensionId = dimensionId, SharingSpaceId = this.SharingSpace.Id });
                     }
                 }
-                // navigate to event detail (overview) 
+
+                await CloudService.SyncOfflineCacheAsync();
+                // navigate to event detail (overview)
+                MessagingCenter.Send(this, "NavigateToEventOverview", SharingSpace);
                 
             }
             catch (Exception ex)

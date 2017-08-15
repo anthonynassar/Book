@@ -30,12 +30,14 @@ namespace PeopleApp.Views
             Resources.Add("TagValidatorFactory", new Func<string, object>(
                 (arg) => vm?.ValidateAndReturn(arg)));
             InitializeComponent();
+            MessagingCenter.Subscribe<CreateSharingSpaceBViewModel, SharingSpace>(this, "NavigateToEventOverview", OnSharingSpaceSubmission);
             //NavigationPage.SetHasNavigationBar(this, false);  // Hide nav bar
         }
 
-        private async Task SubmitButton_ClickedAsync(object sender, EventArgs e)
+        private async void OnSharingSpaceSubmission(CreateSharingSpaceBViewModel source, SharingSpace sharingSpace)
         {
-            Navigation.InsertPageBefore(new EventOverviewPage(), Navigation.NavigationStack.FirstOrDefault());
+            // var objectList = _apiServices.GetObjectsBySharingSpace(SharingSpace.Id);
+            Navigation.InsertPageBefore(new EventOverviewPage(sharingSpace), Navigation.NavigationStack.FirstOrDefault());
             await Navigation.PopToRootAsync();
         }
 

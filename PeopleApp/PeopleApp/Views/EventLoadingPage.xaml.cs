@@ -9,6 +9,7 @@ using Xamarin.Forms.Xaml;
 using PeopleApp.Services;
 using PeopleApp.Models;
 using System.Diagnostics;
+using PeopleApp.Abstractions;
 
 namespace PeopleApp.Views
 {
@@ -16,6 +17,7 @@ namespace PeopleApp.Views
     public partial class EventLoadingPage : ContentPage
     {
         ApiServices _apiServices = new ApiServices();
+        public ICloudService CloudService => ServiceLocator.Get<ICloudService>();
 
         public EventLoadingPage()
         {
@@ -24,17 +26,18 @@ namespace PeopleApp.Views
             InitializeComponent();
 
             NavigationPage.SetHasNavigationBar(this, false);  // Hide nav bar
-
-
         }
 
         protected override async void OnAppearing()
         {
             base.OnAppearing();
-            List<SharingSpace> sharingSpaces = new List<SharingSpace>();
+            ICollection<SharingSpace> sharingSpaces = null;
+            var sharingSpaceTable = await CloudService.GetTableAsync<SharingSpace>();
+
             try
             {
-                sharingSpaces = await _apiServices.GetSharingSpaceAsync(Settings.AccessToken);
+                //sharingSpaces = await _apiServices.GetSharingSpaceAsync(Settings.AccessToken);
+                sharingSpaces = await sharingSpaceTable.ReadAllItemsAsync();
             }
             catch (Exception ex)
             {
@@ -45,7 +48,9 @@ namespace PeopleApp.Views
             // checks if there is already a selected sharing space if not the history page will appear
             if (!String.IsNullOrEmpty(Settings.CurrentSharingSpace))
             {
-                Navigation.InsertPageBefore(new EventOverviewPage(), this);
+                //var sharingSpace = await CloudService.GetSharingSpace(Settings.CurrentSharingSpace);
+                SharingSpace sharingSpace = await sharingSpaceTable.ReadItemAsync(Settings.CurrentSharingSpace);
+                Navigation.InsertPageBefore(new EventOverviewPage(sharingSpace), this);
                 await Navigation.PopAsync();
                 //await Navigation.PushAsync(new EventOverviewPage());
             }
@@ -54,7 +59,8 @@ namespace PeopleApp.Views
             {
                 try
                 {
-                    Navigation.InsertPageBefore(new EventList(sharingSpaces), this);
+                    //Navigation.InsertPageBefore(new EventList(sharingSpaces.ToList()), this);
+                    Navigation.InsertPageBefore(new EventHistoryPage(), this);
                     await Navigation.PopAsync();
                     //await Navigation.PushAsync(new EventList(sharingSpaces));
 

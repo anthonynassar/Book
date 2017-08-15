@@ -9,24 +9,22 @@ using Backend.Models;
 using System.Security.Claims;
 using System.Net;
 using Backend.Extensions;
+using Backend.Helpers;
 
 namespace Backend.Controllers
 {
     [Authorize]
     public class TodoItemController : TableController<TodoItem>
     {
+        string UserId = "";
+
         protected override void Initialize(HttpControllerContext controllerContext)
         {
             base.Initialize(controllerContext);
             MobileServiceContext context = new MobileServiceContext();
             DomainManager = new EntityDomainManager<TodoItem>(context, Request);
+            UserId = Settings.GetUserId(User);
         }
-
-        public string UserId => IdentityProvider + "_" + NameIdentifier;
-
-        public string NameIdentifier => ((ClaimsPrincipal)User).FindFirst(ClaimTypes.NameIdentifier).Value.Split(':')[1];
-
-        public string IdentityProvider => ((ClaimsPrincipal)User).FindFirst("http://schemas.microsoft.com/identity/claims/identityprovider").Value;
 
         public void ValidateOwner(string id)
         {

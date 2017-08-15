@@ -195,6 +195,7 @@
     <Compile Include="DataObjects\User.cs" />
     <Compile Include="Extensions\SharingSpaceExtensions.cs" />
     <Compile Include="Extensions\TodoItemExtensions.cs" />
+    <Compile Include="Extensions\UserExtensions.cs" />
     <Compile Include="Helpers\Settings.cs" />
     <Compile Include="Migrations\201707041007574_Initial.cs" />
     <Compile Include="Migrations\201707041007574_Initial.Designer.cs">
@@ -263,6 +264,10 @@
     <Compile Include="Migrations\201707142003358_AddPropertyDimension.cs" />
     <Compile Include="Migrations\201707142003358_AddPropertyDimension.Designer.cs">
       <DependentUpon>201707142003358_AddPropertyDimension.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201708100853307_UpdateUserTable.cs" />
+    <Compile Include="Migrations\201708100853307_UpdateUserTable.Designer.cs">
+      <DependentUpon>201708100853307_UpdateUserTable.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\MobileServiceContext.cs" />
@@ -338,6 +343,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201707142003358_AddPropertyDimension.resx">
       <DependentUpon>201707142003358_AddPropertyDimension.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201708100853307_UpdateUserTable.resx">
+      <DependentUpon>201708100853307_UpdateUserTable.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

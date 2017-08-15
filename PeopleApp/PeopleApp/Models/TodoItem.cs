@@ -9,5 +9,6 @@ namespace PeopleApp.Models
     {
         public string Text { get; set; }
         public bool Complete { get; set; }
+        public string UserId { get; set; }
     }
 }

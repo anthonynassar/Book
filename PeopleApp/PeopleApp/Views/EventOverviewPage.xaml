@@ -6,10 +6,6 @@
 		     xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
              xmlns:vm="clr-namespace:PeopleApp.ViewModels"
              Title="Event overview">
-    <ContentPage.BindingContext>
-        <vm:EventOverviewViewModel/>
-    </ContentPage.BindingContext>
-
     <ContentPage.Content>
         <Grid RowSpacing="0">
             <Grid.RowDefinitions>
@@ -49,8 +45,8 @@
 							LoadingPlaceholder="image_loading.png" ErrorPlaceholder="image_error.png"
 							Source="{Binding ImageUrl}"/>
 
-                            <Label x:Name="Label" HorizontalOptions="Fill" HorizontalTextAlignment="Center" VerticalOptions="End"
-							BackgroundColor="Silver" Opacity="0.5" Text="{Binding FileName}"/>
+                            <!--<Label x:Name="Label" HorizontalOptions="Fill" HorizontalTextAlignment="Center" VerticalOptions="End"
+							BackgroundColor="Silver" Opacity="0.5" Text="{Binding FileName}"/>-->
                         </Grid>
                     </DataTemplate>
                 </flv:FlowListView.FlowColumnTemplate>

@@ -10,6 +10,12 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using PeopleApp.ViewModels;
+using PeopleApp.Models;
+using PeopleApp.Abstractions;
+using System.Globalization;
+using Microsoft.WindowsAzure.MobileServices.Sync;
+using Microsoft.WindowsAzure.MobileServices;
+using Newtonsoft.Json.Linq;
 
 namespace PeopleApp.Views
 {
@@ -17,29 +23,43 @@ namespace PeopleApp.Views
 	public partial class ProfilePage : ContentPage
 	{
         ApiServices _apiServices = new ApiServices();
-        //private UserInfo userInfo;
+        public ICloudService CloudService => ServiceLocator.Get<ICloudService>();
+        private bool DataChanged = false;
+        public User User { get; set; }
 
-        public ProfilePage(UserInfo userInfo)
+        public ProfilePage(User user)
         {
+            if (user == null)
+                throw new ArgumentNullException();
+
             InitializeComponent();
-            //this.userInfo = userInfo;
-            username.Text = userInfo.UserId;
-            // load user profile on application launch then activate this
-            //Settings.Username = userInfo.UserId;
-            firstname.Text = userInfo.UserClaims.Where(item => item.Type.Equals("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname")).FirstOrDefault<UserClaim>().Value;
-            lastname.Text = userInfo.UserClaims.Where(item => item.Type.Equals("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname")).FirstOrDefault<UserClaim>().Value;
-            email.Text = userInfo.UserClaims.Where(item => item.Type.Equals("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress") || item.Type.Equals("emails")).FirstOrDefault<UserClaim>().Value;
-            //gender.Text = userInfo.UserClaims.Where(item => item.Type.Equals("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/gender")).FirstOrDefault<UserClaim>().Value;
+            birthdate.MaximumDate = DateTime.Now.AddYears(-13);
+            this.User = user;
+            //firstname.Text = userInfo.UserClaims.FirstOrDefault(c => c.Type.Equals("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname")).Value;
+            username.Text = user.Username;
+            firstName.Text = user.GivenName;
+            lastName.Text = user.Surname;
+            gender.Text = user.Gender;
+            email.Detail = user.Email;
+            city.Text = user.City;
+            country.Text = user.Country;
+            //if(false)
+            if(user.Birthdate.Year.Equals(1) || user.Birthdate.Year.Equals(1900))
+                birthdate.IsEnabled = true;
+            else
+            {
+                birthdate.Date = user.Birthdate;
+                birthdate.IsEnabled = false;
+            }
 
-
+            birthdate.PropertyChanged += OnValueChanged;
+            firstName.PropertyChanged += OnValueChanged;
+            country.PropertyChanged += OnValueChanged;
+            city.PropertyChanged += OnValueChanged;
+            gender.PropertyChanged += OnValueChanged;
+            lastName.PropertyChanged += OnValueChanged;
+            DataChanged = false;
         }
-
-        //protected override async void OnAppearing()
-        //{
-        //    base.OnAppearing();
-        //    List<UserInfo> user = await _apiServices.GetUserInfoAsync(Settings.AccessToken);
-
-        //}
 
         public override string ToString()
         {
@@ -48,7 +68,112 @@ namespace PeopleApp.Views
 
         private void Logout_Clicked(object sender, EventArgs e)
         {
+        }
 
+        private async void Update_Clicked(object sender, EventArgs e)
+        {
+            if (IsBusy)
+                return;
+            IsBusy = true;
+            try
+            {
+                
+                if (DataChanged)
+                {
+                    var table = await CloudService.GetTableAsync<User>();
+
+                    User updatedUser = new User
+                    {
+                        Id = Settings.UserId,
+                        GivenName = firstName.Text,
+                        Surname = lastName.Text,
+                        Gender = gender.Text,
+                        CultureInfo = CultureInfo.CurrentUICulture.ToString(),
+                        Birthdate = birthdate.Date,// DateTime.Parse(birthdate.Text, CultureInfo.CurrentUICulture),
+                        City = city.Text,
+                        Country = country.Text,
+                        // unchanged properties
+                        Address = User.Address,
+                        Email = User.Email,
+                        Privilege = User.Privilege,
+                        Profession = User.Profession,
+                        Username = User.Username
+                    };
+
+                    await table.UpdateItemAsync(updatedUser);
+                    //User = updatedUser;
+                }
+                else
+                {
+                    await Application.Current.MainPage.DisplayAlert("Update aborted", "No changes have been found", "OK");
+                }
+            }
+            catch (MobileServicePushFailedException e1 )
+            {
+                if (e1.PushResult != null)
+                {
+                    foreach (var error in e1.PushResult.Errors)
+                    {
+                        await ResolveConflictAsync<User>(error);
+                    }
+                }
+            }
+            catch(Exception e2)
+            {
+                await Application.Current.MainPage.DisplayAlert("Update failed", e2.Message, "OK");
+            }
+            finally
+            {
+                await CloudService.SyncOfflineCacheAsync();
+                IsBusy = false;
+                DataChanged = false;
+            }
+            
+            
+        }
+
+        private async Task ResolveConflictAsync<T>(MobileServiceTableOperationError error) where T:TableData
+        {
+            var serverItem = error.Result.ToObject<T>();
+            var localItem = error.Item.ToObject<T>();
+
+            // TEMP: Solve internal server error
+            if (serverItem == null)
+                return;
+
+            // Note that you need to implement the public override Equals(TodoItem item)
+            // method in the Model for this to work
+            if (serverItem.Equals(localItem))
+            {
+                // Items are the same, so ignore the conflict
+                await error.CancelAndDiscardItemAsync();
+                return;
+            }
+
+            // Client Always Wins
+            localItem.Version = serverItem.Version;
+            await error.UpdateOperationAsync(JObject.FromObject(localItem));
+
+            // Server Always Wins
+            // await error.CancelAndDiscardItemAsync();
+        }
+
+        private void OnValueChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (DataChanged)
+                return;
+
+            if (firstName.Text != User.GivenName ||
+                lastName.Text != User.Surname ||
+                gender.Text != User.Gender ||
+                birthdate.Date.Year != User.Birthdate.Year ||
+                city.Text != User.City ||
+                country.Text != User.Country)
+            {
+                DataChanged = true;
+            }
+
+            return;
         }
     }
 }

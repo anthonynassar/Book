@@ -1,48 +1,50 @@
-﻿using MvvmHelpers;
-using PeopleApp.Abstractions;
+﻿using PeopleApp.Abstractions;
 using PeopleApp.Helpers;
 using PeopleApp.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Diagnostics;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using Xamarin.Forms;
 
 namespace PeopleApp.ViewModels
 {
     class EventHistoryViewModel : Abstractions.BaseViewModel
     {
-        ICloudService cloudService;
+        bool hasMoreItems = true;
 
         public EventHistoryViewModel()
         {
-            Debug.WriteLine("In TaskListViewMOdel");
-            cloudService = ServiceLocator.Instance.Resolve<ICloudService>();
-            Table = cloudService.GetTable<SharingSpace>();
+            Title = "Task List";
+            //Table = await CloudService.GetTableAsync<SharingSpace>();
+            //items.CollectionChanged += this.OnCollectionChanged;
 
+            RefreshCommand = new Command(async () => await Refresh());
+            CreateSharingSpaceCommand = new Command(async () => await CreateSharingSpace());
+            LogoutCommand = new Command(async () => await Logout());
+            //TagsCommand = new Command(async () => await NavigateToTags());
+            LoadMoreCommand = new Command<SharingSpace>(async (SharingSpace item) => await LoadMore(item));
 
-            Title = "Event List";
-            items.CollectionChanged += this.OnCollectionChanged;
-
-            RefreshCommand = new Command(async () => await ExecuteRefreshCommand());
-            LogoutCommand = new Command(async () => await ExecuteLogoutCommand());
-            CreateSharingSpaceCommand = new Command(async () => await ExecuteCreateSharingSpaceCommand());
+            // Subscribe to events from the Task Detail Page
+            MessagingCenter.Subscribe<TaskDetailViewModel>(this, "ItemsChanged", async (sender) =>
+            {
+                await Refresh();
+            });
 
             // Execute the refresh command
             RefreshCommand.Execute(null);
         }
 
-        public ICloudTable<SharingSpace> Table { get; set; }
-        public Command RefreshCommand { get; }
-        public Command LogoutCommand { get; }
-        public Command CreateSharingSpaceCommand { get; }
-
-        void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            Debug.WriteLine("[TaskList] OnCollectionChanged: Items have changed");
-        }
+        public ICloudService CloudService => ServiceLocator.Get<ICloudService>();
+        public ILoginProvider LoginProvider => DependencyService.Get<ILoginProvider>();
+        public ICommand RefreshCommand { get; }
+        public ICommand CreateSharingSpaceCommand { get; }
+        public ICommand LogoutCommand { get; }
+        public ICommand LoadMoreCommand { get; }
 
         ObservableRangeCollection<SharingSpace> items = new ObservableRangeCollection<SharingSpace>();
         public ObservableRangeCollection<SharingSpace> Items
@@ -60,13 +62,13 @@ namespace PeopleApp.ViewModels
                 SetProperty(ref selectedItem, value, "SelectedItem");
                 if (selectedItem != null)
                 {
-                    Application.Current.MainPage.Navigation.PushAsync(new Views.EventDetail(selectedItem));
+                    MessagingCenter.Send(this, "SelectEvent", selectedItem);
                     SelectedItem = null;
                 }
             }
         }
 
-        async Task ExecuteRefreshCommand()
+        async Task Refresh()
         {
             if (IsBusy)
                 return;
@@ -74,8 +76,18 @@ namespace PeopleApp.ViewModels
 
             try
             {
-                var list = await Table.ReadAllItemsAsync();
+                await CloudService.SyncOfflineCacheAsync();
+                //var identity = await CloudService.GetIdentityAsync();
+                //if (identity != null)
+                //{
+                //    var name = identity.UserClaims.FirstOrDefault(c => c.Type.Equals("name")).Value;
+                //    Title = $"Tasks for {name}";
+                //}
+                var table = await CloudService.GetTableAsync<SharingSpace>();
+                var list = await table.ReadItemsAsync(0, 20);
+                //var list = await table.ReadAllItemsAsync();
                 Items.ReplaceRange(list);
+                hasMoreItems = true; // Reset for refresh
             }
             catch (Exception ex)
             {
@@ -88,7 +100,7 @@ namespace PeopleApp.ViewModels
             }
         }
 
-        async Task ExecuteCreateSharingSpaceCommand()
+        async Task CreateSharingSpace()
         {
             if (IsBusy)
                 return;
@@ -96,7 +108,12 @@ namespace PeopleApp.ViewModels
 
             try
             {
-                await Application.Current.MainPage.Navigation.PushAsync(new Views.CreateSharingSpaceAPage());
+                //await Application.Current.MainPage.Navigation.PushAsync(new Views.CreateSharingSpaceAPage());
+                IsBusy = true;
+
+                var sharingSpace = await CloudService.AddSharingSpace(new SharingSpace { UserId = Settings.UserId, Descriptor = "A very special event", CreationLocation = "Anglet", CreationDate = DateTime.Now });
+                Items.Add(sharingSpace);
+                //SortCoffees();
             }
             catch (Exception ex)
             {
@@ -109,7 +126,7 @@ namespace PeopleApp.ViewModels
             }
         }
 
-        async Task ExecuteLogoutCommand()
+        async Task Logout()
         {
             if (IsBusy)
                 return;
@@ -117,8 +134,8 @@ namespace PeopleApp.ViewModels
 
             try
             {
-                var cloudService = ServiceLocator.Instance.Resolve<ICloudService>();
-                await cloudService.LogoutAsync();
+                //var cloudService = ServiceLocator.Instance.Resolve<ICloudService>();
+                await CloudService.LogoutAsync();
                 Application.Current.MainPage = new NavigationPage(new Views.EntryPage());
             }
             catch (Exception ex)
@@ -131,14 +148,52 @@ namespace PeopleApp.ViewModels
             }
         }
 
-        async Task RefreshList()
+        async Task LoadMore(SharingSpace item)
         {
-            await ExecuteRefreshCommand();
-            MessagingCenter.Subscribe<TaskDetailViewModel>(this, "ItemsChanged", async (sender) =>
+            if (IsBusy)
             {
-                await ExecuteRefreshCommand();
-            });
+                Debug.WriteLine($"LoadMore: bailing because IsBusy = true");
+                return;
+            }
+
+            // If we are not displaying the last one in the list, then return.
+            if (!Items.Last().Id.Equals(item.Id))
+            {
+                Debug.WriteLine($"LoadMore: bailing because this id is not the last id in the list");
+                return;
+            }
+
+            // If we don't have more items, return
+            if (!hasMoreItems)
+            {
+                Debug.WriteLine($"LoadMore: bailing because we don't have any more items");
+                return;
+            }
+
+            IsBusy = true;
+            var table = await CloudService.GetTableAsync<SharingSpace>();
+            try
+            {
+                var list = await table.ReadItemsAsync(Items.Count, 20);
+                if (list.Count > 0)
+                {
+                    Debug.WriteLine($"LoadMore: got {list.Count} more items");
+                    Items.AddRange(list);
+                }
+                else
+                {
+                    Debug.WriteLine($"LoadMore: no more items: setting hasMoreItems= false");
+                    hasMoreItems = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                await Application.Current.MainPage.DisplayAlert("LoadMore Failed", ex.Message, "OK");
+            }
+            finally
+            {
+                IsBusy = false;
+            }
         }
     }
-
 }

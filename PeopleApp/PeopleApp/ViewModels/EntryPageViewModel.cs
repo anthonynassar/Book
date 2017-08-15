@@ -6,6 +6,7 @@ using PeopleApp.Services;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
@@ -20,13 +21,18 @@ namespace PeopleApp.ViewModels
         {
             Title = "Task List";
 
-            LoginCommand = new Command(async () => await ExecuteLoginCommand());
-            FbLoginCommand = new Command(async () => await ExecuteFbLoginCommand());
+            AppService = Locations.AppServiceUrl;
+            LoginCommand = new Command(async () => await Login());
+            FbLoginCommand = new Command(async () => await FbLogin());
         }
+
+        public ICloudService CloudService => ServiceLocator.Get<ICloudService>();
+        public ILoginProvider LoginProvider => DependencyService.Get<ILoginProvider>();
         public Command LoginCommand { get; }
         public Command FbLoginCommand { get; }
+        public string AppService { get; set; }
 
-        async Task ExecuteLoginCommand()
+        async Task Login()
         {
             if (IsBusy)
                 return;
@@ -34,26 +40,30 @@ namespace PeopleApp.ViewModels
 
             try
             {
-                var cloudService = ServiceLocator.Instance.Resolve<ICloudService>();
-                //await cloudService.LoginAsync(User);
-                
-                MobileServiceUser user = await cloudService.LoginAsync("aad");
-                User currentUser = new User();
-                // add user to db
-                currentUser = await _apiServices.PostUserAsync(currentUser, user.MobileServiceAuthenticationToken);
-                if (currentUser != null && currentUser.Id != null)
+                MobileServiceUser user = await CloudService.LoginAsync("aad");
+                var table = await CloudService.GetTableAsync<User>();
+                string userId = "aad|" + user.UserId.Replace(':','|');
+                User retrievedUser = await table.ReadItemAsync(userId);
+                var a = 0;
+                if (retrievedUser == null)
                 {
-                    Settings.AccessToken = user.MobileServiceAuthenticationToken;
-                    Settings.IdentityProvider = "aad";
-                    //Settings.UserId = "aad" + "_" + user.UserId.Split(':')[1];
-                    Settings.UserId = currentUser.Id;
-                    Application.Current.MainPage = new Views.MenuPage();
+                    await table.CreateItemAsync(new User { Id = userId, CultureInfo = CultureInfo.CurrentUICulture.ToString() });
+                    await CloudService.SyncOfflineCacheAsync();
+                    User tempUser = await table.ReadItemAsync(userId);
+                    //User tempUser = await _apiServices.PostUserAsync(new User(), user.MobileServiceAuthenticationToken);
+
+                    if (tempUser == null)
+                        throw new NullReferenceException("Problem adding/signing in user");
+                    else
+                        retrievedUser = tempUser;
                 }
-                else
-                {
-                    Application.Current.MainPage = new Views.MenuPage();
-                }
-                
+
+                Settings.AccessToken = user.MobileServiceAuthenticationToken;
+                Settings.IdentityProvider = "aad";
+                Settings.UserId = retrievedUser.Id;
+                Settings.Username = retrievedUser.Username;
+                Application.Current.MainPage = new Views.MenuPage();
+
             }
             catch (Exception ex)
             {
@@ -63,11 +73,12 @@ namespace PeopleApp.ViewModels
             }
             finally
             {
+                //await CloudService.SyncOfflineCacheAsync();
                 IsBusy = false;
             }
         }
 
-        async Task ExecuteFbLoginCommand()
+        async Task FbLogin()
         {
             if (IsBusy)
                 return;
@@ -75,10 +86,7 @@ namespace PeopleApp.ViewModels
 
             try
             {
-                var cloudService = ServiceLocator.Instance.Resolve<ICloudService>();
-                //await cloudService.LoginAsync(User);
-
-                MobileServiceUser user = await cloudService.LoginAsync("facebook");
+                MobileServiceUser user = await CloudService.LoginAsync("facebook");
                 User currentUser = new User();
                 // add user to db
                 await _apiServices.PostUserAsync(currentUser, user.MobileServiceAuthenticationToken);
@@ -91,7 +99,7 @@ namespace PeopleApp.ViewModels
             {
                 Debug.WriteLine("Error: " + ex.Message);
                 Debug.WriteLine("Error Full: ======/n" + ex);
-                await Application.Current.MainPage.DisplayAlert("Login Failed", ex.Message, "OK");
+                await Application.Current.MainPage.DisplayAlert("Facebook Login Failed", ex.Message, "OK");
             }
             finally
             {

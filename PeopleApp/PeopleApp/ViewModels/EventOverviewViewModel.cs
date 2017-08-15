@@ -19,6 +19,8 @@ using System.Collections.ObjectModel;
 using PeopleApp.Models.ViewsRelated;
 using PeopleApp.Core;
 using PeopleApp.Services;
+using PeopleApp.Models;
+using PeopleApp.Abstractions;
 
 namespace PeopleApp.ViewModels
 {
@@ -27,18 +29,109 @@ namespace PeopleApp.ViewModels
         ApiServices _apiServices = new ApiServices();
 
         public ObservableCollection<Photo> Items { get; set; }
-
-        public string SharingSpaceId { get; set; }
-
+        public SharingSpace SharingSpace { get; set; }
         public string AlbumPath { get; set; }
-
-        public ImageSource ImageSource { get; set; }
-
+        //public ImageSource ImageSource { get; set; }
         public bool UpDownRunning { get; set; }
-
         public string ErrorMessage { get; set; }
-
         public int Count { get; set; }
+        public ICloudService CloudService => ServiceLocator.Get<ICloudService>();
+
+        public EventOverviewViewModel(SharingSpace sharingSpace, List<Models.Object> objectList)
+        {
+            SharingSpace = sharingSpace;
+            Items = new ObservableCollection<Photo>();
+            var list = new ObservableCollection<Photo>();
+
+            //// get photos from directory
+            var documentsDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
+            var documents2Directory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+
+            documentsDirectory += "/PeopleApp/";
+
+            //string[] files = System.IO.Directory.GetFiles(documentsDirectory, "*.jp*g");
+            //foreach (var item in files)
+            //{
+            //    Console.WriteLine(item.ToString());
+            //}
+            //if (files.Length == 0)
+            //{
+            //    Console.Error.WriteLine("No matching files found.");
+            //    Environment.Exit(1);
+            //}
+
+            //UNCOMMENT HERE
+            bool quest = Directory.Exists(Settings.PhotoAlbumPath);
+
+            if (!quest)
+            {
+                string[] images = {
+                "https://farm9.staticflickr.com/8625/15806486058_7005d77438.jpg",
+                "https://farm5.staticflickr.com/4011/4308181244_5ac3f8239b.jpg",
+                "https://farm8.staticflickr.com/7423/8729135907_79599de8d8.jpg",
+                "https://farm3.staticflickr.com/2475/4058009019_ecf305f546.jpg",
+                "https://farm6.staticflickr.com/5117/14045101350_113edbe20b.jpg",
+                "https://farm2.staticflickr.com/1227/1116750115_b66dc3830e.jpg",
+                "https://farm2.staticflickr.com/1227/1116750115_b66dc3830e.jpg",
+                "https://farm1.staticflickr.com/44/117598011_250aa8ffb1.jpg",
+                "https://farm8.staticflickr.com/7524/15620725287_3357e9db03.jpg",
+                "https://farm9.staticflickr.com/8351/8299022203_de0cb894b0.jpg",
+            };
+
+                int number = 0;
+                for (int n = 0; n < 2; n++)
+                {
+                    for (int i = 0; i < images.Length; i++)
+                    {
+                        number++;
+                        var item = new Photo()
+                        {
+                            ImageUrl = images[i],
+                            FileName = string.Format("image_{0}.jpg", number),
+                        };
+
+                        list.Add(item);
+                    }
+                }
+
+                Items = list;
+            }
+            else
+            {
+                List<string> fileEntries = Directory.GetFiles(Settings.PhotoAlbumPath)
+                                                .Where<string>(t => Path.GetFileNameWithoutExtension(t).StartsWith("001"))
+                                                .ToArray<string>()
+                                                .ToList<string>();
+
+                // get images by sharingspace
+                // write a simple http get request
+                // var objectList = _apiServices.GetObjectsBySharingSpace(SharingSpace.Id);
+                //int cnt = 0;
+                foreach (var item in objectList)
+                {
+                    string path = Settings.PhotoAlbumPath + "/" + item.Id + ".jpg";
+                    fileEntries.Add(path);
+                    //cnt++;
+                }
+
+                int photoIndex = 0;
+                Count = fileEntries.Count;
+                foreach (string fileName in fileEntries)
+                {
+                    photoIndex++;
+                    var item = new Photo()
+                    {
+                        ImageUrl = fileName,
+                        FileName = Path.GetFileName(fileName),
+                        Index = photoIndex
+                    };
+
+                    list.Add(item);
+                }
+                Items = list;
+                //Debug.WriteLine("Processed file '{0}'.", fileName);
+            }
+        }
 
         public ICommand TakePhotoCommand
         {
@@ -56,16 +149,16 @@ namespace PeopleApp.ViewModels
                     }
 
                     // Unique File Name
-                    //var myUniqueFileName = string.Format(@"{0}.jpg", Guid.NewGuid());
-                    var myUniqueFileName = string.Format(@"{0}.jpg", DateTime.Now.Ticks);
-                    //var myUniqueFileName = string.Format(@"{0}.jpg", DateTime.Now.Ticks.GetHashCode().ToString("x").ToUpper());
+                    var uniqueFileName = string.Format(@"{0}", Guid.NewGuid());
+                    //var uniqueFileName = string.Format(@"{0}.jpg", DateTime.Now.Ticks);
+                    //var uniqueFileName = string.Format(@"{0}.jpg", DateTime.Now.Ticks.GetHashCode().ToString("x").ToUpper());
 
                     var file = await CrossMedia.Current.TakePhotoAsync(
                         new StoreCameraMediaOptions
                         {
                             SaveToAlbum = true,
                             Directory = "PeopleApp",
-                            Name = myUniqueFileName
+                            Name = uniqueFileName + ".jpg"
                         });
 
                     if (file == null)
@@ -78,17 +171,18 @@ namespace PeopleApp.ViewModels
 
                     string filename = Path.GetFileNameWithoutExtension(AlbumPath);
 
+                    // PhotoAlbumPath is already saved on app launch (platform specific code)
                     if (!AlbumPath.Equals(Settings.PhotoAlbumPath))
                     {
                         Settings.PhotoAlbumPath = Path.GetDirectoryName(AlbumPath);
                     }
 
-                    ImageSource = ImageSource.FromStream(() =>
-                    {
-                        var stream = file.GetStream();
-                        file.Dispose();
-                        return stream;
-                    });
+                    //ImageSource = ImageSource.FromStream(() =>
+                    //{
+                    //    var stream = file.GetStream();
+                    //    file.Dispose();
+                    //    return stream;
+                    //});
 
                     //PhotoModel newPhoto = new PhotoModel();
                     var item = new Photo()
@@ -98,51 +192,74 @@ namespace PeopleApp.ViewModels
                     };
                     Items.Add(item);
 
-                    // create the object (photo) to upload 
-                    var objectId = Utilities.NewGuid();
-                    Models.Object obj = new Models.Object
+                    try
                     {
-                        Id = objectId,
+                        // create the object (photo) to upload 
+                        //var objectId = Utilities.NewGuid();
+                        Models.Object obj = new Models.Object
+                    {
+                        Id = uniqueFileName,
                         CreationLocation = "",
                         CreationDate = DateTime.Now,
                         UserId = Settings.UserId,
-                        SharingSpaceId = SharingSpaceId,
+                        SharingSpaceId = SharingSpace.Id,
                         Type = "photo"
                         // storedLocally = "true",
                         // storedRemotely = "false",
                         // localPath = "the local path",
                         // remotePath = ""
                     };
-                    await _apiServices.PostObjectAsync(obj); // post this at the end with attributes
+
+                        //await _apiServices.PostObjectAsync(obj);
+                        //await CloudService.AddObject(obj);
+                        var table = await CloudService.GetTableAsync<Models.Object>();
+                        await table.CreateItemAsync(obj);
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine("Error :" + ex.Message);
+                    }
+                    
                     // extract metadata from single photo
                     List<PhotoModel> photoInfo = MetaExtractor.ExtractMetadataPerPhoto(AlbumPath);
 
-
-                    // post in attribute table
-                    var datatypeList = await _apiServices.GetDatatypesAsync(Settings.CurrentSharingSpace);
-                    // datatype = { datatypeId, label }
-                    foreach (var datatype in datatypeList)
+                    try
                     {
-                        string value = "";
-                        if (datatype.Label.Equals("Time"))
+                        // post in attribute table
+                        var datatypeList = await _apiServices.GetDatatypesAsync(Settings.CurrentSharingSpace);
+                        // datatype = { datatypeId, label }
+                        foreach (var datatype in datatypeList)
                         {
-                            value = photoInfo.FirstOrDefault().map["date"];
-                        }
-                        else if (datatype.Label.Equals("Location"))
-                        {
-                            value = photoInfo.FirstOrDefault().map["lat"] + ", " + photoInfo.FirstOrDefault().map["lng"];
-                        }
-                        else if (datatype.Label.Equals("Social"))
-                        {
-                            value = photoInfo.FirstOrDefault().map["owner"];
-                        }
-                        else if (datatype.Label.Equals("Topic"))
-                        {
-                            value = "keywords";
-                        }
+                            string value = "";
+                            if (datatype.Label.Equals("Time"))
+                            {
+                                value = photoInfo.FirstOrDefault().map["date"];
+                            }
+                            else if (datatype.Label.Equals("Location"))
+                            {
+                                value = photoInfo.FirstOrDefault().map["lat"] + ", " + photoInfo.FirstOrDefault().map["lng"];
+                            }
+                            else if (datatype.Label.Equals("Social"))
+                            {
+                                value = photoInfo.FirstOrDefault().map["owner"];
+                            }
+                            else if (datatype.Label.Equals("Topic"))
+                            {
+                                value = "keywords";
+                            }
 
-                        await _apiServices.PostAttributeAsync(new Models.Attribute { ObjectId = objectId, Value = value, DatatypeId = datatype.DatatypeId });
+                            await _apiServices.PostAttributeAsync(new Models.Attribute { ObjectId = uniqueFileName, Value = value, DatatypeId = datatype.DatatypeId });
+                        }
                     }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine("Error :" + ex.Message);
+                    }
+                    finally
+                    {
+                        await CloudService.SyncOfflineCacheAsync();
+                    }
+                    
 
 
 
@@ -218,88 +335,6 @@ namespace PeopleApp.ViewModels
             }
         }
 
-        public EventOverviewViewModel()
-        {
-            Items = new ObservableCollection<Photo>();
-            var list = new ObservableCollection<Photo>();
-
-            SharingSpaceId = Settings.CurrentSharingSpace;
-
-            //// get photos from directory
-            var documentsDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
-            var documents2Directory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
-
-            documentsDirectory += "/PeopleApp/";
-
-            //string[] files = System.IO.Directory.GetFiles(documentsDirectory, "*.jp*g");
-            //foreach (var item in files)
-            //{
-            //    Console.WriteLine(item.ToString());
-            //}
-            //if (files.Length == 0)
-            //{
-            //    Console.Error.WriteLine("No matching files found.");
-            //    Environment.Exit(1);
-            //}
-
-            bool quest = Directory.Exists(Settings.PhotoAlbumPath);
-
-
-            //bool isEmpty = !Directory.EnumerateFiles(Settings.PhotoAlbumPath).Any();
-
-            if (!quest)
-            {
-                string[] images = {
-                "https://farm9.staticflickr.com/8625/15806486058_7005d77438.jpg",
-                "https://farm5.staticflickr.com/4011/4308181244_5ac3f8239b.jpg",
-                "https://farm8.staticflickr.com/7423/8729135907_79599de8d8.jpg",
-                "https://farm3.staticflickr.com/2475/4058009019_ecf305f546.jpg",
-                "https://farm6.staticflickr.com/5117/14045101350_113edbe20b.jpg",
-                "https://farm2.staticflickr.com/1227/1116750115_b66dc3830e.jpg",
-                "https://farm2.staticflickr.com/1227/1116750115_b66dc3830e.jpg",
-                "https://farm1.staticflickr.com/44/117598011_250aa8ffb1.jpg",
-                "https://farm8.staticflickr.com/7524/15620725287_3357e9db03.jpg",
-                "https://farm9.staticflickr.com/8351/8299022203_de0cb894b0.jpg",
-            };
-
-                int number = 0;
-                for (int n = 0; n < 2; n++)
-                {
-                    for (int i = 0; i < images.Length; i++)
-                    {
-                        number++;
-                        var item = new Photo()
-                        {
-                            ImageUrl = images[i],
-                            FileName = string.Format("image_{0}.jpg", number),
-                        };
-
-                        list.Add(item);
-                    }
-                }
-
-                Items = list;
-            }
-            else
-            {
-                string[] fileEntries = Directory.GetFiles(Settings.PhotoAlbumPath);
-                int photoIndex = 0;
-                Count = fileEntries.Length;
-                foreach (string fileName in fileEntries)
-                {
-                    photoIndex++;
-                    var item = new Photo()
-                    {
-                        ImageUrl = fileName,
-                        FileName = Path.GetFileName(fileName),
-                        Index = photoIndex
-                    };
-
-                    list.Add(item);
-                }
-                Items = list;
-                //Debug.WriteLine("Processed file '{0}'.", fileName);
-            }
-        }
+        
     }
 }

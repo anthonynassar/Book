@@ -5,13 +5,16 @@ using PeopleApp.ViewModels;
 using PeopleApp.Views;
 using DLToolkit.Forms.Controls;
 using Xamarin.Forms;
+using System;
+using PeopleApp.Models;
 
 namespace PeopleApp
 {
 	public partial class App : Application
 	{
-        public static ICloudService CloudService { get; set; }
+        //public static ICloudService CloudService { get; set; }
         //public static NavigationPage NavPage { get; private set; }
+        public ICloudService CloudService => ServiceLocator.Get<ICloudService>();
 
         public App ()
 		{
@@ -19,12 +22,24 @@ namespace PeopleApp
 
             FlowListView.Init();
             //CloudService = new AzureCloudService();
-            ServiceLocator.Instance.Add<ICloudService, AzureCloudService>();
+            ServiceLocator.Add<ICloudService, AzureCloudService>();
 
+            //LoadSomeData();
             SetMainPage();
             
             //MainPage = new NavigationPage(new Views.EntryPage());
         }
+
+        //private async void LoadSomeData()
+        //{
+        //    if (!string.IsNullOrEmpty(Settings.AccessToken) && !string.IsNullOrEmpty(Settings.UserId))
+        //    {
+        //        var table = await CloudService.GetTableAsync<User>();
+        //        User user = await table.ReadItemAsync(Settings.UserId);
+        //        Settings.Username = user.Username;
+        //    }
+               
+        //}
 
         private void SetMainPage()
         {

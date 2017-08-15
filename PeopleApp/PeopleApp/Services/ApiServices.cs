@@ -14,7 +14,7 @@ namespace PeopleApp.Services
 {
     class ApiServices
     {
-        public async Task<List<UserInfo>> GetUserInfoAsync(string token)
+        public async Task<List<AppServiceIdentity>> GetUserInfoAsync(string token)
         {
             var client = new HttpClient();
 
@@ -24,7 +24,7 @@ namespace PeopleApp.Services
             var json = await client.GetStringAsync(Constants.BaseApiAddress + ".auth/me");
             try
             {
-                var userInfo = JsonConvert.DeserializeObject<List<UserInfo>>(json);
+                var userInfo = JsonConvert.DeserializeObject<List<AppServiceIdentity>>(json);
 
                 return userInfo;
             }
@@ -101,6 +101,7 @@ namespace PeopleApp.Services
             content.Headers.Add("X-ZUMO-AUTH", token);
 
             var response = await client.PostAsync(Constants.BaseApiAddress + "tables/sharingspace", content);
+
             return response;
         }
 
@@ -115,6 +116,8 @@ namespace PeopleApp.Services
 
             var response = await client.PostAsync(Constants.BaseApiAddress + "tables/dimension", content);
         }
+
+        
 
         public async Task PostConstraintAsync(Constraint constraint)
         {
@@ -152,6 +155,19 @@ namespace PeopleApp.Services
             var datatypes = JsonConvert.DeserializeObject<List<SpecialDatatype>>(json);
 
             return datatypes;
+        }
+
+        public async Task<List<Models.Object>> GetObjectsBySharingSpace(string sharingSpaceId)
+        {
+            var client = new HttpClient();
+
+            client.DefaultRequestHeaders.Add("ZUMO-API-VERSION", "2.0.0");
+
+            var json = await client.GetStringAsync(Constants.BaseApiAddress + "tables/object/special/" + sharingSpaceId);
+
+            var objects = JsonConvert.DeserializeObject<List<Models.Object>>(json);
+
+            return objects;
         }
 
         public async Task PostObjectAsync(Models.Object obj)

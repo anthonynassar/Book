@@ -11,6 +11,7 @@ using PeopleApp.Abstractions;
 using PeopleApp.Droid.Services;
 using PeopleApp.Helpers;
 using Xamarin.Auth;
+using System.IO;
 
 [assembly: Xamarin.Forms.Dependency(typeof(DroidLoginProvider))]
 namespace PeopleApp.Droid.Services
@@ -79,6 +80,18 @@ namespace PeopleApp.Droid.Services
                     AccountStore.Delete(acct, "tasklist");
                 }
             }
+        }
+
+        public string GetSyncStore()
+        {
+            var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "syncstore.db");
+
+            if (!File.Exists(path))
+            {
+                File.Create(path).Dispose();
+            }
+
+            return path;
         }
 
         //async Task ILoginProvider.LoginAsync(MobileServiceClient client)

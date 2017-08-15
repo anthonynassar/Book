@@ -8,38 +8,47 @@ namespace PeopleApp.Helpers
 {
     public sealed class ServiceLocator
     {
-        static readonly Lazy<ServiceLocator> instance = new Lazy<ServiceLocator>(() => new ServiceLocator());
-        readonly Dictionary<Type, Lazy<object>> registeredServices = new Dictionary<Type, Lazy<object>>();
-
         /// <summary>
-        /// Singleton instance for the default service locator
-        /// </summary>
-        public static ServiceLocator Instance => instance.Value;
-
-        /// <summary>
-        /// Add a new service implementation
+        /// Add a singleton service implementation
         /// </summary>
         /// <typeparam name="TContract">The type of service</typeparam>
-        /// <typeparam name="TService">The service implementation</typeparam>
-        public void Add<TContract, TService>() where TService : new()
+        /// <typeparam name="TService">The concrete implementation of the service</typeparam>
+        public static void Add<TContract, TService>() where TService : new()
         {
-            registeredServices[typeof(TContract)] = new Lazy<object>(() => Activator.CreateInstance(typeof(TService)));
+            Instance.InternalAdd<TContract, TService>();
         }
 
         /// <summary>
-        /// Resolve the service type into the implementation.  This assumes the key used to register the
-        /// object is of the appropriate type - throws InvalidCastException if you get this wrong (at runtime)
+        /// Resolve the service type into the implementation.
         /// </summary>
         /// <typeparam name="T">The type of service</typeparam>
-        /// <returns>The service implementation</returns>
-        public T Resolve<T>() where T : class
+        /// <returns>The concrete implementation of the service</returns>
+        /// <exception cref="InvalidCastException">If you mix and match services</exception>
+        public static T Get<T>() where T : class
+        {
+            return Instance.Resolve<T>();
+        }
+
+        #region Internal Representation
+        static readonly Lazy<ServiceLocator> instance = new Lazy<ServiceLocator>(() => new ServiceLocator());
+        readonly Dictionary<Type, Lazy<object>> services = new Dictionary<Type, Lazy<object>>();
+
+        static ServiceLocator Instance => instance.Value;
+
+        void InternalAdd<TContract, TService>() where TService : new()
+        {
+            services[typeof(TContract)] = new Lazy<object>(() => Activator.CreateInstance(typeof(TService)));
+        }
+
+        T Resolve<T>() where T : class
         {
             Lazy<object> service;
-            if (registeredServices.TryGetValue(typeof(T), out service))
+            if (services.TryGetValue(typeof(T), out service))
             {
                 return (T)service.Value;
             }
             return null;
         }
     }
+    #endregion
 }

@@ -15,30 +15,64 @@ namespace PeopleApp.ViewModels
     {
         public TaskDetailViewModel(TodoItem item = null)
         {
-            ICloudService cloudService = ServiceLocator.Instance.Resolve<ICloudService>();
-            Table = cloudService.GetTable<TodoItem>();
+            SaveCommand = new Command(async () => await SaveAsync());
+            DeleteCommand = new Command(async () => await DeleteAsync());
 
             if (item != null)
             {
-                Item = item;
+                CurrentTask = item;
                 Title = item.Text;
             }
             else
             {
-                Item = new TodoItem { Text = "New Item", Complete = false };
+                CurrentTask = new TodoItem { Text = "New Item", Complete = false };
                 Title = "New Item";
             }
-
-            SaveCommand = new Command(async () => await ExecuteSaveCommand());
-            DeleteCommand = new Command(async () => await ExecuteDeleteCommand());
         }
 
-        public TodoItem Item { get; set; }
-        public ICloudTable<TodoItem> Table { get; set; }
+        public ICloudService CloudService => ServiceLocator.Get<ICloudService>();
+        public ILoginProvider LoginProvider => DependencyService.Get<ILoginProvider>();
         public Command SaveCommand { get; }
         public Command DeleteCommand { get; }
+        public Command RefreshCommand { get; }
 
-        async Task ExecuteSaveCommand()
+        TodoItem currentTask;
+        public TodoItem CurrentTask
+        {
+            get { return currentTask; }
+            set { SetProperty(ref currentTask, value, "CurrentTask"); }
+        }
+
+
+        public string Text
+        {
+            get
+            {
+                return CurrentTask.Text;
+            }
+            set
+            {
+                var cText = CurrentTask.Text;
+                SetProperty(ref cText, value, "Text");
+                CurrentTask.Text = cText;
+            }
+        }
+
+        public bool Complete
+        {
+            get
+            {
+                return CurrentTask.Complete;
+            }
+            set
+            {
+                var cComplete = CurrentTask.Complete;
+                SetProperty(ref cComplete, value, "Complete");
+                CurrentTask.Complete = cComplete;
+            }
+        }
+
+        async Task SaveAsync()
         {
             if (IsBusy)
                 return;
@@ -46,20 +80,14 @@ namespace PeopleApp.ViewModels
 
             try
             {
-                if (Item.Id == null)
-                {
-                    await Table.CreateItemAsync(Item);
-                }
-                else
-                {
-                    await Table.UpdateItemAsync(Item);
-                }
+                var table = await CloudService.GetTableAsync<TodoItem>();
+                await table.UpsertItemAsync(CurrentTask);
+                await CloudService.SyncOfflineCacheAsync();
                 MessagingCenter.Send<TaskDetailViewModel>(this, "ItemsChanged");
                 await Application.Current.MainPage.Navigation.PopAsync();
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"[TaskDetail] Save error: {ex.Message}");
                 await Application.Current.MainPage.DisplayAlert("Save Item Failed", ex.Message, "OK");
             }
             finally
@@ -68,7 +96,7 @@ namespace PeopleApp.ViewModels
             }
         }
 
-        async Task ExecuteDeleteCommand()
+        async Task DeleteAsync()
         {
             if (IsBusy)
                 return;
@@ -76,16 +104,17 @@ namespace PeopleApp.ViewModels
 
             try
             {
-                if (Item.Id != null)
+                if (CurrentTask.Id != null)
                 {
-                    await Table.DeleteItemAsync(Item);
+                    var table = await CloudService.GetTableAsync<TodoItem>();
+                    await table.DeleteItemAsync(CurrentTask);
+                    await CloudService.SyncOfflineCacheAsync();
+                    MessagingCenter.Send<TaskDetailViewModel>(this, "ItemsChanged");
                 }
-                MessagingCenter.Send<TaskDetailViewModel>(this, "ItemsChanged");
                 await Application.Current.MainPage.Navigation.PopAsync();
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"[TaskDetail] Save error: {ex.Message}");
                 await Application.Current.MainPage.DisplayAlert("Delete Item Failed", ex.Message, "OK");
             }
             finally
