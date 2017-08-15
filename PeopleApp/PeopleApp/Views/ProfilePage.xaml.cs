@@ -58,7 +58,6 @@ namespace PeopleApp.Views
             city.PropertyChanged += OnValueChanged;
             gender.PropertyChanged += OnValueChanged;
             lastName.PropertyChanged += OnValueChanged;
-            DataChanged = false;
         }
 
         public override string ToString()
@@ -66,15 +65,40 @@ namespace PeopleApp.Views
             return this.Title;
         }
 
-        private void Logout_Clicked(object sender, EventArgs e)
+        private async void Logout_Clicked(object sender, EventArgs e)
         {
+            if (activityStack.IsVisible)
+                return;
+
+            messageLabel.Text = "Terminating your session! Please wait!";
+            activityStack.IsVisible = true;
+            activityIndicator.IsRunning = true;
+           
+
+            try
+            {
+                await CloudService.LogoutAsync();
+                Application.Current.MainPage = new NavigationPage(new Views.EntryPage());
+            }
+            catch (Exception ex)
+            {
+                await Application.Current.MainPage.DisplayAlert("Logout Failed", ex.Message, "OK");
+            }
+            finally
+            {
+                activityStack.IsVisible = false;
+                activityIndicator.IsRunning = false;
+            }
         }
 
         private async void Update_Clicked(object sender, EventArgs e)
         {
-            if (IsBusy)
+            if (activityStack.IsVisible)
                 return;
-            IsBusy = true;
+
+            activityStack.IsVisible = true;
+            activityIndicator.IsRunning = true;
+            messageLabel.Text = "Updating your profile!";
             try
             {
                 
@@ -102,6 +126,7 @@ namespace PeopleApp.Views
 
                     await table.UpdateItemAsync(updatedUser);
                     //User = updatedUser;
+                    await CloudService.SyncOfflineCacheAsync();
                 }
                 else
                 {
@@ -116,6 +141,8 @@ namespace PeopleApp.Views
                     {
                         await ResolveConflictAsync<User>(error);
                     }
+                    // Sync the operation table after changes have been made
+                    await CloudService.SyncOfflineCacheAsync();
                 }
             }
             catch(Exception e2)
@@ -124,12 +151,10 @@ namespace PeopleApp.Views
             }
             finally
             {
-                await CloudService.SyncOfflineCacheAsync();
-                IsBusy = false;
+                activityStack.IsVisible = false;
+                activityIndicator.IsRunning = false;
                 DataChanged = false;
             }
-            
-            
         }
 
         private async Task ResolveConflictAsync<T>(MobileServiceTableOperationError error) where T:TableData

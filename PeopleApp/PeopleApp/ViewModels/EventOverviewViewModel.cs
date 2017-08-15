@@ -43,6 +43,8 @@ namespace PeopleApp.ViewModels
             Items = new ObservableCollection<Photo>();
             var list = new ObservableCollection<Photo>();
 
+            TakePhotoCommand = new Command(async () => await TakePhoto());
+
             //// get photos from directory
             var documentsDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
             var documents2Directory = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
@@ -133,139 +135,138 @@ namespace PeopleApp.ViewModels
             }
         }
 
-        public ICommand TakePhotoCommand
+        public ICommand TakePhotoCommand { get; }
+
+        async Task TakePhoto()
         {
-            get
+            await CrossMedia.Current.Initialize();
+
+            if (!CrossMedia.Current.IsCameraAvailable || !CrossMedia.Current.IsTakePhotoSupported)
             {
-                return new Command(async () =>
-                {
-                    await CrossMedia.Current.Initialize();
-
-                    if (!CrossMedia.Current.IsCameraAvailable || !CrossMedia.Current.IsTakePhotoSupported)
-                    {
-                        //await DisplayAlert("No Camera", ":( No camera available.", "OK");
-                        ErrorMessage = ":( No camera available.";
-                        return;
-                    }
-
-                    // Unique File Name
-                    var uniqueFileName = string.Format(@"{0}", Guid.NewGuid());
-                    //var uniqueFileName = string.Format(@"{0}.jpg", DateTime.Now.Ticks);
-                    //var uniqueFileName = string.Format(@"{0}.jpg", DateTime.Now.Ticks.GetHashCode().ToString("x").ToUpper());
-
-                    var file = await CrossMedia.Current.TakePhotoAsync(
-                        new StoreCameraMediaOptions
-                        {
-                            SaveToAlbum = true,
-                            Directory = "PeopleApp",
-                            Name = uniqueFileName + ".jpg"
-                        });
-
-                    if (file == null)
-                        return;
-
-                    // public path
-                    AlbumPath = file.AlbumPath;
-                    // private path
-                    string privatePath = file.Path;
-
-                    string filename = Path.GetFileNameWithoutExtension(AlbumPath);
-
-                    // PhotoAlbumPath is already saved on app launch (platform specific code)
-                    if (!AlbumPath.Equals(Settings.PhotoAlbumPath))
-                    {
-                        Settings.PhotoAlbumPath = Path.GetDirectoryName(AlbumPath);
-                    }
-
-                    //ImageSource = ImageSource.FromStream(() =>
-                    //{
-                    //    var stream = file.GetStream();
-                    //    file.Dispose();
-                    //    return stream;
-                    //});
-
-                    //PhotoModel newPhoto = new PhotoModel();
-                    var item = new Photo()
-                    {
-                        ImageUrl = AlbumPath,
-                        FileName = filename
-                    };
-                    Items.Add(item);
-
-                    try
-                    {
-                        // create the object (photo) to upload 
-                        //var objectId = Utilities.NewGuid();
-                        Models.Object obj = new Models.Object
-                    {
-                        Id = uniqueFileName,
-                        CreationLocation = "",
-                        CreationDate = DateTime.Now,
-                        UserId = Settings.UserId,
-                        SharingSpaceId = SharingSpace.Id,
-                        Type = "photo"
-                        // storedLocally = "true",
-                        // storedRemotely = "false",
-                        // localPath = "the local path",
-                        // remotePath = ""
-                    };
-
-                        //await _apiServices.PostObjectAsync(obj);
-                        //await CloudService.AddObject(obj);
-                        var table = await CloudService.GetTableAsync<Models.Object>();
-                        await table.CreateItemAsync(obj);
-                    }
-                    catch (Exception ex)
-                    {
-                        Debug.WriteLine("Error :" + ex.Message);
-                    }
-                    
-                    // extract metadata from single photo
-                    List<PhotoModel> photoInfo = MetaExtractor.ExtractMetadataPerPhoto(AlbumPath);
-
-                    try
-                    {
-                        // post in attribute table
-                        var datatypeList = await _apiServices.GetDatatypesAsync(Settings.CurrentSharingSpace);
-                        // datatype = { datatypeId, label }
-                        foreach (var datatype in datatypeList)
-                        {
-                            string value = "";
-                            if (datatype.Label.Equals("Time"))
-                            {
-                                value = photoInfo.FirstOrDefault().map["date"];
-                            }
-                            else if (datatype.Label.Equals("Location"))
-                            {
-                                value = photoInfo.FirstOrDefault().map["lat"] + ", " + photoInfo.FirstOrDefault().map["lng"];
-                            }
-                            else if (datatype.Label.Equals("Social"))
-                            {
-                                value = photoInfo.FirstOrDefault().map["owner"];
-                            }
-                            else if (datatype.Label.Equals("Topic"))
-                            {
-                                value = "keywords";
-                            }
-
-                            await _apiServices.PostAttributeAsync(new Models.Attribute { ObjectId = uniqueFileName, Value = value, DatatypeId = datatype.DatatypeId });
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Debug.WriteLine("Error :" + ex.Message);
-                    }
-                    finally
-                    {
-                        await CloudService.SyncOfflineCacheAsync();
-                    }
-                    
-
-
-
-                });
+                //await DisplayAlert("No Camera", ":( No camera available.", "OK");
+                ErrorMessage = ":( No camera available.";
+                return;
             }
+
+            // Unique File Name
+            var uniqueFileName = string.Format(@"{0}", Guid.NewGuid());
+            //var uniqueFileName = string.Format(@"{0}.jpg", DateTime.Now.Ticks);
+            //var uniqueFileName = string.Format(@"{0}.jpg", DateTime.Now.Ticks.GetHashCode().ToString("x").ToUpper());
+
+            var file = await CrossMedia.Current.TakePhotoAsync(
+                new StoreCameraMediaOptions
+                {
+                    SaveToAlbum = true,
+                    Directory = "PeopleApp",
+                    Name = uniqueFileName + ".jpg"
+                });
+
+            if (file == null)
+                return;
+
+            // public path
+            AlbumPath = file.AlbumPath;
+            // private path
+            string privatePath = file.Path;
+
+            string filename = Path.GetFileNameWithoutExtension(AlbumPath);
+
+            // PhotoAlbumPath is already saved on app launch (platform specific code)
+            if (!AlbumPath.Equals(Settings.PhotoAlbumPath))
+            {
+                Settings.PhotoAlbumPath = Path.GetDirectoryName(AlbumPath);
+            }
+
+            //ImageSource = ImageSource.FromStream(() =>
+            //{
+            //    var stream = file.GetStream();
+            //    file.Dispose();
+            //    return stream;
+            //});
+
+            //PhotoModel newPhoto = new PhotoModel();
+            var item = new Photo()
+            {
+                ImageUrl = AlbumPath,
+                FileName = filename
+            };
+            Items.Add(item);
+
+            try
+            {
+                // create the object (photo) to upload 
+                //var objectId = Utilities.NewGuid();
+                Models.Object obj = new Models.Object
+                {
+                    Id = uniqueFileName,
+                    CreationLocation = "",
+                    CreationDate = DateTime.Now,
+                    UserId = Settings.UserId,
+                    SharingSpaceId = SharingSpace.Id,
+                    Type = "photo"
+                    // storedLocally = "true",
+                    // storedRemotely = "false",
+                    // localPath = "the local path",
+                    // remotePath = ""
+                };
+
+                //await _apiServices.PostObjectAsync(obj);
+                //await CloudService.AddObject(obj);
+                var table = await CloudService.GetTableAsync<Models.Object>();
+                await table.CreateItemAsync(obj);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Error :" + ex.Message);
+            }
+            finally
+            {
+                await CloudService.SyncOfflineCacheAsync();
+            }
+
+            // extract metadata from single photo
+            List<PhotoModel> photoInfo = MetaExtractor.ExtractMetadataPerPhoto(AlbumPath);
+
+            try
+            {
+                // post in attribute table
+                var datatypeList = await _apiServices.GetDatatypesAsync(Settings.CurrentSharingSpace);
+                // datatype = { datatypeId, label }
+                foreach (var datatype in datatypeList)
+                {
+                    string value = "";
+                    if (datatype.Label.Equals("Time"))
+                    {
+                        value = photoInfo.FirstOrDefault().map["date"];
+                    }
+                    else if (datatype.Label.Equals("Location"))
+                    {
+                        value = photoInfo.FirstOrDefault().map["lat"] + ", " + photoInfo.FirstOrDefault().map["lng"];
+                    }
+                    else if (datatype.Label.Equals("Social"))
+                    {
+                        value = photoInfo.FirstOrDefault().map["owner"];
+                    }
+                    else if (datatype.Label.Equals("Topic"))
+                    {
+                        value = "keywords";
+                    }
+
+                    await _apiServices.PostAttributeAsync(new Models.Attribute { ObjectId = uniqueFileName, Value = value, DatatypeId = datatype.DatatypeId });
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Error :" + ex.Message);
+            }
+            // useless no use for syncing here
+            //finally
+            //{
+            //    await CloudService.SyncOfflineCacheAsync();
+            //}
+
         }
+
 
         public ICommand ProcessCommand
         {
@@ -335,6 +336,6 @@ namespace PeopleApp.ViewModels
             }
         }
 
-        
+
     }
 }

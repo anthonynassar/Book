@@ -25,7 +25,6 @@ namespace PeopleApp.ViewModels
 
             RefreshCommand = new Command(async () => await Refresh());
             CreateSharingSpaceCommand = new Command(async () => await CreateSharingSpace());
-            LogoutCommand = new Command(async () => await Logout());
             //TagsCommand = new Command(async () => await NavigateToTags());
             LoadMoreCommand = new Command<SharingSpace>(async (SharingSpace item) => await LoadMore(item));
 
@@ -43,7 +42,6 @@ namespace PeopleApp.ViewModels
         public ILoginProvider LoginProvider => DependencyService.Get<ILoginProvider>();
         public ICommand RefreshCommand { get; }
         public ICommand CreateSharingSpaceCommand { get; }
-        public ICommand LogoutCommand { get; }
         public ICommand LoadMoreCommand { get; }
 
         ObservableRangeCollection<SharingSpace> items = new ObservableRangeCollection<SharingSpace>();
@@ -119,28 +117,6 @@ namespace PeopleApp.ViewModels
             {
                 Debug.WriteLine($"[TaskList] Error in CreateSharingSpace: {ex.Message}");
                 await Application.Current.MainPage.DisplayAlert("Sharing space Not Created", ex.Message, "OK");
-            }
-            finally
-            {
-                IsBusy = false;
-            }
-        }
-
-        async Task Logout()
-        {
-            if (IsBusy)
-                return;
-            IsBusy = true;
-
-            try
-            {
-                //var cloudService = ServiceLocator.Instance.Resolve<ICloudService>();
-                await CloudService.LogoutAsync();
-                Application.Current.MainPage = new NavigationPage(new Views.EntryPage());
-            }
-            catch (Exception ex)
-            {
-                await Application.Current.MainPage.DisplayAlert("Logout Failed", ex.Message, "OK");
             }
             finally
             {

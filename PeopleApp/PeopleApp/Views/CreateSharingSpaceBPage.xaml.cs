@@ -20,6 +20,7 @@ namespace PeopleApp.Views
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class CreateSharingSpaceBPage : ContentPage
     {
+        ApiServices _apiServices = new ApiServices();
         CreateSharingSpaceBViewModel vm;
 
         public CreateSharingSpaceBPage(SharingSpace sharingSpace, List<DimensionLocal> dimensions)
@@ -37,7 +38,8 @@ namespace PeopleApp.Views
         private async void OnSharingSpaceSubmission(CreateSharingSpaceBViewModel source, SharingSpace sharingSpace)
         {
             // var objectList = _apiServices.GetObjectsBySharingSpace(SharingSpace.Id);
-            Navigation.InsertPageBefore(new EventOverviewPage(sharingSpace), Navigation.NavigationStack.FirstOrDefault());
+            var objectList = await _apiServices.GetObjectsBySharingSpace(sharingSpace.Id);
+            Navigation.InsertPageBefore(new EventOverviewPage(sharingSpace, objectList), Navigation.NavigationStack.FirstOrDefault());
             await Navigation.PopToRootAsync();
         }
 

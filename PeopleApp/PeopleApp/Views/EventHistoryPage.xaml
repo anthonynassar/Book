@@ -3,37 +3,41 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="PeopleApp.Views.EventHistoryPage"
              Title="Your history">
-    <ContentPage.ToolbarItems>
-        <ToolbarItem Name="Logout"
-                     Command="{Binding LogoutCommand}"
-                     Text="logout"
-                     Order="Primary"
-                     Priority="0" />
-    </ContentPage.ToolbarItems>
     <ContentPage.Content>
-        <StackLayout>
-            <ListView x:Name="listView" BackgroundColor="#7F7F7F"
+        <StackLayout Padding="20, 5">
+            <ListView x:Name="listView"
+                      Margin="0, 10"
                 CachingStrategy="RecycleElement"
                 IsPullToRefreshEnabled="True"
                 IsRefreshing="{Binding IsBusy, Mode=OneWay}"
                 ItemsSource="{Binding Items}"
                 RefreshCommand="{Binding RefreshCommand}"
-                RowHeight="50"
+                RowHeight="80"
                 ItemSelected="ListView_ItemSelected"
                 SelectedItem="{Binding SelectedItem, Mode=TwoWay}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
-                            <StackLayout HorizontalOptions="FillAndExpand"
-                           Orientation="Horizontal"
-                           Padding="10"
-                           VerticalOptions="CenterAndExpand">
+                            <StackLayout Orientation="Vertical" HeightRequest="50" >
                                 <Label HorizontalOptions="FillAndExpand"
-                       Text="{Binding Descriptor}"
-                       TextColor="#272832" />
-                                <Label HorizontalOptions="FillAndExpand"
-                       Text="{Binding CreationLocation}"
-                       TextColor="#272832" />
+                                           Text="{Binding Descriptor}"
+                                           FontAttributes="Bold" FontSize="Large"/>
+                                <StackLayout Orientation="Horizontal" >
+                                    <Label HorizontalOptions="Start"
+                                           Text="Location: "
+                                           FontAttributes="Bold" TextColor="Gray" FontSize="Small"/>
+                                    <Label HorizontalOptions="End"
+                                           Text="{Binding CreationLocation}"
+                                           TextColor="Gray" FontSize="Small"/>
+                                </StackLayout>
+                                <StackLayout Orientation="Horizontal" >
+                                    <Label HorizontalOptions="Start"
+                                           Text="Time: "
+                                           FontAttributes="Bold" TextColor="Gray" FontSize="Small"/>
+                                    <Label HorizontalOptions="End"
+                                           Text="{Binding CreationDate}"
+                                           TextColor="Gray" FontSize="Small"/>
+                                </StackLayout>
                             </StackLayout>
                         </ViewCell>
                     </DataTemplate>
@@ -41,9 +45,9 @@
             </ListView>
             <StackLayout HorizontalOptions="Center"
                    Orientation="Horizontal">
-                <Button BackgroundColor="Teal"
+                <Button BackgroundColor="DarkCyan"
                 Command="{Binding CreateSharingSpaceCommand}"
-                Text="Create New SS"
+                Text="Create New Event"
                 TextColor="White" />
             </StackLayout>
         </StackLayout>

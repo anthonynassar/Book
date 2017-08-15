@@ -18,45 +18,57 @@
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <ScrollView Orientation="Horizontal" VerticalOptions="FillAndExpand">
-            <StackLayout Spacing="0" Padding="0" BackgroundColor="White">
-                <!--<BoxView HorizontalOptions="FillAndExpand" HeightRequest="100" VerticalOptions="Start" Color="Gray" />-->
-                <Button Image="Icon.png" BorderRadius="20"  HeightRequest="72" WidthRequest="72" BackgroundColor="Red" HorizontalOptions="Center" VerticalOptions="Start">
-                    <!--<Button.BorderRadius>
+            <AbsoluteLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Padding="0,15">
+                <StackLayout AbsoluteLayout.LayoutFlags="All" 
+                             AbsoluteLayout.LayoutBounds="0,0,1,1" Spacing="0" Padding="0" >
+                    <!--<BoxView HorizontalOptions="FillAndExpand" HeightRequest="100" VerticalOptions="Start" Color="Gray" />-->
+                    <Button Image="Icon.png" BorderRadius="20"  HeightRequest="72" WidthRequest="72" BackgroundColor="Red" HorizontalOptions="Center" VerticalOptions="Start">
+                        <!--<Button.BorderRadius>
                          HACK: fixes a bug where border doesn't get draw unless there is a radius. 
                         <OnPlatform x:TypeArguments="x:Int32">
                             <OnPlatform.Android>1</OnPlatform.Android>
                         </OnPlatform>
                     </Button.BorderRadius>-->
-                </Button>
-                <StackLayout HeightRequest="100" VerticalOptions="Start" HorizontalOptions="FillAndExpand" Spacing="20" BackgroundColor="White">
-                    <Label x:Name="username" TextColor="Black" Text="User Name" FontSize="28" HorizontalOptions="Center" VerticalOptions="Center" FontAttributes="Bold" />
-                    <Entry Text="Bio + Hashtags" HorizontalOptions="FillAndExpand" VerticalOptions="CenterAndExpand" />
-                </StackLayout>
-                <StackLayout Orientation="Horizontal">
-                    <TableView Intent="Form">
-                        <TableRoot>
-                            <TableSection Title="Basics">
-                                <EntryCell x:Name="firstName" Label="First name" Keyboard="Text" />
-                                <EntryCell x:Name="lastName" Label="Last name" Keyboard="Text" />
-                                <TextCell x:Name="email" TextColor="Gray" Text="Email" Detail="" />
-                                <!--<EntryCell x:Name="email" Label="Email" Keyboard="Text" />-->
-                                <!--<EntryCell x:Name="birthdate" Label="Birthday" Keyboard="Text" />-->
-                                <ViewCell>
-                                    <StackLayout Orientation="Horizontal" Padding="13, 0">
-                                        <Label Text="Birthday" TextColor="Gray" VerticalOptions="Center"/>
-                                        <DatePicker x:Name="birthdate" HorizontalOptions="EndAndExpand" Date="{x:Static sys:DateTime.Now}" Format="dd MMM yyyy" MinimumDate="Jan 1 1950" MaximumDate="Dec 31 2050"/>
-                                    </StackLayout>
+                    </Button>
+                    <StackLayout Padding="20, 0" HeightRequest="100" VerticalOptions="Start" HorizontalOptions="FillAndExpand" Spacing="20" BackgroundColor="White">
+                        <Label x:Name="username" TextColor="Black" Text="User Name" FontSize="28" HorizontalOptions="Center" VerticalOptions="Center" FontAttributes="Bold" />
+                        <Entry Text="Bio + Hashtags" HorizontalOptions="FillAndExpand" VerticalOptions="CenterAndExpand" />
+                    </StackLayout>
+                    <StackLayout Orientation="Horizontal">
+                        <TableView Intent="Form">
+                            <TableRoot>
+                                <TableSection Title="Basics">
+                                    <EntryCell x:Name="firstName" Label="First name" Keyboard="Text" />
+                                    <EntryCell x:Name="lastName" Label="Last name" Keyboard="Text" />
+                                    <TextCell x:Name="email" TextColor="Gray" Text="Email" Detail="" />
+                                    <!--<EntryCell x:Name="email" Label="Email" Keyboard="Text" />-->
+                                    <!--<EntryCell x:Name="birthdate" Label="Birthday" Keyboard="Text" />-->
+                                    <ViewCell>
+                                        <StackLayout Orientation="Horizontal" Padding="13, 0">
+                                            <Label Text="Birthday" TextColor="Gray" VerticalOptions="Center"/>
+                                            <DatePicker x:Name="birthdate" HorizontalOptions="EndAndExpand" Date="{x:Static sys:DateTime.Now}" Format="dd MMM yyyy" MinimumDate="Jan 1 1950" MaximumDate="Dec 31 2050"/>
+                                        </StackLayout>
                                     </ViewCell>
-                                <EntryCell x:Name="gender" Label="Gender" Keyboard="Text" />
-                            </TableSection>
-                            <TableSection Title="Address">
-                                <EntryCell x:Name="city" Label="City" />
-                                <EntryCell x:Name="country" Label="Country" />
-                            </TableSection>
-                        </TableRoot>
-                    </TableView>
+                                    <EntryCell x:Name="gender" Label="Gender" Keyboard="Text" />
+                                </TableSection>
+                                <TableSection Title="Address">
+                                    <EntryCell x:Name="city" Label="City" />
+                                    <EntryCell x:Name="country" Label="Country" />
+                                </TableSection>
+                            </TableRoot>
+                        </TableView>
+                    </StackLayout>
                 </StackLayout>
-            </StackLayout>
+                <StackLayout x:Name="activityStack" IsVisible="False"
+                     Padding="32"
+                     AbsoluteLayout.LayoutFlags="PositionProportional"
+                     AbsoluteLayout.LayoutBounds="0.5,0.5,-1,-1"
+                     BackgroundColor="#90000000" >
+                    <ActivityIndicator x:Name="activityIndicator" Color="#3CB9A8"/>
+                    <Label x:Name="messageLabel" Text="Updating profile..." HorizontalOptions="Center" TextColor = "White" />
+                </StackLayout>
+            </AbsoluteLayout>
+            
         </ScrollView>
     </ContentPage.Content>
 </ContentPage>

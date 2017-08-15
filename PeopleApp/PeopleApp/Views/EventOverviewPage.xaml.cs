@@ -35,17 +35,17 @@ namespace PeopleApp.Views
             this.sharingSpace = sharingSpace;
         }
 
-        public EventOverviewPage(SharingSpace sharingSpace)
-        {
-            if (sharingSpace == null)
-                throw new ArgumentNullException();
+        //public EventOverviewPage(SharingSpace sharingSpace)
+        //{
+        //    if (sharingSpace == null)
+        //        throw new ArgumentNullException();
 
-            //BindingContext = vm = new EventOverviewViewModel(sharingSpace);
-            InitializeComponent();
-            eventName.Text = sharingSpace.Descriptor;
-            Settings.CurrentSharingSpace = sharingSpace.Id;
-            this.sharingSpace = sharingSpace;
-        }
+        //    //BindingContext = vm = new EventOverviewViewModel(sharingSpace);
+        //    InitializeComponent();
+        //    eventName.Text = sharingSpace.Descriptor;
+        //    Settings.CurrentSharingSpace = sharingSpace.Id;
+        //    this.sharingSpace = sharingSpace;
+        //}
 
         private async void PhotoItemTappedAsync(object sender, ItemTappedEventArgs e)
         {

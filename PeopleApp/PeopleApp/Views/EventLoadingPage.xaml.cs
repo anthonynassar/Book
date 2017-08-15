@@ -34,6 +34,18 @@ namespace PeopleApp.Views
             ICollection<SharingSpace> sharingSpaces = null;
             var sharingSpaceTable = await CloudService.GetTableAsync<SharingSpace>();
 
+            // checks if there is already a selected sharing space if not the history page will appear
+            if (!String.IsNullOrEmpty(Settings.CurrentSharingSpace))
+            {
+                //var sharingSpace = await CloudService.GetSharingSpace(Settings.CurrentSharingSpace);
+                SharingSpace sharingSpace = await sharingSpaceTable.ReadItemAsync(Settings.CurrentSharingSpace);
+                var objectList = await _apiServices.GetObjectsBySharingSpace(sharingSpace.Id);
+                Navigation.InsertPageBefore(new EventOverviewPage(sharingSpace, objectList), this);
+                await Navigation.PopAsync();
+                return;
+                //await Navigation.PushAsync(new EventOverviewPage());
+            }
+
             try
             {
                 //sharingSpaces = await _apiServices.GetSharingSpaceAsync(Settings.AccessToken);
@@ -46,16 +58,16 @@ namespace PeopleApp.Views
             }
 
             // checks if there is already a selected sharing space if not the history page will appear
-            if (!String.IsNullOrEmpty(Settings.CurrentSharingSpace))
-            {
-                //var sharingSpace = await CloudService.GetSharingSpace(Settings.CurrentSharingSpace);
-                SharingSpace sharingSpace = await sharingSpaceTable.ReadItemAsync(Settings.CurrentSharingSpace);
-                Navigation.InsertPageBefore(new EventOverviewPage(sharingSpace), this);
-                await Navigation.PopAsync();
-                //await Navigation.PushAsync(new EventOverviewPage());
-            }
+            //if (!String.IsNullOrEmpty(Settings.CurrentSharingSpace))
+            //{
+            //    //var sharingSpace = await CloudService.GetSharingSpace(Settings.CurrentSharingSpace);
+            //    SharingSpace sharingSpace = await sharingSpaceTable.ReadItemAsync(Settings.CurrentSharingSpace);
+            //    Navigation.InsertPageBefore(new EventOverviewPage(sharingSpace), this);
+            //    await Navigation.PopAsync();
+            //    //await Navigation.PushAsync(new EventOverviewPage());
+            //}
             // else if there is events list them otherwise open no event page
-            else if (sharingSpaces.Count > 0)
+            if (sharingSpaces.Count > 0)
             {
                 try
                 {
