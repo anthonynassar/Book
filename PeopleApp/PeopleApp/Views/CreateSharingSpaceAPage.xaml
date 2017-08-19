@@ -5,11 +5,11 @@
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              xmlns:viewModels="clr-namespace:PeopleApp.ViewModels"
              Title="Create Event">
-    <ContentPage.BindingContext>
+    <!--<ContentPage.BindingContext>
         <viewModels:CreateSharingSpaceAViewModel/>
-    </ContentPage.BindingContext>
-    <StackLayout Padding="0,15">
-        <Entry x:Name="eventDescriptor" Placeholder="Insert event name here (eg Birthday)"/>
+    </ContentPage.BindingContext>-->
+    <StackLayout Padding="15, 10">
+        <Entry x:Name="eventDescriptor" Placeholder="Insert event name here (eg. Birthday)" Keyboard="Text"/>
         <TableView Intent="Form">
             <TableRoot>
                 <TableSection Title="Time">
@@ -17,14 +17,14 @@
                     <ViewCell>
                         <StackLayout Orientation="Horizontal" Padding="13, 0">
                             <Label Text="Starts" VerticalOptions="Center"/>
-                            <DatePicker x:Name="dateStart" HorizontalOptions="EndAndExpand" Date="{x:Static sys:DateTime.Now}" Format="dd MMM yyyy" MinimumDate="Jan 1 2017" MaximumDate="Dec 31 2050"/>
+                            <DatePicker x:Name="dateStart" HorizontalOptions="EndAndExpand" Date="{x:Static sys:DateTime.Now}" Format="dd MMM yyyy" MinimumDate="Jan 1 2017" MaximumDate="Dec 31 2025"/>
                             <TimePicker x:Name="timeStart" Time="12:00" HorizontalOptions="End"/>
                         </StackLayout>
                     </ViewCell>
                     <ViewCell>
                         <StackLayout Orientation="Horizontal" Padding="13, 0">
                             <Label Text="Ends" VerticalOptions="Center"/>
-                            <DatePicker x:Name="dateEnd" HorizontalOptions="EndAndExpand" Date="{x:Static sys:DateTime.Now}" Format="dd MMM yyyy" MinimumDate="Jan 1 2017" MaximumDate="Dec 31 2050"/>
+                            <DatePicker x:Name="dateEnd" BindingContext="{x:Reference Name=dateStart}" HorizontalOptions="EndAndExpand" Date="{x:Static sys:DateTime.Now}" Format="dd MMM yyyy" MinimumDate="{x:Static sys:DateTime.Now}" MaximumDate="Dec 31 2025"/>
                             <TimePicker x:Name="timeEnd" Time="12:00" HorizontalOptions="End"/>
                         </StackLayout>
                     </ViewCell>
@@ -42,7 +42,7 @@
                 </TableSection>
             </TableRoot>
         </TableView>
-        <Button Text="Next" Clicked="NextButton_Clicked"/>
+        <Button HorizontalOptions="Center" Text="Next" Clicked="NextButton_Clicked"/>
     </StackLayout>
 
 </ContentPage>

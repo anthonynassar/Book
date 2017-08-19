@@ -20,7 +20,8 @@
         <ScrollView Orientation="Horizontal" VerticalOptions="FillAndExpand">
             <AbsoluteLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Padding="0,15">
                 <StackLayout AbsoluteLayout.LayoutFlags="All" 
-                             AbsoluteLayout.LayoutBounds="0,0,1,1" Spacing="0" Padding="0" >
+                             AbsoluteLayout.LayoutBounds="0,0,1,1" Spacing="0" Padding="0" 
+                             >
                     <!--<BoxView HorizontalOptions="FillAndExpand" HeightRequest="100" VerticalOptions="Start" Color="Gray" />-->
                     <Button Image="Icon.png" BorderRadius="20"  HeightRequest="72" WidthRequest="72" BackgroundColor="Red" HorizontalOptions="Center" VerticalOptions="Start">
                         <!--<Button.BorderRadius>
@@ -34,7 +35,7 @@
                         <Label x:Name="username" TextColor="Black" Text="User Name" FontSize="28" HorizontalOptions="Center" VerticalOptions="Center" FontAttributes="Bold" />
                         <Entry Text="Bio + Hashtags" HorizontalOptions="FillAndExpand" VerticalOptions="CenterAndExpand" />
                     </StackLayout>
-                    <StackLayout Orientation="Horizontal">
+                    <StackLayout Orientation="Horizontal" BackgroundColor="White">
                         <TableView Intent="Form">
                             <TableRoot>
                                 <TableSection Title="Basics">

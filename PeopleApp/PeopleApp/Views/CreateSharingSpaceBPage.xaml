@@ -9,28 +9,12 @@
         <vm:CreateSharingSpaceBViewModel/>
     </ContentPage.BindingContext>-->
     <ContentPage.Content>
-        <AbsoluteLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Padding="0,15">
+        <AbsoluteLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Padding="15, 10">
 
             <StackLayout AbsoluteLayout.LayoutFlags="All" 
                          AbsoluteLayout.LayoutBounds="0,0,1,1">
                 <TableView HasUnevenRows="True">
                     <TableRoot >
-                        <TableSection Title="Topic">
-                            <TextCell Text="Describe your event with tags"/>
-                            <ViewCell >
-                                <dltag:TagEntryView TagItems="{Binding Items}"
-                                                TagTappedCommand="{Binding RemoveTagCommand}"
-                                                TagValidatorFactory="{StaticResource TagValidatorFactory}">
-                                    <dltag:TagEntryView.TagItemTemplate>
-                                        <DataTemplate>
-                                            <Frame BackgroundColor="#60b8ff" OutlineColor="Transparent" Padding="10" HasShadow="false">
-                                                <Label Text="{Binding Name}"/>
-                                            </Frame>
-                                        </DataTemplate>
-                                    </dltag:TagEntryView.TagItemTemplate>
-                                </dltag:TagEntryView>
-                            </ViewCell>
-                        </TableSection>
                         <TableSection Title="Social - The potential participants">
                             <!--<TextCell Text="Choose your participants from your circles"/>-->
                             <ViewCell Tapped="HandleNavigation_Tapped">
@@ -44,9 +28,25 @@
                                 </StackLayout>
                             </ViewCell>
                         </TableSection>
+                        <TableSection Title="Topic">
+                            <TextCell Text="Describe your event with tags"/>
+                            <ViewCell >
+                                <dltag:TagEntryView TagItems="{Binding Items}" Padding="0,0,0,35"
+                                                TagTappedCommand="{Binding RemoveTagCommand}"
+                                                TagValidatorFactory="{StaticResource TagValidatorFactory}" VerticalOptions="FillAndExpand">
+                                    <dltag:TagEntryView.TagItemTemplate>
+                                        <DataTemplate>
+                                            <Frame BackgroundColor="#60b8ff" OutlineColor="Transparent" Padding="10" HasShadow="false">
+                                                <Label Text="{Binding Name}"/>
+                                            </Frame>
+                                        </DataTemplate>
+                                    </dltag:TagEntryView.TagItemTemplate>
+                                </dltag:TagEntryView>
+                            </ViewCell>
+                        </TableSection>
                     </TableRoot>
                 </TableView>
-                <Button IsEnabled="{Binding IsNotBusy}" Text="Submit" Command="{Binding CreateEventCommand}"/>
+                <Button HorizontalOptions="Center" IsEnabled="{Binding IsNotBusy}" Text="Submit" Command="{Binding CreateEventCommand}"/>
             </StackLayout>
             <StackLayout IsVisible="{Binding IsBusy}"
                      Padding="32"

@@ -13,6 +13,7 @@ using PeopleApp.Models;
 using System.IO;
 using System.Collections.ObjectModel;
 using PeopleApp.Services;
+using System.Globalization;
 
 namespace PeopleApp.Views
 {
@@ -30,7 +31,9 @@ namespace PeopleApp.Views
 
             BindingContext = vm = new EventOverviewViewModel(sharingSpace, objectList);
             InitializeComponent();
-            eventName.Text = sharingSpace.Descriptor;
+            TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
+            eventName.Text = textInfo.ToTitleCase(sharingSpace.Descriptor);
+
             Settings.CurrentSharingSpace = sharingSpace.Id;
             this.sharingSpace = sharingSpace;
         }

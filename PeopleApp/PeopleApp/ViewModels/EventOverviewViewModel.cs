@@ -100,10 +100,11 @@ namespace PeopleApp.ViewModels
             }
             else
             {
-                List<string> fileEntries = Directory.GetFiles(Settings.PhotoAlbumPath)
-                                                .Where<string>(t => Path.GetFileNameWithoutExtension(t).StartsWith("001"))
-                                                .ToArray<string>()
-                                                .ToList<string>();
+                List<string> fileEntries = new List<string>();
+                //List<string> fileEntries = Directory.GetFiles(Settings.PhotoAlbumPath)
+                //                                .Where<string>(t => Path.GetFileNameWithoutExtension(t).StartsWith("001"))
+                //                                .ToArray<string>()
+                //                                .ToList<string>();
 
                 // get images by sharingspace
                 // write a simple http get request
@@ -191,6 +192,20 @@ namespace PeopleApp.ViewModels
                 FileName = filename
             };
             Items.Add(item);
+
+            try
+            {
+                // upload item to cloud
+                string imageRemotePath = await UploadToCloud(uniqueFileName + ".jpg");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Error: " + ex.Message);
+                Debug.WriteLine("Error Full: " + ex);
+                await Application.Current.MainPage.DisplayAlert("Image upload failed", ex.Message, "OK");
+                return;
+            }
+            
 
             try
             {
@@ -306,7 +321,7 @@ namespace PeopleApp.ViewModels
         //    }
         //}
 
-        private async Task UploadToCloud()
+        private async Task<string> UploadToCloud(string filename)
         {
             // Parse the connection string and return a reference to the storage account.
             // Retrieve storage account from connection string.
@@ -316,7 +331,7 @@ namespace PeopleApp.ViewModels
             CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
 
             // Retrieve a reference to a container.
-            CloudBlobContainer container = blobClient.GetContainerReference("user1");
+            CloudBlobContainer container = blobClient.GetContainerReference(Settings.UserId.Replace("|", ""));
 
             // Create the container if it doesn't already exist.
             await container.CreateIfNotExistsAsync();
@@ -325,13 +340,19 @@ namespace PeopleApp.ViewModels
             await container.SetPermissionsAsync(new BlobContainerPermissions { PublicAccess = BlobContainerPublicAccessType.Blob });
 
             // Retrieve reference to a blob named "myblob".
-            CloudBlockBlob blockBlob = container.GetBlockBlobReference("myphoto2.jpg");
+            CloudBlockBlob blockBlob = container.GetBlockBlobReference(filename);
 
             // Create or overwrite the "myblob" blob with contents from a local file.
             using (var fileStream = System.IO.File.OpenRead(AlbumPath))
             {
                 await blockBlob.UploadFromStreamAsync(fileStream);
             }
+
+            // Set the conntent type of the current blob to image/jpeg
+            blockBlob.Properties.ContentType = "image/jpeg";
+            await blockBlob.SetPropertiesAsync();
+
+            return blockBlob.Uri.ToString();
         }
 
 
