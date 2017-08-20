@@ -36,6 +36,27 @@ namespace PeopleApp.Services
             }
         }
 
+        public async Task<List<SharingSpace>> GetNearbyEvents(string token, string distance)
+        {
+            distance = "500";
+            var client = new HttpClient();
+
+            client.DefaultRequestHeaders.Add("ZUMO-API-VERSION", "2.0.0");
+            client.DefaultRequestHeaders.Add("X-ZUMO-AUTH", token);
+            //var json = JsonConvert.SerializeObject(user);
+            // HttpContent content = new StringContent(json);
+            //content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+            //content.Headers.Add("ZUMO-API-VERSION", "2.0.0");
+            //content.Headers.Add("X-ZUMO-AUTH", token);
+
+            var json = await client.GetStringAsync(Constants.BaseApiAddress + "api/custom/" + distance);
+
+            var sharingspaces = JsonConvert.DeserializeObject<List<SharingSpace>>(json);
+
+            return sharingspaces;
+
+        }
+
         public async Task<User> PostUserAsync(User user, string token)
         {
             var client = new HttpClient();

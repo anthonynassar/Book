@@ -166,6 +166,7 @@
     <Compile Include="App_Start\Startup.MobileApp.cs" />
     <Compile Include="Controllers\AttributeController.cs" />
     <Compile Include="Controllers\ConstraintController.cs" />
+    <Compile Include="Controllers\CustomController.cs" />
     <Compile Include="Controllers\DatatypeController.cs" />
     <Compile Include="Controllers\DimDatatypeController.cs" />
     <Compile Include="Controllers\DimensionController.cs" />
@@ -269,6 +270,10 @@
     <Compile Include="Migrations\201708100853307_UpdateUserTable.Designer.cs">
       <DependentUpon>201708100853307_UpdateUserTable.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201708201640521_UpdateUserTable1.cs" />
+    <Compile Include="Migrations\201708201640521_UpdateUserTable1.Designer.cs">
+      <DependentUpon>201708201640521_UpdateUserTable1.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\MobileServiceContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -346,6 +351,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201708100853307_UpdateUserTable.resx">
       <DependentUpon>201708100853307_UpdateUserTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201708201640521_UpdateUserTable1.resx">
+      <DependentUpon>201708201640521_UpdateUserTable1.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

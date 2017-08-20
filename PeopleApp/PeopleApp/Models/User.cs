@@ -19,6 +19,8 @@ namespace PeopleApp.Models
         public string CultureInfo { get; set; }
         public string Country { get; set; }
         public string City { get; set; }
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
 
         public override bool Equals(System.Object obj)
         {
@@ -31,7 +33,8 @@ namespace PeopleApp.Models
                 Username.Equals(user.Username) && GivenName.Equals(user.GivenName) &&
                 Surname.Equals(user.Surname) && Birthdate.Equals(user.Birthdate) &&
                 Gender.Equals(user.Gender) && CultureInfo.Equals(user.CultureInfo) &&
-                City.Equals(user.City) && Country.Equals(user.Country);
+                City.Equals(user.City) && Country.Equals(user.Country) &&
+                Latitude.Equals(user.Latitude) && Longitude.Equals(user.Longitude);
         }
     }
 }

@@ -90,9 +90,11 @@ namespace PeopleApp.Views
 
             Models.Constraint timeConstraint1 = new Models.Constraint { Operator = "begin", Value = startDate.ToString() };
             Models.Constraint timeConstraint2 = new Models.Constraint { Operator = "end", Value = endDate.ToString() };
-            Models.Constraint locationConstraint = new Models.Constraint { Operator = "range", Value = mySlider.Value.ToString() };
+            Models.Constraint locationConstraint1 = new Models.Constraint { Operator = "range", Value = mySlider.Value.ToString() };
+            Models.Constraint locationConstraint2 = new Models.Constraint { Operator = "latitude", Value = LatitudeLabel.Detail };
+            Models.Constraint locationConstraint3 = new Models.Constraint { Operator = "longitude", Value = LongitudeLabel.Detail };
             var timeConstraintList = new List<Models.Constraint> { timeConstraint1, timeConstraint2 };
-            var locationConstraintList = new List<Models.Constraint> { locationConstraint };
+            var locationConstraintList = new List<Models.Constraint> { locationConstraint1, locationConstraint2, locationConstraint3 };
             List<DimensionLocal> dimensions = new List<DimensionLocal>
             {
                 new DimensionLocal { Label = "Time", Interval = true, ConstraintList = timeConstraintList},
