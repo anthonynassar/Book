@@ -34,7 +34,7 @@ namespace PeopleApp.Views
 
         private async void JoinSharingSpace_Clicked(object sender, EventArgs e)
         {
-            await Navigation.PushAsync(new EventList());
+            await Navigation.PushAsync(new JoinEventLoadingPage());
         }
     }
 }

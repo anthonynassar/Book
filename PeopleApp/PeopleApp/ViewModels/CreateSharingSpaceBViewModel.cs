@@ -23,7 +23,7 @@ namespace PeopleApp.ViewModels
         ApiServices _apiServices = new ApiServices();
         public ICloudService CloudService => ServiceLocator.Get<ICloudService>();
         public SharingSpace SharingSpace { get; set; }
-        public List<DimensionLocal> Dimensions { get; set; }
+        public List<DimensionView> Dimensions { get; set; }
         private ContentPage _page;
 
         public CreateSharingSpaceBViewModel() 
@@ -32,7 +32,7 @@ namespace PeopleApp.ViewModels
             //RemoveTagCommand = new BaseCommand<TagItem>((arg) => RemoveTag(arg));
         }
 
-        public CreateSharingSpaceBViewModel(SharingSpace sharingSpace, List<DimensionLocal> dimensions, CreateSharingSpaceBPage page)
+        public CreateSharingSpaceBViewModel(SharingSpace sharingSpace, List<DimensionView> dimensions, CreateSharingSpaceBPage page)
         {
             this.SharingSpace = sharingSpace;
             this.Dimensions = dimensions;
@@ -130,6 +130,9 @@ namespace PeopleApp.ViewModels
             IsBusy = true;
             try
             {
+                DimensionView socialDimension = new DimensionView { Label = "Social", Interval = true };
+                Dimensions.Add(socialDimension);
+
                 Settings.CurrentSharingSpace = this.SharingSpace.Id;
                 var response = await _apiServices.PostSharingSpaceAsync(this.SharingSpace, Settings.AccessToken);
 
@@ -138,6 +141,7 @@ namespace PeopleApp.ViewModels
                     var dimensionId = Utilities.NewGuid();
                     var dataypeId = Utilities.NewGuid();
                     await _apiServices.PostDimensionAsync(new Dimension { Id = dimensionId, Interval = dimension.Interval, Label = dimension.Label });
+                    // metadata related tables
                     await _apiServices.PostDatatypeAsync(new Datatype { Id = dataypeId, Type = "string", Domain = "" });
                     await _apiServices.PostDimDatatypeAsync(new DimDatatype { DatatypeId = dataypeId, DimensionId = dimensionId });
                     foreach (var constraint in dimension.ConstraintList)

@@ -31,6 +31,7 @@ namespace PeopleApp.Views
 
             BindingContext = vm = new EventOverviewViewModel(sharingSpace, objectList);
             InitializeComponent();
+            // Capitalize event title
             TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
             eventName.Text = textInfo.ToTitleCase(sharingSpace.Descriptor);
 

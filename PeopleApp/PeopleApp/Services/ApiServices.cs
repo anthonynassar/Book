@@ -43,18 +43,75 @@ namespace PeopleApp.Services
 
             client.DefaultRequestHeaders.Add("ZUMO-API-VERSION", "2.0.0");
             client.DefaultRequestHeaders.Add("X-ZUMO-AUTH", token);
-            //var json = JsonConvert.SerializeObject(user);
-            // HttpContent content = new StringContent(json);
-            //content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-            //content.Headers.Add("ZUMO-API-VERSION", "2.0.0");
-            //content.Headers.Add("X-ZUMO-AUTH", token);
+            
+            try
+            {
+                var response = await client.PostAsync(Constants.BaseApiAddress + "api/custom/" + distance, null);
+                //GetStringAsync(Constants.BaseApiAddress + "api/custom/" + distance);
+                //var sharingspaces = JsonConvert.DeserializeObject<List<SharingSpace>>(json);
+                if (response.StatusCode.Equals(HttpStatusCode.OK))
+                {
+                    try
+                    {
+                        var returnedObjects = response.Content.ReadAsStringAsync().Result;
+                        var returnedSharingSpaces = JsonConvert.DeserializeObject<List<SharingSpace>>(returnedObjects);
 
-            var json = await client.GetStringAsync(Constants.BaseApiAddress + "api/custom/" + distance);
+                        return returnedSharingSpaces;
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine("Error: " + ex.Message);
+                        Debug.WriteLine("Error: " + ex);
+                        return null;
+                    }
+                }
+                else
+                {
+                    return null;
+                }
 
-            var sharingspaces = JsonConvert.DeserializeObject<List<SharingSpace>>(json);
+                //return sharingspaces;
+                
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Error: " + ex);
+                return null;
+            }
+        }
+        
+        public async Task<string> VerifyUserParticipation(string sharingSpaceId, string token)
+        {
+            var client = new HttpClient();
 
-            return sharingspaces;
+            client.DefaultRequestHeaders.Add("ZUMO-API-VERSION", "2.0.0");
+            client.DefaultRequestHeaders.Add("X-ZUMO-AUTH", token);
 
+            var json = await client.GetStringAsync(Constants.BaseApiAddress + "api/custom/ss/" + sharingSpaceId);
+
+            var response = JsonConvert.DeserializeObject<List<string>>(json);
+
+            if (response.Count != 0)
+                return response[0];
+            else
+                return null;
+        }
+
+        public async Task<string> VerifyOnwershipOfEvent(string sharingSpaceId, string token)
+        {
+            var client = new HttpClient();
+
+            client.DefaultRequestHeaders.Add("ZUMO-API-VERSION", "2.0.0");
+            client.DefaultRequestHeaders.Add("X-ZUMO-AUTH", token);
+
+            var json = await client.GetStringAsync(Constants.BaseApiAddress + "api/custom/user/" + sharingSpaceId);
+
+            var response = JsonConvert.DeserializeObject<List<string>>(json);
+
+            if(response.Count != 0)
+                return response[0];
+            else
+                return null;
         }
 
         public async Task<User> PostUserAsync(User user, string token)
@@ -108,6 +165,20 @@ namespace PeopleApp.Services
             var sharingSpaces = JsonConvert.DeserializeObject<List<SharingSpace>>(json);
 
             return sharingSpaces;
+        }
+
+        public async Task<string> GetDimensionId(string sharingSpaceId, string topic, string token)
+        {
+            var client = new HttpClient();
+
+            client.DefaultRequestHeaders.Add("ZUMO-API-VERSION", "2.0.0");
+            client.DefaultRequestHeaders.Add("X-ZUMO-AUTH", token);
+
+            var json = await client.GetStringAsync(Constants.BaseApiAddress + "api/custom/dimension?sharingSpaceId=" + sharingSpaceId + "&topic=" + topic);
+
+            string dimensionId = JsonConvert.DeserializeObject<string>(json);
+
+            return dimensionId;
         }
 
         //public async Task PostSharingSpaceAsync(Idea idea, string accessToken)

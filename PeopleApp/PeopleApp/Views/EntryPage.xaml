@@ -3,20 +3,23 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="PeopleApp.Views.EntryPage"
              Title="Login page">
-    <ContentPage.Content>
-        <StackLayout HorizontalOptions="Center"
-                     Orientation="Vertical"
-                     VerticalOptions="Center">
-            <Button BackgroundColor="Teal"
-                    BorderRadius="10"
-                    Command="{Binding FbLoginCommand}"
+    <ContentPage.Content BackgroundColor="White">
+        <StackLayout Orientation="Vertical" Margin="20,10" Spacing="15" >
+            <Label Text="Welcome to PeopleApp" FontSize="Large" FontAttributes="Bold"
+                   VerticalOptions="StartAndExpand" HorizontalTextAlignment="Start" TextColor="Black"/>
+            <Label Text="It's free and always will be." FontSize="Medium" VerticalOptions="StartAndExpand" TextColor="Black"/>
+            <Label Text="Login through your facebook account" FontSize="Medium" TextColor="Black"/>
+            <Button Command="{Binding FbLoginCommand}"
                     Text="Facebook Login"
-                    TextColor="White" />
-            <Button BackgroundColor="Teal"
-                    BorderRadius="10"
-                    Command="{Binding LoginCommand}"
+                    TextColor="White" 
+                    BorderColor="White"
+                    BackgroundColor="#3b5998" VerticalOptions="Center" HorizontalOptions="Center"/>
+            <Label Text="Or click this button to either sign in or sign up" FontSize="Medium" TextColor="Black"/>
+            <Button Command="{Binding LoginCommand}"
                     Text="Login"
-                    TextColor="White" />
+                    TextColor="White" 
+                    BorderColor="White"
+                    BackgroundColor="Teal" VerticalOptions="Center" HorizontalOptions="Center"/>
             <!--<Button BackgroundColor="Teal"
                     BorderRadius="10"
                     Text="Create Sharing Space"

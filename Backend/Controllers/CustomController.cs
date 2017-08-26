@@ -7,11 +7,14 @@ using System.Diagnostics;
 using System.Collections.Generic;
 using Backend.Helpers;
 using Backend.DataObjects;
+using System.Linq;
+using System.Net.Http;
+using System;
 
 namespace Backend.Controllers
 {
     [MobileAppController]
-    [Authorize]
+    //[Authorize]
     public class CustomController : ApiController
     {
         MobileServiceContext context;
@@ -61,11 +64,62 @@ namespace Backend.Controllers
             }
         }
 
-        public class SomeType
+        [HttpGet]
+        [Route("api/custom/ss/{sharingSpaceId}")]
+        public IQueryable<string> VerifyUserParticipation(string sharingSpaceId)
         {
-            public int a1;
-            public int a2;
+            var result = context.Events.Where(e => e.SharingSpaceId == sharingSpaceId)
+                                       .Join(context.Constraints,
+                                                e => e.ConstraintId,
+                                                c => c.Id,
+                                                (e, c) => e.SharingSpaceId).Distinct()
+                                       .AsQueryable();
+
+            return result;
         }
-    
+
+        [HttpGet, Authorize]
+        [Route("api/custom/user/{sharingSpaceId}")]
+        public IQueryable<string> VerifyOnwershipOfEvent(string sharingSpaceId)
+        {
+            var userId = Settings.GetUserId(User);
+            var result = context.SharingSpaces
+                                .Where(s => s.Id == sharingSpaceId && s.UserId == userId)
+                                .Select(e => e.Id)
+                                .AsQueryable();
+            return result;
+        }
+
+        [HttpGet, Authorize]
+        [Route("api/custom/dimension")]
+        public IQueryable<string> GetDimensionId()
+        {
+            string sharingSpaceId = GetParameter(Request, "sharingSpaceId"),
+                   topic = GetParameter(Request, "topic");
+
+            var userId = Settings.GetUserId(User);
+            var result = context.Events.Where(e => e.SharingSpaceId == sharingSpaceId)
+                                       .Join(context.Dimensions, e => e.DimensionId, d => d.Id, (e, d) => new { d.Id, d.Label })
+                                       .Where(d => d.Label == topic).Select(a => a.Id)
+                                       .AsQueryable();
+            return result;
+        }
+
+        /// <summary>
+        /// Retrieve parameters sent with the request and throws exception if the parameter
+        /// does not exist in the GET request. 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        private string GetParameter(HttpRequestMessage request, string name)
+        {
+            var queryParams = request.GetQueryNameValuePairs().Where(kv => kv.Key == name).ToList();
+            if (queryParams.Count == 0)
+            {
+                throw new HttpResponseException(HttpStatusCode.BadRequest);
+            }
+            return queryParams[0].Value;
+        }
     }
 }

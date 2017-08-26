@@ -113,8 +113,12 @@ namespace PeopleApp.ViewModels
                 foreach (var item in objectList)
                 {
                     string path = Settings.PhotoAlbumPath + "/" + item.Id + ".jpg";
-                    fileEntries.Add(path);
-                    //cnt++;
+                    // test if the image exists locally
+                    if (File.Exists(path))
+                        fileEntries.Add(path);
+                    else
+                        fileEntries.Add("https://farm9.staticflickr.com/8351/8299022203_de0cb894b0.jpg"); //fileEntries.Add(item.RemotePath);
+
                 }
 
                 int photoIndex = 0;
@@ -196,6 +200,7 @@ namespace PeopleApp.ViewModels
             try
             {
                 // upload item to cloud
+
                 string imageRemotePath = await UploadToCloud(uniqueFileName + ".jpg");
             }
             catch (Exception ex)

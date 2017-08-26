@@ -44,7 +44,6 @@ namespace PeopleApp.ViewModels
                 var table = await CloudService.GetTableAsync<User>();
                 string userId = "aad|" + user.UserId.Replace(':','|');
                 User retrievedUser = await table.ReadItemAsync(userId);
-                var a = 0;
                 if (retrievedUser == null)
                 {
                     await table.CreateItemAsync(new User { Id = userId, CultureInfo = CultureInfo.CurrentUICulture.ToString() });
@@ -62,18 +61,17 @@ namespace PeopleApp.ViewModels
                 Settings.IdentityProvider = "aad";
                 Settings.UserId = retrievedUser.Id;
                 Settings.Username = retrievedUser.Username;
-                Application.Current.MainPage = new Views.MenuPage();
 
+                Application.Current.MainPage = new Views.MenuPage();
             }
             catch (Exception ex)
             {
                 Debug.WriteLine("Error: " + ex.Message);
-                Debug.WriteLine("Error Full: ======/n" + ex);
+                Debug.WriteLine("Full error: " + ex);
                 await Application.Current.MainPage.DisplayAlert("Login Failed", ex.Message, "OK");
             }
             finally
             {
-                //await CloudService.SyncOfflineCacheAsync();
                 IsBusy = false;
             }
         }
@@ -87,18 +85,32 @@ namespace PeopleApp.ViewModels
             try
             {
                 MobileServiceUser user = await CloudService.LoginAsync("facebook");
-                User currentUser = new User();
-                // add user to db
-                await _apiServices.PostUserAsync(currentUser, user.MobileServiceAuthenticationToken);
+                var table = await CloudService.GetTableAsync<User>();
+                string userId = "facebook|" + user.UserId.Replace(':', '|');
+                User retrievedUser = await table.ReadItemAsync(userId);
+                if (retrievedUser == null)
+                {
+                    await table.CreateItemAsync(new User { Id = userId, CultureInfo = CultureInfo.CurrentUICulture.ToString() });
+                    await CloudService.SyncOfflineCacheAsync();
+                    User tempUser = await table.ReadItemAsync(userId);
+                    //User tempUser = await _apiServices.PostUserAsync(new User(), user.MobileServiceAuthenticationToken);
+
+                    if (tempUser == null)
+                        throw new NullReferenceException("Problem adding/signing in user");
+                    else
+                        retrievedUser = tempUser;
+                }
                 Settings.AccessToken = user.MobileServiceAuthenticationToken;
                 Settings.IdentityProvider = "facebook";
-                Settings.UserId = "facebook" + "_" + user.UserId.Split(':')[1];
+                Settings.UserId = retrievedUser.Id;
+                Settings.Username = retrievedUser.Username;
+
                 Application.Current.MainPage = new Views.MenuPage();
             }
             catch (Exception ex)
             {
                 Debug.WriteLine("Error: " + ex.Message);
-                Debug.WriteLine("Error Full: ======/n" + ex);
+                Debug.WriteLine("Full error: " + ex);
                 await Application.Current.MainPage.DisplayAlert("Facebook Login Failed", ex.Message, "OK");
             }
             finally

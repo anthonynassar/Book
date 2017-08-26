@@ -28,11 +28,11 @@ namespace PeopleApp.ViewModels
             //TagsCommand = new Command(async () => await NavigateToTags());
             LoadMoreCommand = new Command<SharingSpace>(async (SharingSpace item) => await LoadMore(item));
 
-            // Subscribe to events from the Task Detail Page
-            MessagingCenter.Subscribe<TaskDetailViewModel>(this, "ItemsChanged", async (sender) =>
-            {
-                await Refresh();
-            });
+            //// Subscribe to events from the Task Detail Page
+            //MessagingCenter.Subscribe<TaskDetailViewModel>(this, "ItemsChanged", async (sender) =>
+            //{
+            //    await Refresh();
+            //});
 
             // Execute the refresh command
             RefreshCommand.Execute(null);

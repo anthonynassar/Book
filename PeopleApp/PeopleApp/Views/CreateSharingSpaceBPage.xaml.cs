@@ -23,7 +23,7 @@ namespace PeopleApp.Views
         ApiServices _apiServices = new ApiServices();
         CreateSharingSpaceBViewModel vm;
 
-        public CreateSharingSpaceBPage(SharingSpace sharingSpace, List<DimensionLocal> dimensions)
+        public CreateSharingSpaceBPage(SharingSpace sharingSpace, List<DimensionView> dimensions)
         {
             BindingContext = vm = new CreateSharingSpaceBViewModel(sharingSpace, dimensions, this);
             Resources = new ResourceDictionary();

@@ -95,12 +95,11 @@ namespace PeopleApp.Views
             Models.Constraint locationConstraint3 = new Models.Constraint { Operator = "longitude", Value = LongitudeLabel.Detail };
             var timeConstraintList = new List<Models.Constraint> { timeConstraint1, timeConstraint2 };
             var locationConstraintList = new List<Models.Constraint> { locationConstraint1, locationConstraint2, locationConstraint3 };
-            List<DimensionLocal> dimensions = new List<DimensionLocal>
+            List<DimensionView> dimensions = new List<DimensionView>
             {
-                new DimensionLocal { Label = "Time", Interval = true, ConstraintList = timeConstraintList},
-                new DimensionLocal { Label = "Location", Interval = true, ConstraintList = locationConstraintList}
+                new DimensionView { Label = "Time", Interval = true, ConstraintList = timeConstraintList},
+                new DimensionView { Label = "Location", Interval = true, ConstraintList = locationConstraintList}
             };
-
 
             await Navigation.PushAsync(new CreateSharingSpaceBPage(sharingSpace, dimensions));
         }

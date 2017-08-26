@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="PeopleApp.Views.EventJoinPage"
+             Title="Nearby event(s)">
+    <ContentPage.Content>
+        <StackLayout>
+            <ListView HasUnevenRows="True"
+                ItemsSource="{Binding Items, Mode=TwoWay}"
+                ItemTapped="ListView_ItemTapped"
+                SelectedItem="{Binding SelectedItem, Mode=TwoWay}">
+                <!--RowHeight="95"-->
+                <!--CachingStrategy="RecycleElement"-->
+                
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <StackLayout Orientation="Vertical" Margin="20, 10">
+                                <Label HorizontalOptions="FillAndExpand"
+                                           Text="{Binding Descriptor}"
+                                           FontAttributes="Bold" FontSize="Large"/>
+                                <StackLayout Orientation="Horizontal" >
+                                    <Label HorizontalOptions="Start"
+                                           Text="Location: "
+                                           FontAttributes="Bold" TextColor="Gray" FontSize="Small"/>
+                                    <Label HorizontalOptions="End"
+                                           Text="{Binding CreationLocation}"
+                                           TextColor="Gray" FontSize="Small"/>
+                                </StackLayout>
+                                <StackLayout Orientation="Horizontal" >
+                                    <Label HorizontalOptions="Start"
+                                           Text="Time: "
+                                           FontAttributes="Bold" TextColor="Gray" FontSize="Small"/>
+                                    <Label HorizontalOptions="End"
+                                           Text="{Binding CreationDate}"
+                                           TextColor="Gray" FontSize="Small"/>
+                                </StackLayout>
+                                <Button HorizontalOptions="Center"
+                                        Text="Join" IsVisible="{Binding IsVisible, Mode=TwoWay}"
+                                        Clicked="Join_Clicked" />
+                            </StackLayout>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
