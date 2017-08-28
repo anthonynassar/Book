@@ -22,7 +22,5 @@ namespace PeopleApp.Abstractions
 
         // Simple Operations
         Task<SharingSpace> AddSharingSpace(SharingSpace sharingSpace);
-        Task<Models.Object> AddObject(Models.Object @object);
-        Task<SharingSpace> GetSharingSpace(string id);
     }
 }

@@ -274,6 +274,10 @@
     <Compile Include="Migrations\201708201640521_UpdateUserTable1.Designer.cs">
       <DependentUpon>201708201640521_UpdateUserTable1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201708281347156_UpdateObjectTable.cs" />
+    <Compile Include="Migrations\201708281347156_UpdateObjectTable.Designer.cs">
+      <DependentUpon>201708281347156_UpdateObjectTable.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\MobileServiceContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -354,6 +358,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201708201640521_UpdateUserTable1.resx">
       <DependentUpon>201708201640521_UpdateUserTable1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201708281347156_UpdateObjectTable.resx">
+      <DependentUpon>201708281347156_UpdateObjectTable.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

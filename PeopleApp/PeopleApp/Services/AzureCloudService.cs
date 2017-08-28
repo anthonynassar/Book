@@ -125,23 +125,9 @@ namespace PeopleApp.Services
         }
         #endregion
 
+        // this region needs to be removed
         #region Operations on Tables
-        //public async Task<T> AddItemTableAsync<T>(T item) where T : TableData
-        //{
-        //    await InitializeAsync();
 
-        //    // manipulate the input
-
-        //    await ICloudTable<item>.UpsertItemAsync(item);
-
-        //    await SyncOfflineCacheAsync();
-        //    //return coffee
-        //    return item;
-        //}
-        public async Task<SharingSpace> GetSharingSpace(string id)
-        {
-            return await sharingSpaceTable.ReadItemAsync(id);
-        }
         public async Task<SharingSpace> AddSharingSpace(SharingSpace sharingSpace)
         {
             await InitializeAsync();
@@ -154,18 +140,7 @@ namespace PeopleApp.Services
             //return coffee
             return sharingSpace;
         }
-        public async Task<Models.Object> AddObject(Models.Object @object)
-        {
-            await InitializeAsync();
-
-            // manipulate the input
-
-            await objectTable.UpsertItemAsync(@object);
-
-            await SyncOfflineCacheAsync();
-            //return coffee
-            return @object;
-        }
+        
         #endregion
 
 

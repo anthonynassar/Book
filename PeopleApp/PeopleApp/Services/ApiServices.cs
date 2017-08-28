@@ -38,7 +38,7 @@ namespace PeopleApp.Services
 
         public async Task<List<SharingSpace>> GetNearbyEvents(string token, string distance)
         {
-            distance = "500";
+            distance = "5000";
             var client = new HttpClient();
 
             client.DefaultRequestHeaders.Add("ZUMO-API-VERSION", "2.0.0");
@@ -79,7 +79,21 @@ namespace PeopleApp.Services
                 return null;
             }
         }
-        
+
+        public async Task<SharingSpace> GetSharingSpaceById(string sharingSpaceId, string token)
+        {
+            var client = new HttpClient();
+
+            client.DefaultRequestHeaders.Add("ZUMO-API-VERSION", "2.0.0");
+            client.DefaultRequestHeaders.Add("X-ZUMO-AUTH", token);
+
+            var json = await client.GetStringAsync(Constants.BaseApiAddress + "tables/SharingSpace/extra/" + sharingSpaceId);
+
+            var sharingSpaces = JsonConvert.DeserializeObject<SharingSpace>(json);
+
+            return sharingSpaces;
+        }
+
         public async Task<string> VerifyUserParticipation(string sharingSpaceId, string token)
         {
             var client = new HttpClient();
@@ -112,6 +126,20 @@ namespace PeopleApp.Services
                 return response[0];
             else
                 return null;
+        }
+
+        public async Task<string> GetUserBySharingSpace(string sharingSpaceId, string token)
+        {
+            var client = new HttpClient();
+
+            client.DefaultRequestHeaders.Add("ZUMO-API-VERSION", "2.0.0");
+            client.DefaultRequestHeaders.Add("X-ZUMO-AUTH", token);
+
+            var json = await client.GetStringAsync(Constants.BaseApiAddress + "api/custom/ss2/" + sharingSpaceId);
+
+            var response = JsonConvert.DeserializeObject<string>(json);
+
+            return response;
         }
 
         public async Task<User> PostUserAsync(User user, string token)
@@ -176,9 +204,12 @@ namespace PeopleApp.Services
 
             var json = await client.GetStringAsync(Constants.BaseApiAddress + "api/custom/dimension?sharingSpaceId=" + sharingSpaceId + "&topic=" + topic);
 
-            string dimensionId = JsonConvert.DeserializeObject<string>(json);
+            var response = JsonConvert.DeserializeObject<List<string>>(json);
 
-            return dimensionId;
+            if (response.Count != 0)
+                return response[0];
+            else
+                return null;
         }
 
         //public async Task PostSharingSpaceAsync(Idea idea, string accessToken)
@@ -208,8 +239,6 @@ namespace PeopleApp.Services
 
             var response = await client.PostAsync(Constants.BaseApiAddress + "tables/dimension", content);
         }
-
-        
 
         public async Task PostConstraintAsync(Constraint constraint)
         {

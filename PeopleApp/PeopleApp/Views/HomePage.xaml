@@ -22,8 +22,8 @@
        FontAttributes="Bold"
        FontSize="Large" Grid.Row="1"/>
 
-        <Button Text="Create event" Grid.Row="3" Clicked="CreateSharingSpace_Clicked" />
+        <Button Text="Create event" Grid.Row="3" VerticalOptions="Center" Clicked="CreateSharingSpace_Clicked" />
 
-        <Button Text="Join event" Grid.Row="5" Clicked="JoinSharingSpace_Clicked"/>
+        <Button Text="Join nearby events" Grid.Row="5" VerticalOptions="Center" Clicked="JoinSharingSpace_Clicked"/>
     </Grid>
 </ContentPage>

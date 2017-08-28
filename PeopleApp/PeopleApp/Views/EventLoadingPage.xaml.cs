@@ -37,8 +37,8 @@ namespace PeopleApp.Views
             // checks if there is already a selected sharing space if not the history page will appear
             if (!String.IsNullOrEmpty(Settings.CurrentSharingSpace))
             {
-                //var sharingSpace = await CloudService.GetSharingSpace(Settings.CurrentSharingSpace);
-                SharingSpace sharingSpace = await sharingSpaceTable.ReadItemAsync(Settings.CurrentSharingSpace);
+                //SharingSpace sharingSpace = await sharingSpaceTable.ReadItemAsync(Settings.CurrentSharingSpace);
+                SharingSpace sharingSpace = await _apiServices.GetSharingSpaceById(Settings.CurrentSharingSpace, Settings.AccessToken);
                 var objectList = await _apiServices.GetObjectsBySharingSpace(sharingSpace.Id);
                 Navigation.InsertPageBefore(new EventOverviewPage(sharingSpace, objectList), this);
                 await Navigation.PopAsync();

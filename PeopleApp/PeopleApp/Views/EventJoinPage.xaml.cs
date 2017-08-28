@@ -73,6 +73,7 @@ namespace PeopleApp.Views
                 {
                     // Navigate to event overview
                     var objectList = await _apiServices.GetObjectsBySharingSpace(selectedSharingSpace.Id);
+                    //MenuPage.NavPage = new EventOverviewPage(selectedSharingSpace, objectList);
                     Navigation.InsertPageBefore(new EventOverviewPage(selectedSharingSpace, objectList), this);
                     await Navigation.PopAsync();
                 }

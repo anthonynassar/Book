@@ -76,5 +76,12 @@ namespace Backend.Controllers
             ValidateOwner(id);
             return DeleteAsync(id);
         }
+
+        [HttpGet]
+        [Route("tables/SharingSpace/extra/{sharingSpaceId}")]
+        public SingleResult<SharingSpace> GetSharingSpaceById(string sharingSpaceId)
+        {
+            return new SingleResult<SharingSpace>(Lookup(sharingSpaceId).Queryable);
+        }
     }
 }

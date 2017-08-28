@@ -130,7 +130,8 @@ namespace PeopleApp.ViewModels
             IsBusy = true;
             try
             {
-                DimensionView socialDimension = new DimensionView { Label = "Social", Interval = true };
+                Models.Constraint socialConstraint = new Models.Constraint { Operator = "owner", Value = Settings.UserId };
+                DimensionView socialDimension = new DimensionView { Label = "Social", Interval = true, ConstraintList = new List<Models.Constraint> { socialConstraint } };
                 Dimensions.Add(socialDimension);
 
                 Settings.CurrentSharingSpace = this.SharingSpace.Id;

@@ -24,19 +24,17 @@ namespace PeopleApp.Views
         ApiServices _apiServices = new ApiServices();
         SharingSpace sharingSpace;
 
+        // add the user name as parameter
         public EventOverviewPage(SharingSpace sharingSpace, List<Models.Object> objectList)
         {
-            if (sharingSpace == null)
-                throw new ArgumentNullException();
-
+            this.sharingSpace = sharingSpace ?? throw new ArgumentNullException();
+            Settings.CurrentSharingSpace = sharingSpace.Id;
+            
             BindingContext = vm = new EventOverviewViewModel(sharingSpace, objectList);
             InitializeComponent();
             // Capitalize event title
             TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
             eventName.Text = textInfo.ToTitleCase(sharingSpace.Descriptor);
-
-            Settings.CurrentSharingSpace = sharingSpace.Id;
-            this.sharingSpace = sharingSpace;
         }
 
         //public EventOverviewPage(SharingSpace sharingSpace)

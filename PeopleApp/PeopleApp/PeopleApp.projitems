@@ -19,6 +19,7 @@
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Constants.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\GoogleGeocodeResponse.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Core\ImageResizer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\MetaExtractor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Core\ZoomImage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Helpers\AuthenticationDelegatingHandler.cs" />

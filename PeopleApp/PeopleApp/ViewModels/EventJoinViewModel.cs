@@ -60,7 +60,7 @@ namespace PeopleApp.ViewModels
                 {
                     // hide previous selected item
                     _oldItem.IsVisible = false;
-                    UpdateItems(item);
+                    UpdateItems(_oldItem);
                 }
                 // show selected item
                 item.IsVisible = true;

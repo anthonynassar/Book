@@ -64,15 +64,42 @@ namespace Backend.Controllers
             }
         }
 
-        [HttpGet]
+        [HttpGet, Authorize]
+        [Route("api/custom/ss2/{sharingSpaceId}")]
+        public Task<string> GetUserBySharingSpace(string sharingSpaceId)
+        {
+            string currentUserId = Settings.GetUserId(User);
+            string userId = context.SharingSpaces.Where(e => e.Id == sharingSpaceId)
+                                                 .Select(e => e.UserId)
+                                                 .FirstOrDefault();
+            Task<string> user;
+
+            if (userId == currentUserId)
+            {
+                user = Task<string>.Factory.StartNew(() => "You");
+            }
+            else
+            {
+                string name = context.Users.Where(e => e.Id == userId)
+                                           .Select(e => e.GivenName + " " + e.Surname)
+                                           .FirstOrDefault();
+                user = Task<string>.Factory.StartNew(() => name);
+            }
+
+            return user;
+        }
+
+        [HttpGet, Authorize]
         [Route("api/custom/ss/{sharingSpaceId}")]
         public IQueryable<string> VerifyUserParticipation(string sharingSpaceId)
         {
-            var result = context.Events.Where(e => e.SharingSpaceId == sharingSpaceId)
-                                       .Join(context.Constraints,
+            var userId = Settings.GetUserId(User);
+            var result = context.Events.Join(context.Constraints,
                                                 e => e.ConstraintId,
                                                 c => c.Id,
-                                                (e, c) => e.SharingSpaceId).Distinct()
+                                                (e, c) => new { e.SharingSpaceId, c.Operator, c.Value })
+                                       .Where(o => o.SharingSpaceId == sharingSpaceId && o.Operator == "participant" && o.Value == userId)
+                                       .Select(s => s.SharingSpaceId)
                                        .AsQueryable();
 
             return result;

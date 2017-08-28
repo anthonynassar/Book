@@ -9,56 +9,73 @@
     <ContentPage.ToolbarItems>
         <ToolbarItem Name="TakePhoto"
                      Icon="ic_photo_camera_white_48dp.png"
-                     Text=""
+                     Text="Take Photo"
                      Order="Primary"
                      Priority="0"
                      Command="{Binding TakePhotoCommand}"/>
+        <ToolbarItem Name="RefreshPhotos"
+                     Icon="ic_sync_white_48dp.png"
+                     Text="Sync Photos"
+                     Order="Primary"
+                     Priority="1"
+                     Command="{Binding RefreshCommand}"/>
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
-        <Grid RowSpacing="0">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <!--<RowDefinition Height="Auto"/>-->
-            </Grid.RowDefinitions>
-            <!--<ScrollView Grid.Row="0">-->
-            <StackLayout Grid.Row="0" Orientation="Vertical" Padding="15, 10" Spacing="10">
-                <Label x:Name="eventName" FontAttributes="Bold" VerticalOptions="Center" Text="Event Name here" HorizontalOptions="Start" FontSize="Large"></Label>
-                <StackLayout Orientation="Horizontal">
-                    <Button Text="Take a Photo" FontSize="Medium" BackgroundColor="Teal" TextColor="White" VerticalOptions="Center" HorizontalOptions="Start" Command="{Binding TakePhotoCommand}"/>
-                    <Button Text="Process" FontSize="Medium" x:Name="Run" IsEnabled="true" BackgroundColor="Tomato" VerticalOptions="Center"  HorizontalOptions="EndAndExpand" TextColor="White" Command="{Binding ProcessCommand}"/>
+        <AbsoluteLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+            <Grid RowSpacing="0" AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,0,1,1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <!--<RowDefinition Height="Auto"/>-->
+                </Grid.RowDefinitions>
+                <!--<ScrollView Grid.Row="0">-->
+                <StackLayout Grid.Row="0" Orientation="Vertical" Padding="15, 10" Spacing="10">
+                    <Label x:Name="eventName" FontAttributes="Bold" VerticalOptions="Center" Text="Event Name here" HorizontalOptions="Start" FontSize="Large"></Label>
+                    <StackLayout Orientation="Horizontal">
+                        <Button Text="Take a Photo" FontSize="Medium" BackgroundColor="Teal" TextColor="White" VerticalOptions="Center" HorizontalOptions="Start" Command="{Binding TakePhotoCommand}"/>
+                        <Button Text="Process" FontSize="Medium" x:Name="Run" IsEnabled="true" BackgroundColor="Tomato" VerticalOptions="Center"  HorizontalOptions="EndAndExpand" TextColor="White" Command="{Binding ProcessCommand}"/>
+                    </StackLayout>
+                    <!--<ActivityIndicator x:Name="activityIndicator" IsRunning="{Binding UpDownRunning, Mode=TwoWay}"/>-->
                 </StackLayout>
-                <!--<ActivityIndicator x:Name="activityIndicator" IsRunning="{Binding UpDownRunning, Mode=TwoWay}"/>-->
-            </StackLayout>
 
-            <!--</ScrollView>-->
+                <!--</ScrollView>-->
 
-            <flv:FlowListView VerticalOptions="FillAndExpand" Grid.Row="1" SeparatorVisibility="None" HasUnevenRows="true"
+                <flv:FlowListView VerticalOptions="FillAndExpand" Grid.Row="1" SeparatorVisibility="None" HasUnevenRows="true"
 			FlowItemTappedCommand="{Binding ItemTappedCommand}" FlowLastTappedItem="{Binding LastTappedItem}" FlowItemTapped="PhotoItemTappedAsync"
 			FlowColumnMinWidth="110" FlowItemsSource="{Binding Items}" HeightRequest="1500">
 
-                <flv:FlowListView.FlowColumnTemplate>
-                    <DataTemplate>
-                        <Grid Padding="3">
+                    <flv:FlowListView.FlowColumnTemplate>
+                        <DataTemplate>
+                            <Grid Padding="3">
 
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*" />
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
 
-                            <ffimageloading:CachedImage HeightRequest="100" Aspect="AspectFill"
+                                <ffimageloading:CachedImage HeightRequest="100" Aspect="AspectFill"
 							DownsampleHeight="100" DownsampleUseDipUnits="false" 
 							LoadingPlaceholder="image_loading.png" ErrorPlaceholder="image_error.png"
 							Source="{Binding ImageUrl}"/>
 
-                            <!--<Label x:Name="Label" HorizontalOptions="Fill" HorizontalTextAlignment="Center" VerticalOptions="End"
+                                <!--<Label x:Name="Label" HorizontalOptions="Fill" HorizontalTextAlignment="Center" VerticalOptions="End"
 							BackgroundColor="Silver" Opacity="0.5" Text="{Binding FileName}"/>-->
-                        </Grid>
-                    </DataTemplate>
-                </flv:FlowListView.FlowColumnTemplate>
-            </flv:FlowListView>
-        </Grid>
+                            </Grid>
+                        </DataTemplate>
+                    </flv:FlowListView.FlowColumnTemplate>
+                </flv:FlowListView>
+            </Grid>
+            <StackLayout IsVisible="{Binding IsBusy}"
+                     Padding="32"
+                     AbsoluteLayout.LayoutFlags="PositionProportional"
+                     AbsoluteLayout.LayoutBounds="0.5,0.5,-1,-1"
+                     BackgroundColor="#90000000">
+                <ActivityIndicator IsRunning="{Binding IsBusy}" Color="#3CB9A8"/>
+                <Label Text="Syncing photos... Please wait!" HorizontalOptions="Center" TextColor = "White" />
+            </StackLayout>
+        </AbsoluteLayout>
+        
     </ContentPage.Content>
 </ContentPage>

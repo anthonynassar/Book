@@ -12,5 +12,6 @@ namespace PeopleApp.Models
         public DateTime? CreationDate { get; set; } = DateTime.UtcNow;
         public string CreationLocation { get; set; }
         public string SharingSpaceId { get; set; }
+        public string Uri { get; set; }
     }
 }
