@@ -51,6 +51,8 @@ namespace Backend
             //}
 
             app.UseWebApi(config);
+
+            ConfigureSwagger(config);
         }
     }
     
