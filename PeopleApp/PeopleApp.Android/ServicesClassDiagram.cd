@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="PeopleApp.Services.ApiServices">
+    <Position X="9" Y="1.75" Width="1.5" />
+    <NestedTypes>
+      <Class Name="PeopleApp.Services.ApiServices.SpecialDatatype" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>C:\Users\Nassar\documents\visual studio 2017\Projects\Book\PeopleApp\PeopleApp\Services\ApiServices.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>IIAAAAAQAABEAgAAAEAAgAFFEAAAgCAAAAACCAABAAA=</HashCode>
+      <FileName>C:\Users\Nassar\documents\visual studio 2017\Projects\Book\PeopleApp\PeopleApp\Services\ApiServices.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PeopleApp.Services.AzureCloudService" BaseTypeListCollapsed="true">
+    <Position X="13.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EoAAAACEAAAAAAAAACAAAAIAAAABEAAAAAIUACAAAAQ=</HashCode>
+      <FileName>C:\Users\Nassar\documents\visual studio 2017\Projects\Book\PeopleApp\PeopleApp\Services\AzureCloudService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.984" />
+  </Class>
+  <Class Name="PeopleApp.Services.AzureCloudTable&lt;T&gt;" BaseTypeListCollapsed="true">
+    <Position X="11.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAQAAAAAAAABBAAAAAABAAgAAkAAAAAEAAAABAACA=</HashCode>
+      <FileName>C:\Users\Nassar\documents\visual studio 2017\Projects\Book\PeopleApp\PeopleApp\Services\AzureCloudTable.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="System.Object" Collapsed="true">
+    <Position X="12.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="PeopleApp.Droid.Services.DroidLoginProvider">
+    <Position X="15.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAEAABAAAAAAAAAAABAAAAQAAAAAAAAAAACIAAAIAA=</HashCode>
+      <FileName>Services\DroidLoginProvider.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Interface Name="PeopleApp.Abstractions.ICloudService" Collapsed="true">
+    <Position X="18.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AoAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAUACAAAAA=</HashCode>
+      <FileName>C:\Users\Nassar\documents\visual studio 2017\Projects\Book\PeopleApp\PeopleApp\Abstractions\ICloudService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="PeopleApp.Abstractions.ICloudTable&lt;T&gt;" Collapsed="true">
+    <Position X="20" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAQAAAAAAAABAAAAAAABAAgAAkAAAAAEAAAABAACA=</HashCode>
+      <FileName>C:\Users\Nassar\documents\visual studio 2017\Projects\Book\PeopleApp\PeopleApp\Abstractions\ICloudTable.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="PeopleApp.Abstractions.ILoginProvider" Collapsed="true">
+    <Position X="18.25" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAEAABAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAIAA=</HashCode>
+      <FileName>C:\Users\Nassar\documents\visual studio 2017\Projects\Book\PeopleApp\PeopleApp\Abstractions\ILoginProvider.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

@@ -38,7 +38,7 @@ namespace PeopleApp.Services
 
         public async Task<List<SharingSpace>> GetNearbyEvents(string token, string distance)
         {
-            distance = "5000";
+            distance = "500";
             var client = new HttpClient();
 
             client.DefaultRequestHeaders.Add("ZUMO-API-VERSION", "2.0.0");

@@ -246,6 +246,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="ViewsClassDiagram_Part2.cd" />
+    <None Include="ViewsClassDiagram_Part1.cd" />
+    <None Include="ServicesClassDiagram.cd" />
+    <None Include="ViewModelsClassDiagram.cd" />
     <None Include="packages.config" />
     <None Include="Resources\AboutResources.txt" />
     <None Include="Assets\AboutAssets.txt" />
@@ -287,6 +291,9 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\Drawable\ic_sync_white_48dp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\Drawable\icon-spider.png" />
   </ItemGroup>
   <Import Project="..\PeopleApp\PeopleApp.projitems" Label="Shared" Condition="Exists('..\PeopleApp\PeopleApp.projitems')" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />

@@ -1,0 +1,87 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="PeopleApp.ViewModels.CreateSharingSpaceAViewModel" Collapsed="true">
+    <Position X="1.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAEAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C:\Users\Nassar\documents\visual studio 2017\Projects\Book\PeopleApp\PeopleApp\ViewModels\CreateSharingSpaceAViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PeopleApp.ViewModels.CreateSharingSpaceBViewModel" Collapsed="true">
+    <Position X="1" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgABAAAAIIAECAAAAAgABAIAAAAAIAAAABBQIAAAACA=</HashCode>
+      <FileName>C:\Users\Nassar\documents\visual studio 2017\Projects\Book\PeopleApp\PeopleApp\ViewModels\CreateSharingSpaceBViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PeopleApp.ViewModels.EntryPageViewModel" Collapsed="true">
+    <Position X="13" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAIAAAIACAAAAAQAAAAAAAEAAAAABQAACAAAA=</HashCode>
+      <FileName>C:\Users\Nassar\documents\visual studio 2017\Projects\Book\PeopleApp\PeopleApp\ViewModels\EntryPageViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PeopleApp.ViewModels.EventDetailViewModel" Collapsed="true">
+    <Position X="4" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAIEAAAAEAgAAAAAAAAIAAEAAAAAAQAAAEEIA=</HashCode>
+      <FileName>C:\Users\Nassar\documents\visual studio 2017\Projects\Book\PeopleApp\PeopleApp\ViewModels\EventDetailViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PeopleApp.ViewModels.EventHistoryViewModel" Collapsed="true">
+    <Position X="8.5" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEIABACAAAgAgAAAACAAAAEGAAABAAAAAQAAA=</HashCode>
+      <FileName>C:\Users\Nassar\documents\visual studio 2017\Projects\Book\PeopleApp\PeopleApp\ViewModels\EventHistoryViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PeopleApp.ViewModels.EventJoinViewModel" Collapsed="true">
+    <Position X="15.25" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAIAAACAhAAAgIQgAAAAAAAAAAAgBAAAAAgAA=</HashCode>
+      <FileName>C:\Users\Nassar\documents\visual studio 2017\Projects\Book\PeopleApp\PeopleApp\ViewModels\EventJoinViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PeopleApp.ViewModels.EventOverviewViewModel" Collapsed="true">
+    <Position X="6.25" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAIAAIABACAAAgAIABQUAAAAAAAAABABAAEAAAAg=</HashCode>
+      <FileName>C:\Users\Nassar\documents\visual studio 2017\Projects\Book\PeopleApp\PeopleApp\ViewModels\EventOverviewViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PeopleApp.ViewModels.TaskDetailViewModel" Collapsed="true">
+    <Position X="10.75" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAIAAAAAMIgAAACAAAAIAAEAAAAAAACAAEAIA=</HashCode>
+      <FileName>C:\Users\Nassar\documents\visual studio 2017\Projects\Book\PeopleApp\PeopleApp\ViewModels\TaskDetailViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PeopleApp.ViewModels.TaskListViewModel" Collapsed="true">
+    <Position X="17.5" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEIABAiAAAgAgAQgICAAIAACAAABAAAAQQAIA=</HashCode>
+      <FileName>C:\Users\Nassar\documents\visual studio 2017\Projects\Book\PeopleApp\PeopleApp\ViewModels\TaskListViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.Object" Collapsed="true">
+    <Position X="5.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="MvvmHelpers.BaseViewModel" Collapsed="true">
+    <Position X="1" Y="4.75" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="PeopleApp.Abstractions.BaseViewModel" Collapsed="true">
+    <Position X="10.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAAAAEAAIAAAAABAgAEAAAAAAAAAAABAAAA=</HashCode>
+      <FileName>C:\Users\Nassar\documents\visual studio 2017\Projects\Book\PeopleApp\PeopleApp\Abstractions\BaseViewModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="MvvmHelpers.ObservableObject" Collapsed="true">
+    <Position X="1" Y="3.5" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

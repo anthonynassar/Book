@@ -7,9 +7,12 @@
         <AbsoluteLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Padding="15, 10">
             <StackLayout Orientation="Vertical" Margin="20,10" Spacing="15" AbsoluteLayout.LayoutFlags="All" 
                          AbsoluteLayout.LayoutBounds="0,0,1,1">
-                <Label Text="Welcome to PeopleApp" FontSize="Large" FontAttributes="Bold"
-                       VerticalOptions="StartAndExpand" HorizontalTextAlignment="Start" TextColor="Black"/>
-                <Label Text="It's free and always will be." FontSize="Medium" VerticalOptions="StartAndExpand" TextColor="Black"/>
+                <StackLayout Orientation="Vertical" Padding="0, 20" VerticalOptions="StartAndExpand">
+                    <Label Text="Welcome to PeopleApp" FontSize="Large" FontAttributes="Bold"
+                       TextColor="Black"/>
+                    <Label Text="It's free and always will be." FontSize="Medium" TextColor="Black"/>
+                </StackLayout>
+                
                 <Label Text="Login through your facebook account" FontSize="Medium" TextColor="Black"/>
                 <Button Command="{Binding FbLoginCommand}"
                     Text="Facebook Login"
@@ -34,7 +37,7 @@
                      AbsoluteLayout.LayoutBounds="0.5,0.5,-1,-1"
                      BackgroundColor="#90000000">
                 <ActivityIndicator IsRunning="{Binding IsBusy}" Color="#3CB9A8"/>
-                <Label Text="Please wait..." HorizontalOptions="Center" TextColor = "White" />
+                <Label Text="Please wait..." HorizontalOptions="Center" TextColor="White" FontAttributes="Bold" />
             </StackLayout>
         </AbsoluteLayout>
     </ContentPage.Content>

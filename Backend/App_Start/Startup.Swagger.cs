@@ -16,7 +16,7 @@ namespace Backend
             config
                .EnableSwagger(c =>
                {
-                   c.SingleApiVersion("v1", "myService");
+                   c.SingleApiVersion("v1", "SpiderServiceAPI");
 
                    // Tells the Swagger doc that any MobileAppController needs a
                    // ZUMO-API-VERSION header with default 2.0.0

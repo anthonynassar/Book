@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="PeopleApp.Views.EventHistoryPage">
+    <Position X="4" Y="2" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AARAAAAACAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAA=</HashCode>
+      <FileName>C:\Users\Nassar\documents\visual studio 2017\Projects\Book\PeopleApp\PeopleApp\Views\EventHistoryPage.xaml.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PeopleApp.Views.EventJoinPage">
+    <Position X="6.75" Y="2" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIAAAAAAAAAAAAEAAAAAAAAAAAAAAgBgAAgAAAA=</HashCode>
+      <FileName>C:\Users\Nassar\documents\visual studio 2017\Projects\Book\PeopleApp\PeopleApp\Views\EventJoinPage.xaml.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PeopleApp.Views.EventLoadingPage">
+    <Position X="1.5" Y="2" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAIAgAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAA=</HashCode>
+      <FileName>C:\Users\Nassar\documents\visual studio 2017\Projects\Book\PeopleApp\PeopleApp\Views\EventLoadingPage.xaml.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PeopleApp.Views.EventOverviewPage">
+    <Position X="12" Y="2" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAoAAAEAAAAAAAAAAAAAAAAAABAAAAAAAA=</HashCode>
+      <FileName>C:\Users\Nassar\documents\visual studio 2017\Projects\Book\PeopleApp\PeopleApp\Views\EventOverviewPage.xaml.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PeopleApp.Views.FullScreenImagePage">
+    <Position X="14.75" Y="2" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAIAEAAAEgAAEAiAAAQAwAgEQBBAAACAAIwApAAAAA=</HashCode>
+      <FileName>C:\Users\Nassar\documents\visual studio 2017\Projects\Book\PeopleApp\PeopleApp\Views\FullScreenImagePage.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PeopleApp.Views.JoinEventLoadingPage">
+    <Position X="9.25" Y="2" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAIAgAABAAAAAAAAAAAAAAAAAAAABAAEAAAAA=</HashCode>
+      <FileName>C:\Users\Nassar\documents\visual studio 2017\Projects\Book\PeopleApp\PeopleApp\Views\JoinEventLoadingPage.xaml.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PeopleApp.Views.ProfileLoadingPage">
+    <Position X="20.25" Y="2" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAIAgAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAA=</HashCode>
+      <FileName>C:\Users\Nassar\documents\visual studio 2017\Projects\Book\PeopleApp\PeopleApp\Views\ProfileLoadingPage.xaml.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PeopleApp.Views.ProfilePage">
+    <Position X="17.5" Y="2" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAABACAAIAAAAAAUAAIAAAAAAAAAAAEAIABAAAAAAAA=</HashCode>
+      <FileName>C:\Users\Nassar\documents\visual studio 2017\Projects\Book\PeopleApp\PeopleApp\Views\ProfilePage.xaml.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Xamarin.Forms.ContentPage" Collapsed="true">
+    <Position X="11" Y="0.5" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
