@@ -8,7 +8,7 @@
             <StackLayout Orientation="Vertical" Margin="20,10" Spacing="15" AbsoluteLayout.LayoutFlags="All" 
                          AbsoluteLayout.LayoutBounds="0,0,1,1">
                 <StackLayout Orientation="Vertical" Padding="0, 20" VerticalOptions="StartAndExpand">
-                    <Label Text="Welcome to PeopleApp" FontSize="Large" FontAttributes="Bold"
+                    <Label Text="Welcome to SpiderShare" FontSize="Large" FontAttributes="Bold"
                        TextColor="Black"/>
                     <Label Text="It's free and always will be." FontSize="Medium" TextColor="Black"/>
                 </StackLayout>

@@ -37,6 +37,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Models\Datatype.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\DimDatatype.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Dimension.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\StorageTokenViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\ViewsRelated\DimensionView.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Event.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Object.cs" />

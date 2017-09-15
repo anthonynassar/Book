@@ -340,6 +340,52 @@ namespace PeopleApp.Core
             return sb.ToString();
         }
 
+        public static string MetadataToXml(Dictionary<string, string> map, string filename)
+        {
+            XmlDocument doc = new XmlDocument();
+            // Create an XML declaration. 
+            XmlDeclaration xmldecl;
+            xmldecl = doc.CreateXmlDeclaration("1.0", null, null);
+            xmldecl.Encoding = "UTF-8";
+
+            // create root node
+            XmlElement root = (XmlElement)doc.AppendChild(doc.CreateElement("tbl_IMG_META"));
+            //photosMeta.Add(1); photosMeta.Add(2); photosMeta.Add(3);
+            
+            // create imgMeta node
+            XmlElement imgMeta = doc.CreateElement("IMG_META");
+            root.AppendChild(imgMeta);
+            imgMeta.SetAttribute("id_image", Path.GetFileNameWithoutExtension(filename));
+
+            // create metaName node
+            createElement(imgMeta, doc, "1", map["owner"]);
+            createElement(imgMeta, doc, "2", map["lat"]);
+            createElement(imgMeta, doc, "3", map["lng"]);
+            createElement(imgMeta, doc, "4", map["country"]);
+            createElement(imgMeta, doc, "5", map["cityCP"]);
+            createElement(imgMeta, doc, "6", map["department"]);
+            createElement(imgMeta, doc, "7", map["street"]);
+            createElement(imgMeta, doc, "8", map["date"]);
+            createElement(imgMeta, doc, "9", "keywords");
+
+            root.AppendChild(imgMeta);
+            
+            doc.AppendChild(root);
+            doc.InsertBefore(xmldecl, root);
+
+            // Media for XML data output
+            //doc.Save("foo1.xml");
+            //Console.WriteLine(doc.OuterXml);
+            StringBuilder sb = new StringBuilder();
+            System.IO.TextWriter tr = new System.IO.StringWriter(sb);
+            XmlTextWriter wr = new XmlTextWriter(tr);
+            wr.Formatting = System.Xml.Formatting.Indented;
+            doc.Save(wr);
+            wr.Close();
+            //return sb.ToString();
+            return doc.OuterXml;
+        }
+
         private static void createElement(XmlElement imgMeta, XmlDocument doc, string idMeta, string value)
         {
             XmlElement metaName = doc.CreateElement("META");

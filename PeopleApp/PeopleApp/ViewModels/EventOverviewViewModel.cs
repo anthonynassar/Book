@@ -38,6 +38,7 @@ namespace PeopleApp.ViewModels
         //public ImageSource ImageSource { get; set; }
         public bool UpDownRunning { get; set; }
         public string ErrorMessage { get; set; }
+        public string LoadingMessage { get; set; }
         public int Count { get; set; }
         public ICloudService CloudService => ServiceLocator.Get<ICloudService>();
 
@@ -74,153 +75,6 @@ namespace PeopleApp.ViewModels
 
         public ICommand TakePhotoCommand { get; }
         public ICommand RefreshCommand { get; }
-
-        async Task TakePhoto()
-        {
-            await CrossMedia.Current.Initialize();
-
-            if (!CrossMedia.Current.IsCameraAvailable || !CrossMedia.Current.IsTakePhotoSupported)
-            {
-                //await DisplayAlert("No Camera", ":( No camera available.", "OK");
-                ErrorMessage = ":( No camera available.";
-                return;
-            }
-
-            // Unique File Name
-            var uniqueFileName = string.Format(@"{0}", Guid.NewGuid());
-            //var uniqueFileName = string.Format(@"{0}.jpg", DateTime.Now.Ticks);
-            //var uniqueFileName = string.Format(@"{0}.jpg", DateTime.Now.Ticks.GetHashCode().ToString("x").ToUpper());
-
-            var file = await CrossMedia.Current.TakePhotoAsync(
-                new StoreCameraMediaOptions
-                {
-                    SaveToAlbum = true,
-                    Directory = "PeopleApp",
-                    Name = uniqueFileName + ".jpg"
-                });
-
-            if (file == null)
-                return;
-
-            // public path
-            AlbumPath = file.AlbumPath;
-            // private path
-            string privatePath = file.Path;
-
-            string filename = Path.GetFileNameWithoutExtension(AlbumPath);
-
-            // PhotoAlbumPath is already saved on app launch (platform specific code)
-            if (!AlbumPath.Equals(Settings.PhotoAlbumPath))
-            {
-                Settings.PhotoAlbumPath = Path.GetDirectoryName(AlbumPath);
-            }
-
-            //ImageSource = ImageSource.FromStream(() =>
-            //{
-            //    var stream = file.GetStream();
-            //    file.Dispose();
-            //    return stream;
-            //});
-
-            //PhotoModel newPhoto = new PhotoModel();
-            var item = new Photo()
-            {
-                ImageUrl = AlbumPath,
-                FileName = filename
-            };
-            Items.Add(item);
-            string imageRemotePath;
-
-            try
-            {
-                // upload item to cloud
-                imageRemotePath = await UploadToCloud(uniqueFileName + ".jpg");
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("Error: " + ex.Message);
-                Debug.WriteLine("Error Full: " + ex);
-                await Application.Current.MainPage.DisplayAlert("Image upload failed", ex.Message, "OK");
-                return;
-            }
-            
-
-            try
-            {
-                // create the object (photo) to upload 
-                //var objectId = Utilities.NewGuid();
-                Models.Object obj = new Models.Object
-                {
-                    Id = uniqueFileName,
-                    CreationLocation = "",
-                    CreationDate = DateTime.Now,
-                    UserId = Settings.UserId,
-                    SharingSpaceId = SharingSpace.Id,
-                    Type = "photo",
-                    Uri = imageRemotePath
-                    // storedLocally = "true",
-                    // storedRemotely = "false",
-                    // localPath = "the local path",
-
-                };
-
-                //await _apiServices.PostObjectAsync(obj);
-                //await CloudService.AddObject(obj);
-                var table = await CloudService.GetTableAsync<Models.Object>();
-                await table.CreateItemAsync(obj);
-
-                await CloudService.SyncOfflineCacheAsync();
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("Error :" + ex.Message);
-                await Application.Current.MainPage.DisplayAlert("Image object post failed", ex.Message, "OK");
-                return;
-            }
-
-            // extract metadata from single photo
-            List<PhotoModel> photoInfo = MetaExtractor.ExtractMetadataPerPhoto(AlbumPath);
-
-            try
-            {
-                // post in attribute table
-                var datatypeList = await _apiServices.GetDatatypesAsync(Settings.CurrentSharingSpace);
-                // datatype = { datatypeId, label }
-                foreach (var datatype in datatypeList)
-                {
-                    string value = "";
-                    if (datatype.Label.Equals("Time"))
-                    {
-                        value = photoInfo.FirstOrDefault().map["date"];
-                    }
-                    else if (datatype.Label.Equals("Location"))
-                    {
-                        value = photoInfo.FirstOrDefault().map["lat"] + ", " + photoInfo.FirstOrDefault().map["lng"];
-                    }
-                    else if (datatype.Label.Equals("Social"))
-                    {
-                        value = photoInfo.FirstOrDefault().map["owner"];
-                    }
-                    else if (datatype.Label.Equals("Topic"))
-                    {
-                        value = "keywords";
-                    }
-
-                    await _apiServices.PostAttributeAsync(new Models.Attribute { ObjectId = uniqueFileName, Value = value, DatatypeId = datatype.DatatypeId });
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("Error :" + ex.Message);
-            }
-            // useless no use for syncing here
-            //finally
-            //{
-            //    await CloudService.SyncOfflineCacheAsync();
-            //}
-
-        }
-
 
         public ICommand ProcessCommand
         {
@@ -310,11 +164,66 @@ namespace PeopleApp.ViewModels
             return blockBlob.Uri.ToString();
         }
 
+        private async Task<string> UploadToRealCloudAsync(MediaFile file)
+        {
+            var mediaStream = file.GetStream();
+
+            string filename = Path.GetFileNameWithoutExtension(AlbumPath);
+
+            // Get the SAS token from the backend
+            var storageToken = await CloudService.GetUpSasTokenAsync(Settings.CurrentSharingSpace, filename);
+
+            // Use the SAS token to upload the file
+            var storageUri = new Uri($"{storageToken.Uri}{storageToken.SasToken}");
+            var blobStorage = new CloudBlockBlob(storageUri);
+
+            // Compress
+            byte[] img;
+            using (var fileStream = System.IO.File.OpenRead(AlbumPath))
+            {
+                using (BinaryReader br = new BinaryReader(fileStream))
+                {
+                    img = br.ReadBytes((int)fileStream.Length);
+                }
+            }
+
+            // Resize image (do not forget to add the iOS version of it)
+            byte[] resizedImageArray = ImageResizer.ResizeImageAndroid(img, 720, 486);
+            Stream resizedImage = new MemoryStream(resizedImageArray);
+
+            await blobStorage.UploadFromStreamAsync(resizedImage);
+
+            // Set the content type of the current blob to image/jpeg
+            blobStorage.Properties.ContentType = "image/jpeg";
+            await blobStorage.SetPropertiesAsync();
+
+            return storageToken.Uri.ToString();
+        }
+
+        private async Task<string> DownloadFromCloud(string filename)
+        {
+            // Get the SAS token from the backend
+            var storageToken = await CloudService.GetDownSasTokenAsync(filename);
+
+            // Use the SAS token to get a reference to the blob storage
+            var storageUri = new Uri($"{storageToken.Uri}{storageToken.SasToken}");
+            //var blobStorage = new CloudBlockBlob(storageUri);
+
+            // Get a stream for the blob file
+            //var mediaStream = await blobStorage.OpenReadAsync();
+            // Do something with the mediaStream - like move it to storage
+            //await PlatformProvider.StoreFileAsync(mediaStream);
+            // At the end, close the stream properly
+            //mediaStream.Dispose();
+            return storageUri.ToString();
+        }
+
         async Task Refresh()
         {
             if (IsBusy)
                 return;
             IsBusy = true;
+            LoadingMessage = "Syncing photos... Please wait!";
 
             try
             {
@@ -375,7 +284,7 @@ namespace PeopleApp.ViewModels
                         if (File.Exists(path))
                             fileEntries.Add(path);
                         else
-                            fileEntries.Add(item.Uri); //fileEntries.Add("https://farm9.staticflickr.com/8351/8299022203_de0cb894b0.jpg"); 
+                            fileEntries.Add(item.Uri);//fileEntries.Add(await DownloadFromCloud(item.Uri)); //fileEntries.Add("https://farm9.staticflickr.com/8351/8299022203_de0cb894b0.jpg"); 
 
                     }
 
@@ -410,8 +319,193 @@ namespace PeopleApp.ViewModels
             finally
             {
                 IsBusy = false;
+                LoadingMessage = "";
             }
         }
 
+        async Task TakePhoto()
+        {
+            if (IsBusy)
+                return;
+            IsBusy = true;
+            LoadingMessage = "Adding photo... Please wait!";
+
+            try
+            {
+                await CrossMedia.Current.Initialize();
+
+                if (!CrossMedia.Current.IsCameraAvailable || !CrossMedia.Current.IsTakePhotoSupported)
+                {
+                    //await DisplayAlert("No Camera", ":( No camera available.", "OK");
+                    ErrorMessage = ":( No camera available.";
+                    return;
+                }
+
+                // Unique File Name
+                var uniqueFileName = string.Format(@"{0}", Guid.NewGuid());
+                //var uniqueFileName = string.Format(@"{0}.jpg", DateTime.Now.Ticks);
+                //var uniqueFileName = string.Format(@"{0}.jpg", DateTime.Now.Ticks.GetHashCode().ToString("x").ToUpper());
+
+                var file = await CrossMedia.Current.TakePhotoAsync(
+                    new StoreCameraMediaOptions
+                    {
+                        SaveToAlbum = true,
+                        Directory = "PeopleApp",
+                        Name = uniqueFileName + ".jpg"
+                    });
+
+                if (file == null)
+                    return;
+
+                // public path
+                AlbumPath = file.AlbumPath;
+                // private path
+                string privatePath = file.Path;
+
+                string filename = Path.GetFileNameWithoutExtension(AlbumPath);
+
+                // PhotoAlbumPath is already saved on app launch (platform specific code)
+                if (!AlbumPath.Equals(Settings.PhotoAlbumPath))
+                {
+                    Settings.PhotoAlbumPath = Path.GetDirectoryName(AlbumPath);
+                }
+
+                //ImageSource = ImageSource.FromStream(() =>
+                //{
+                //    var stream = file.GetStream();
+                //    file.Dispose();
+                //    return stream;
+                //});
+
+                //PhotoModel newPhoto = new PhotoModel();
+                var item = new Photo()
+                {
+                    ImageUrl = AlbumPath,
+                    FileName = filename
+                };
+                Items.Add(item);
+                string imageRemotePath;
+
+                try
+                {
+                    // upload item to cloud
+                    // support other method
+                    imageRemotePath = await UploadToRealCloudAsync(file);
+                    //imageRemotePath = await UploadToCloud(uniqueFileName + ".jpg");
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine("Error: " + ex.Message);
+                    Debug.WriteLine("Error Full: " + ex);
+                    await Application.Current.MainPage.DisplayAlert("Image upload failed", ex.Message, "OK");
+                    return;
+                }
+
+                try
+                {
+                    // create the object (photo) to upload 
+                    //var objectId = Utilities.NewGuid();
+                    Models.Object obj = new Models.Object
+                    {
+                        Id = uniqueFileName,
+                        CreationLocation = "",
+                        CreationDate = DateTime.Now,
+                        UserId = Settings.UserId,
+                        SharingSpaceId = SharingSpace.Id,
+                        Type = "photo",
+                        Uri = imageRemotePath
+                        // storedLocally = "true",
+                        // storedRemotely = "false",
+                        // localPath = "the local path",
+
+                    };
+
+                    //await _apiServices.PostObjectAsync(obj);
+                    //await CloudService.AddObject(obj);
+                    var table = await CloudService.GetTableAsync<Models.Object>();
+                    await table.CreateItemAsync(obj);
+
+                    await CloudService.SyncOfflineCacheAsync();
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine("Error :" + ex.Message);
+                    await Application.Current.MainPage.DisplayAlert("Image object post failed", ex.Message, "OK");
+                    return;
+                }
+
+                // extract metadata from single photo
+                List<PhotoModel> photoInfo = MetaExtractor.ExtractMetadataPerPhoto(AlbumPath);
+                string xmlString = MetaExtractor.MetadataToXml(photoInfo.FirstOrDefault().map, photoInfo.FirstOrDefault().file);
+                Debug.WriteLine(xmlString);
+                await UploadXml(xmlString);
+
+                try
+                {
+                    // post in attribute table
+                    var datatypeList = await _apiServices.GetDatatypesAsync(Settings.CurrentSharingSpace);
+                    // datatype = { datatypeId, label }
+                    foreach (var datatype in datatypeList)
+                    {
+                        string value = "";
+                        if (datatype.Label.Equals("Time"))
+                        {
+                            value = photoInfo.FirstOrDefault().map["date"];
+                        }
+                        else if (datatype.Label.Equals("Location"))
+                        {
+                            value = photoInfo.FirstOrDefault().map["lat"] + ", " + photoInfo.FirstOrDefault().map["lng"];
+                        }
+                        else if (datatype.Label.Equals("Social"))
+                        {
+                            value = photoInfo.FirstOrDefault().map["owner"];
+                        }
+                        else if (datatype.Label.Equals("Topic"))
+                        {
+                            value = "keywords";
+                        }
+
+                        await _apiServices.PostAttributeAsync(new Models.Attribute { ObjectId = uniqueFileName, Value = value, DatatypeId = datatype.DatatypeId });
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine("Error :" + ex.Message);
+                }
+                // useless no use for syncing here
+                //finally
+                //{
+                //    await CloudService.SyncOfflineCacheAsync();
+                //}
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Global error :" + ex.Message);
+            }
+            finally
+            {
+                IsBusy = false;
+                LoadingMessage = "";
+            }
+
+            
+
+        }
+
+        private async Task UploadXml(string xmlString)
+        {
+            // Get the SAS token from the backend
+            var storageToken = await CloudService.GetUpXmlSasTokenAsync(Settings.CurrentSharingSpace);
+
+            // Use the SAS token to upload the file
+            var storageUri = new Uri($"{storageToken.Uri}{storageToken.SasToken}");
+            var blobStorage = new CloudBlockBlob(storageUri);
+
+            await blobStorage.UploadTextAsync(xmlString);
+
+            // Set the content type of the current blob to image/jpeg
+            blobStorage.Properties.ContentType = "application/xml";
+            await blobStorage.SetPropertiesAsync();
+        }
     }
 }

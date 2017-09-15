@@ -22,5 +22,9 @@ namespace PeopleApp.Abstractions
 
         // Simple Operations
         Task<SharingSpace> AddSharingSpace(SharingSpace sharingSpace);
+
+        Task<StorageTokenViewModel> GetUpSasTokenAsync(string sharingSpaceId, string objectId);
+        Task<StorageTokenViewModel> GetDownSasTokenAsync(string filename);
+        Task<StorageTokenViewModel> GetUpXmlSasTokenAsync(string sharingSpaceId);
     }
 }

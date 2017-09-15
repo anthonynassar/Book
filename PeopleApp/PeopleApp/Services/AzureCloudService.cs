@@ -326,6 +326,31 @@ namespace PeopleApp.Services
             // Remove the token from the MobileServiceClient
             await Client.LogoutAsync();
         }
+
+        public async Task<StorageTokenViewModel> GetUpSasTokenAsync(string sharingSpaceId, string objectId)
+        {
+            var parameters = new Dictionary<string, string>();
+            parameters.Add("sharingSpaceId", sharingSpaceId);
+            parameters.Add("objectId", objectId);
+            var storageToken = await Client.InvokeApiAsync<StorageTokenViewModel>("GetStorageToken/UpAccess", HttpMethod.Get, parameters);
+            return storageToken;
+        }
+
+        public async Task<StorageTokenViewModel> GetDownSasTokenAsync(string filename)
+        {
+            var parameters = new Dictionary<string, string>();
+            parameters.Add("filename", filename);
+            var storageToken = await Client.InvokeApiAsync<StorageTokenViewModel>("GetStorageToken/DownAccess", HttpMethod.Get, parameters);
+            return storageToken;
+        }
+
+        public async Task<StorageTokenViewModel> GetUpXmlSasTokenAsync(string sharingSpaceId)
+        {
+            var parameters = new Dictionary<string, string>();
+            parameters.Add("sharingSpaceId", sharingSpaceId);
+            var storageToken = await Client.InvokeApiAsync<StorageTokenViewModel>("GetStorageToken/UpXmlAccess", HttpMethod.Get, parameters);
+            return storageToken;
+        }
         #endregion
     }
 
