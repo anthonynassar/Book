@@ -246,10 +246,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="ViewsClassDiagram_Part2.cd" />
-    <None Include="ViewsClassDiagram_Part1.cd" />
-    <None Include="ServicesClassDiagram.cd" />
-    <None Include="ViewModelsClassDiagram.cd" />
+    <None Include="Resources\Diagrams\ViewsClassDiagram_Part2.cd" />
+    <None Include="Resources\Diagrams\ViewsClassDiagram_Part1.cd" />
+    <None Include="Resources\Diagrams\ServicesClassDiagram.cd" />
+    <None Include="Resources\Diagrams\ViewModelsClassDiagram.cd" />
     <None Include="packages.config" />
     <None Include="Resources\AboutResources.txt" />
     <None Include="Assets\AboutAssets.txt" />
@@ -295,6 +295,7 @@
   <ItemGroup>
     <AndroidResource Include="Resources\Drawable\icon-spider.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="..\PeopleApp\PeopleApp.projitems" Label="Shared" Condition="Exists('..\PeopleApp\PeopleApp.projitems')" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <Import Project="..\..\packages\Xamarin.Android.Support.Vector.Drawable.23.3.0\build\Xamarin.Android.Support.Vector.Drawable.targets" Condition="Exists('..\..\packages\Xamarin.Android.Support.Vector.Drawable.23.3.0\build\Xamarin.Android.Support.Vector.Drawable.targets')" />

@@ -13,18 +13,18 @@ using Xamarin.Forms;
 
 namespace PeopleApp.ViewModels
 {
-    class EventHistoryViewModel : Abstractions.BaseViewModel
+    class OwnerEventsViewModel : Abstractions.BaseViewModel
     {
         bool hasMoreItems = true;
 
-        public EventHistoryViewModel()
+        public OwnerEventsViewModel()
         {
             Title = "Task List";
             //Table = await CloudService.GetTableAsync<SharingSpace>();
             //items.CollectionChanged += this.OnCollectionChanged;
 
             RefreshCommand = new Command(async () => await Refresh());
-            CreateSharingSpaceCommand = new Command(async () => await CreateSharingSpace());
+            //CreateSharingSpaceCommand = new Command(async () => await CreateSharingSpace());
             //TagsCommand = new Command(async () => await NavigateToTags());
             LoadMoreCommand = new Command<SharingSpace>(async (SharingSpace item) => await LoadMore(item));
 
@@ -35,13 +35,13 @@ namespace PeopleApp.ViewModels
             //});
 
             // Execute the refresh command
-            RefreshCommand.Execute(null);
+            //RefreshCommand.Execute(null);
         }
 
         public ICloudService CloudService => ServiceLocator.Get<ICloudService>();
         public ILoginProvider LoginProvider => DependencyService.Get<ILoginProvider>();
         public ICommand RefreshCommand { get; }
-        public ICommand CreateSharingSpaceCommand { get; }
+        //public ICommand CreateSharingSpaceCommand { get; }
         public ICommand LoadMoreCommand { get; }
 
         ObservableRangeCollection<SharingSpace> items = new ObservableRangeCollection<SharingSpace>();
@@ -60,7 +60,7 @@ namespace PeopleApp.ViewModels
                 SetProperty(ref selectedItem, value, "SelectedItem");
                 if (selectedItem != null)
                 {
-                    MessagingCenter.Send(this, "SelectEvent", selectedItem);
+                    MessagingCenter.Send(this, "SelectOwnerEvent", selectedItem);
                     SelectedItem = null;
                 }
             }
@@ -98,31 +98,31 @@ namespace PeopleApp.ViewModels
             }
         }
 
-        async Task CreateSharingSpace()
-        {
-            if (IsBusy)
-                return;
-            IsBusy = true;
+        //async Task CreateSharingSpace()
+        //{
+        //    if (IsBusy)
+        //        return;
+        //    IsBusy = true;
 
-            try
-            {
-                //await Application.Current.MainPage.Navigation.PushAsync(new Views.CreateSharingSpaceAPage());
-                IsBusy = true;
+        //    try
+        //    {
+        //        //await Application.Current.MainPage.Navigation.PushAsync(new Views.CreateSharingSpaceAPage());
+        //        IsBusy = true;
 
-                var sharingSpace = await CloudService.AddSharingSpace(new SharingSpace { UserId = Settings.UserId, Descriptor = "A very special event", CreationLocation = "Anglet", CreationDate = DateTime.Now });
-                Items.Add(sharingSpace);
-                //SortCoffees();
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"[TaskList] Error in CreateSharingSpace: {ex.Message}");
-                await Application.Current.MainPage.DisplayAlert("Sharing space Not Created", ex.Message, "OK");
-            }
-            finally
-            {
-                IsBusy = false;
-            }
-        }
+        //        var sharingSpace = await CloudService.AddSharingSpace(new SharingSpace { UserId = Settings.UserId, Descriptor = "A very special event", CreationLocation = "Anglet", CreationDate = DateTime.Now });
+        //        Items.Add(sharingSpace);
+        //        //SortCoffees();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Debug.WriteLine($"[TaskList] Error in CreateSharingSpace: {ex.Message}");
+        //        await Application.Current.MainPage.DisplayAlert("Sharing space Not Created", ex.Message, "OK");
+        //    }
+        //    finally
+        //    {
+        //        IsBusy = false;
+        //    }
+        //}
 
         async Task LoadMore(SharingSpace item)
         {

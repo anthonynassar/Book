@@ -25,7 +25,7 @@ namespace PeopleApp.Views
             //Settings.SharingSpaceCount = sharingSpaceCount;
         }
 
-        async void OnItemSelected(object sender, SelectedItemChangedEventArgs e)
+        void OnItemSelected(object sender, SelectedItemChangedEventArgs e)
         {
             var item = e.SelectedItem as MasterPageItem;
             if (item != null)

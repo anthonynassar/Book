@@ -1,6 +1,7 @@
 ﻿using Microsoft.WindowsAzure.MobileServices;
 using PeopleApp.Models;
 using PeopleApp.Models.ViewsRelated;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace PeopleApp.Abstractions
@@ -26,5 +27,7 @@ namespace PeopleApp.Abstractions
         Task<StorageTokenViewModel> GetUpSasTokenAsync(string sharingSpaceId, string objectId);
         Task<StorageTokenViewModel> GetDownSasTokenAsync(string filename);
         Task<StorageTokenViewModel> GetUpXmlSasTokenAsync(string sharingSpaceId);
+        Task<List<SharingSpace>> GetSharingSpacesAsParticipant();
+
     }
 }

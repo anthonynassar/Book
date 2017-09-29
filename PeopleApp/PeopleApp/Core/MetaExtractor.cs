@@ -340,7 +340,7 @@ namespace PeopleApp.Core
             return sb.ToString();
         }
 
-        public static string MetadataToXml(Dictionary<string, string> map, string filename)
+        public static string MetadataToXml(Dictionary<string, string> map, string filename, out string fullAddress)
         {
             XmlDocument doc = new XmlDocument();
             // Create an XML declaration. 
@@ -357,17 +357,20 @@ namespace PeopleApp.Core
             root.AppendChild(imgMeta);
             imgMeta.SetAttribute("id_image", Path.GetFileNameWithoutExtension(filename));
 
+            string country = map["country"], city = map["city"].Split(' ')[0],
+                cp = map["city"].Split(' ')[1], department = map["department"],
+                street = map["street"];
             // create metaName node
-            createElement(imgMeta, doc, "1", map["owner"]);
+            createElement(imgMeta, doc, "1", Helpers.Settings.UserId);
             createElement(imgMeta, doc, "2", map["lat"]);
             createElement(imgMeta, doc, "3", map["lng"]);
-            createElement(imgMeta, doc, "4", map["country"]);
+            createElement(imgMeta, doc, "4", country);
             createElement(imgMeta, doc, "5", map["cityCP"]);
-            createElement(imgMeta, doc, "6", map["department"]);
-            createElement(imgMeta, doc, "7", map["street"]);
+            createElement(imgMeta, doc, "6", department);
+            createElement(imgMeta, doc, "7", street);
             createElement(imgMeta, doc, "8", map["date"]);
             createElement(imgMeta, doc, "9", "keywords");
-
+            fullAddress = "{country}:{city}:{cp}:{department}:{street}";
             root.AppendChild(imgMeta);
             
             doc.AppendChild(root);

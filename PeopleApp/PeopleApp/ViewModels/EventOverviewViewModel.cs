@@ -436,8 +436,16 @@ namespace PeopleApp.ViewModels
 
                 // extract metadata from single photo
                 List<PhotoModel> photoInfo = MetaExtractor.ExtractMetadataPerPhoto(AlbumPath);
-                string xmlString = MetaExtractor.MetadataToXml(photoInfo.FirstOrDefault().map, photoInfo.FirstOrDefault().file);
+                string fullAddress;
+                string xmlString = MetaExtractor.MetadataToXml(photoInfo.FirstOrDefault().map, photoInfo.FirstOrDefault().file, out fullAddress);
                 Debug.WriteLine(xmlString);
+                //var constraintId = Guid.NewGuid().ToString();
+                //Models.Constraint ctr = new Models.Constraint { Id = constraintId, Operator = "fulladdress", Value = fullAddress };
+                //await _apiServices.PostConstraintAsync(ctr);
+                //// get social dimensionId related to the current sharing space
+                //string dimensionId = await _apiServices.GetDimensionId(Settings.CurrentSharingSpace, "Social", Settings.AccessToken);
+                //Event newEvent = new Event { ConstraintId = constraintId, DimensionId = dimensionId, SharingSpaceId = Settings.CurrentSharingSpace };
+                //await _apiServices.PostEventAsync(newEvent);
                 await UploadXml(xmlString);
 
                 try

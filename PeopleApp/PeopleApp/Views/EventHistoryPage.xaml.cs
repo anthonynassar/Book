@@ -14,44 +14,36 @@ using Xamarin.Forms.Xaml;
 namespace PeopleApp.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class EventHistoryPage : ContentPage
+    public partial class EventHistoryPage : TabbedPage
     {
         ApiServices _apiServices = new ApiServices();
 
-        public EventHistoryPage()
+        public EventHistoryPage ()
         {
             InitializeComponent();
-            BindingContext = new EventHistoryViewModel();
-            // problem called many times
-            //MessagingCenter.Unsubscribe<EventHistoryPage, SharingSpace>(this, "SelectEvent");
-            MessagingCenter.Subscribe<EventHistoryViewModel, SharingSpace>(this, "SelectEvent", OnSelectedSharingSpace);
+            MessagingCenter.Subscribe<OwnerEventsViewModel, SharingSpace>(this, "SelectOwnerEvent", OnSelectedSharingSpace);
+            MessagingCenter.Subscribe<ParticipantEventsViewModel, SharingSpace>(this, "SelectEvent", OnSelectedSharingSpace);
         }
 
-
-        private void ListView_ItemSelected(object sender, SelectedItemChangedEventArgs e)
-        {
-            listView.IsEnabled = false;
-        }
-
-        private async void OnSelectedSharingSpace(EventHistoryViewModel source, SharingSpace sharingSpace)
+        private async void OnSelectedSharingSpace(Abstractions.BaseViewModel source, SharingSpace sharingSpace)
         {
             try
             {
                 var objectList = await _apiServices.GetObjectsBySharingSpace(sharingSpace.Id);
-                Navigation.InsertPageBefore(new EventOverviewPage(sharingSpace, objectList), this);
+                Navigation.InsertPageBefore(new EventOverviewPage(sharingSpace, objectList), this);//Navigation.NavigationStack.OfType<EventHistoryPage>().FirstOrDefault()); // this);
                 await Navigation.PopAsync();
             }
             catch (Exception ex)
             {
                 Debug.WriteLine("Error :" + ex.Message);
             }
-
         }
 
         protected override void OnDisappearing()
         {
             base.OnDisappearing();
-            MessagingCenter.Unsubscribe<EventHistoryViewModel, SharingSpace>(this, "SelectEvent");// .Subscribe<EventHistoryViewModel, SharingSpace>(this, "SelectEvent", OnSelectedSharingSpace);
+            MessagingCenter.Unsubscribe<OwnerEventsViewModel, SharingSpace>(this, "SelectOwnerEvent");// .Subscribe<EventHistoryViewModel, SharingSpace>(this, "SelectEvent", OnSelectedSharingSpace);
+            MessagingCenter.Unsubscribe<ParticipantEventsViewModel, SharingSpace>(this, "SelectEvent");
         }
     }
 }

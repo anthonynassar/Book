@@ -15,7 +15,8 @@ namespace PeopleApp.Views
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class CreateSharingSpaceAPage : ContentPage
 	{
-		public CreateSharingSpaceAPage ()
+        private string fullAddress = "";
+        public CreateSharingSpaceAPage ()
 		{
 			InitializeComponent ();
             //NavigationPage.SetHasNavigationBar(this, false);  // Hide nav bar
@@ -55,6 +56,7 @@ namespace PeopleApp.Views
                 {
                     Debug.WriteLine("Address: {0} {1} {2}", address.Thoroughfare, address.Locality, address.CountryName);
                     AddressLabel.Detail = $"Address: {address.Thoroughfare} {address.Locality} {address.CountryName}";
+                    fullAddress = $"{address.CountryName}:{address.Locality}:{address.PostalCode}:{address.SubLocality}:{address.Thoroughfare}";
                 }
             }
             catch (TaskCanceledException e)
@@ -93,8 +95,10 @@ namespace PeopleApp.Views
             Models.Constraint locationConstraint1 = new Models.Constraint { Operator = "range", Value = mySlider.Value.ToString() };
             Models.Constraint locationConstraint2 = new Models.Constraint { Operator = "latitude", Value = LatitudeLabel.Detail };
             Models.Constraint locationConstraint3 = new Models.Constraint { Operator = "longitude", Value = LongitudeLabel.Detail };
+            //var constraintId = Guid.NewGuid().ToString();
+            Models.Constraint locationConstraint4 = new Models.Constraint { Operator = "fulladdress", Value = fullAddress };
             var timeConstraintList = new List<Models.Constraint> { timeConstraint1, timeConstraint2 };
-            var locationConstraintList = new List<Models.Constraint> { locationConstraint1, locationConstraint2, locationConstraint3 };
+            var locationConstraintList = new List<Models.Constraint> { locationConstraint1, locationConstraint2, locationConstraint3, locationConstraint4 };
             List<DimensionView> dimensions = new List<DimensionView>
             {
                 new DimensionView { Label = "Time", Interval = true, ConstraintList = timeConstraintList},

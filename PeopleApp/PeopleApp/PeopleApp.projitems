@@ -57,9 +57,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\CreateSharingSpaceBViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\EntryPageViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\EventDetailViewModel.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\EventHistoryViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\OwnerEventsViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\EventJoinViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\EventOverviewViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ParticipantEventsViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\TaskDetailViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\TaskListViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Views\AboutPage.xaml.cs">
@@ -78,6 +79,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Views\EventHistoryPage.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Views\OwnerEventsPage.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Views\EventJoinPage.xaml.cs">
@@ -100,6 +104,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Views\MenuPage.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Views\ParticipantEventsPage.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Views\ProfileLoadingPage.xaml.cs">
@@ -181,7 +188,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\EventHistoryPage.xaml">
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\OwnerEventsPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>
@@ -207,6 +214,16 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\JoinEventLoadingPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\EventHistoryPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\ParticipantEventsPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>

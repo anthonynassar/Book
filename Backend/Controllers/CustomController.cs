@@ -132,6 +132,27 @@ namespace Backend.Controllers
             return result;
         }
 
+        [HttpGet, Authorize]
+        [Route("api/custom/GetSharingSpacesAsParticipant")]
+        public IQueryable<SharingSpace> GetSharingSpacesAsParticipant()
+        {
+            var userId = Settings.GetUserId(User);
+            var result = context.Events.Join(context.Constraints,
+                                                e => e.ConstraintId,
+                                                c => c.Id,
+                                                (e, c) => new { e.SharingSpaceId, c.Operator, c.Value })
+                                       .Where(o => o.Operator == "participant" && o.Value == userId)
+                                       //.Select(s => s.SharingSpaceId)
+                                       .Join(context.SharingSpaces,
+                                                e => e.SharingSpaceId,
+                                                s => s.Id,
+                                                (e, s) => s)
+                                       .AsQueryable<SharingSpace>();
+
+            Debug.WriteLine(result.Count());
+            return result;
+        }
+
         /// <summary>
         /// Retrieve parameters sent with the request and throws exception if the parameter
         /// does not exist in the GET request. 

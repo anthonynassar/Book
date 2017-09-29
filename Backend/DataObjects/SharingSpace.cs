@@ -1,4 +1,5 @@
 ﻿using Microsoft.Azure.Mobile.Server;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -18,13 +19,16 @@ namespace Backend.DataObjects
         //public long IdSs { get; set; }
         [MaxLength(128)]
         public string UserId { get; set; }
+        [JsonIgnore]
         public virtual User User { get; set; }
 
         public string Descriptor { get; set; }
         public DateTime? CreationDate { get; set; } = DateTime.UtcNow;
         public string CreationLocation { get; set; }
 
+        [JsonIgnore]
         public virtual ICollection<Object> Object { get; set; }
+        [JsonIgnore]
         public virtual ICollection<Event> Event { get; set; }
     }
 }

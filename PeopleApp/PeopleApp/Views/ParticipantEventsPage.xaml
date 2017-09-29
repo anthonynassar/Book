@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="PeopleApp.Views.ParticipantEventsPage"
+             Title="Friends' events">
+    <ContentPage.Content>
+        <ListView x:Name="listView"
+                CachingStrategy="RecycleElement"
+                IsPullToRefreshEnabled="True"
+                IsRefreshing="{Binding IsBusy, Mode=OneWay}"
+                ItemsSource="{Binding Items}"
+                RefreshCommand="{Binding RefreshCommand}"
+                RowHeight="95"
+                ItemSelected="ListView_ItemSelected"
+                SelectedItem="{Binding SelectedItem, Mode=TwoWay}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <StackLayout Orientation="Vertical" HeightRequest="50" Margin="20, 10">
+                            <Label HorizontalOptions="FillAndExpand"
+                                           Text="{Binding Descriptor}"
+                                           FontAttributes="Bold" FontSize="Large"/>
+                            <StackLayout Orientation="Horizontal" >
+                                <Label HorizontalOptions="Start"
+                                           Text="Location: "
+                                           FontAttributes="Bold" TextColor="Gray" FontSize="Small"/>
+                                <Label HorizontalOptions="End"
+                                           Text="{Binding CreationLocation}"
+                                           TextColor="Gray" FontSize="Small"/>
+                            </StackLayout>
+                            <StackLayout Orientation="Horizontal" >
+                                <Label HorizontalOptions="Start"
+                                           Text="Time: "
+                                           FontAttributes="Bold" TextColor="Gray" FontSize="Small"/>
+                                <Label HorizontalOptions="End"
+                                           Text="{Binding CreationDate}"
+                                           TextColor="Gray" FontSize="Small"/>
+                            </StackLayout>
+                        </StackLayout>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </ContentPage.Content>
+</ContentPage>

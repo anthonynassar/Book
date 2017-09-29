@@ -351,6 +351,13 @@ namespace PeopleApp.Services
             var storageToken = await Client.InvokeApiAsync<StorageTokenViewModel>("GetStorageToken/UpXmlAccess", HttpMethod.Get, parameters);
             return storageToken;
         }
+
+        public async Task<List<SharingSpace>> GetSharingSpacesAsParticipant()
+        {
+            var parameters = new Dictionary<string, string>();
+            var sharingSpaces = await Client.InvokeApiAsync<List<SharingSpace>>("Custom/GetSharingSpacesAsParticipant", HttpMethod.Get, parameters);
+            return sharingSpaces;
+        }
         #endregion
     }
 
