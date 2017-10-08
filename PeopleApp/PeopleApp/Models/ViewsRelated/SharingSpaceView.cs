@@ -16,6 +16,7 @@ namespace PeopleApp.Models.ViewsRelated
             base.UpdatedAt = sharingSpace.UpdatedAt;
             base.UserId = sharingSpace.UserId;
             base.Version = sharingSpace.Version;
+            base.Verified = sharingSpace.Verified;
             IsVisible = isVisible;
         }
 

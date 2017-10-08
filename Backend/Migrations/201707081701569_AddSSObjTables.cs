@@ -25,7 +25,7 @@ namespace Backend.Migrations
                         Type = c.String(),
                         CreationDate = c.DateTime(),
                         CreationLocation = c.String(),
-                        SharingSpaceId = c.String(nullable: false, maxLength: 128),
+                        SharingSpaceId = c.String(nullable: true, maxLength: 128),
                         Version = c.Binary(nullable: false, fixedLength: true, timestamp: true, storeType: "rowversion",
                             annotations: new Dictionary<string, AnnotationValues>
                             {

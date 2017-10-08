@@ -25,6 +25,7 @@ namespace Backend.DataObjects
         public string Descriptor { get; set; }
         public DateTime? CreationDate { get; set; } = DateTime.UtcNow;
         public string CreationLocation { get; set; }
+        public bool Verified { get; set; }
 
         [JsonIgnore]
         public virtual ICollection<Object> Object { get; set; }

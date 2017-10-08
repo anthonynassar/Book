@@ -11,5 +11,6 @@ namespace PeopleApp.Models
         public string Descriptor { get; set; }
         public DateTime? CreationDate { get; set; } = DateTime.UtcNow;
         public string CreationLocation { get; set; }
+        public bool Verified { get; set; }
     }
 }

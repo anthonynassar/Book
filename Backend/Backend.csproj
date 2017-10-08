@@ -295,6 +295,10 @@
     <Compile Include="Migrations\201708281347156_UpdateObjectTable.Designer.cs">
       <DependentUpon>201708281347156_UpdateObjectTable.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201710081323477_UpdateSharingSpaceTable.cs" />
+    <Compile Include="Migrations\201710081323477_UpdateSharingSpaceTable.Designer.cs">
+      <DependentUpon>201710081323477_UpdateSharingSpaceTable.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\MobileServiceContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -378,6 +382,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201708281347156_UpdateObjectTable.resx">
       <DependentUpon>201708281347156_UpdateObjectTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201710081323477_UpdateSharingSpaceTable.resx">
+      <DependentUpon>201710081323477_UpdateSharingSpaceTable.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
