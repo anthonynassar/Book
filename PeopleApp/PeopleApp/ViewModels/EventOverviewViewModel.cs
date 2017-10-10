@@ -435,9 +435,9 @@ namespace PeopleApp.ViewModels
                 }
 
                 // extract metadata from single photo
-                List<PhotoModel> photoInfo = MetaExtractor.ExtractMetadataPerPhoto(AlbumPath);
-                string fullAddress;
-                string xmlString = MetaExtractor.MetadataToXml(photoInfo.FirstOrDefault().map, photoInfo.FirstOrDefault().file, out fullAddress);
+                List<PhotoModel> photoInfo = MetaExtractor.ExtractMetadataPerPhoto(AlbumPath, out string fullAddress);
+
+                string xmlString = MetaExtractor.MetadataToXml(photoInfo.FirstOrDefault().map, photoInfo.FirstOrDefault().file);
                 Debug.WriteLine(xmlString);
                 //var constraintId = Guid.NewGuid().ToString();
                 //Models.Constraint ctr = new Models.Constraint { Id = constraintId, Operator = "fulladdress", Value = fullAddress };
@@ -462,11 +462,13 @@ namespace PeopleApp.ViewModels
                         }
                         else if (datatype.Label.Equals("Location"))
                         {
-                            value = photoInfo.FirstOrDefault().map["lat"] + ", " + photoInfo.FirstOrDefault().map["lng"];
+                            //value = photoInfo.FirstOrDefault().map["lat"] + ", " + photoInfo.FirstOrDefault().map["lng"];
+                            value = fullAddress;
                         }
                         else if (datatype.Label.Equals("Social"))
                         {
-                            value = photoInfo.FirstOrDefault().map["owner"];
+                            //value = photoInfo.FirstOrDefault().map["owner"];
+                            value = Settings.UserId;
                         }
                         else if (datatype.Label.Equals("Topic"))
                         {

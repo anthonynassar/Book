@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Collections;
+using PeopleApp.Helpers;
 #if Android
 using MetadataExtractor;
 using MetadataExtractor.Formats.Exif;
@@ -119,16 +120,17 @@ namespace PeopleApp.Core
 #endif
 
 #if Android
-                photoLocations = ExtractMetadataPerPhoto(file);
+                photoLocations.AddRange(ExtractMetadataPerPhoto(file, out string fullAdress));
 #endif
             }
             return photoLocations;
         }
 
-        public static List<PhotoModel> ExtractMetadataPerPhoto(string file)
+        public static List<PhotoModel> ExtractMetadataPerPhoto(string file, out string fullAddress)
         {
             Dictionary<string, string> hm = new Dictionary<string, string>();
             List<PhotoModel> photoLocations = new List<PhotoModel>();
+            fullAddress = "";
 
             // read all metadata from the image
             Stream stream = File.OpenRead(file);
@@ -196,19 +198,22 @@ namespace PeopleApp.Core
                     hm.Add("lat", latlng[0]);
                     hm.Add("lng", latlng[1].TrimStart());
 
-                    ReverseGeocode(hm, coordinate);
+                    fullAddress = ReverseGeocode(hm, coordinate);
                     // Add to our collection for use below
                     photoLocations.Add(new PhotoModel(file, hm));
 
                     break; // get out of the for loop
                 }
             }
+            
             return photoLocations;
         }
 
-        private static void ReverseGeocode(Dictionary<string, string> hm, string coordinate)
+        private static string ReverseGeocode(Dictionary<string, string> hm, string coordinate)
         {
-            var address = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + coordinate + "&key=AIzaSyB7bADUszXp-UbX-m8twdgfE6yntChXroM";
+            string country = "", city, cp = "", department, street = "";
+
+            var address = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + coordinate + "&key=" + Constants.GeocodingApiKey;
             // Download the data from google API
             System.Net.WebClient webClient = new System.Net.WebClient();
             var rawData = webClient.DownloadData(address);
@@ -245,9 +250,11 @@ namespace PeopleApp.Core
                             break;
                         case "country":
                             hm["country"] = adComponent.long_name;
+                            country = adComponent.long_name;
                             break;
                         case "postal_code":
                             hm["postalCode"] = adComponent.long_name;
+                            cp = adComponent.long_name;
                             break;
                         default:
                             break;
@@ -264,34 +271,39 @@ namespace PeopleApp.Core
             }
             hm.Add("street", "");
             hm.Add("cityCP", ""); //department
+            hm.Add("city", ""); //department
             hm.Add("department", ""); //stateCP
 
             // add city
             if (!hm["locality"].Equals(""))
             {
-                hm["cityCP"] = hm["locality"] + " " + hm["postalCode"];
+                //hm["cityCP"] = hm["locality"] + " " + hm["postalCode"];
+                city = hm["city"] = hm["locality"];
             }
             else if (!hm["sublocality"].Equals(""))
             {
-                hm["cityCP"] = hm["sublocality"] + " " + hm["postalCode"];
+                //hm["cityCP"] = hm["sublocality"] + " " + hm["postalCode"];
+                city = hm["city"] = hm["sublocality"];
             }
             else
             {
-                hm["cityCP"] = hm["adminArea3"] + " " + hm["postalCode"];
+                //hm["cityCP"] = hm["adminArea3"] + " " + hm["postalCode"];
+                city = hm["city"] = hm["adminArea3"];
             }
 
             // add premise instead of route if the latter does not exist to street key
             if (hm["route"].Equals(""))
             {
-                hm["street"] = hm["premise"];
+                street = hm["street"] = hm["premise"];
             }
             else
             {
-                hm["street"] = hm["streetNumber"] + " " + hm["route"];
+                street = hm["street"] = hm["streetNumber"] + " " + hm["route"];
             }
 
             // add department plus postal code
-            hm["department"] = hm["adminArea"];
+            department = hm["department"] = hm["adminArea"];
+            return $"{country}:{city}:{cp}:{department}:{street}";
         }
 
         private static string writeXML(List<PhotoModel> photosMeta)
@@ -313,12 +325,12 @@ namespace PeopleApp.Core
                 imgMeta.SetAttribute("id_image", Path.GetFileNameWithoutExtension(photo.file));
 
                 // create metaName node
-                createElement(imgMeta, doc, "1", photo.map["owner"]);
+                createElement(imgMeta, doc, "1", Settings.UserId);//photo.map["owner"]);
                 createElement(imgMeta, doc, "2", photo.map["lat"]);
                 createElement(imgMeta, doc, "3", photo.map["lng"]);
                 createElement(imgMeta, doc, "4", photo.map["country"]);
-                createElement(imgMeta, doc, "5", photo.map["cityCP"]);
-                createElement(imgMeta, doc, "6", photo.map["department"]);
+                createElement(imgMeta, doc, "5", photo.map["department"]);
+                createElement(imgMeta, doc, "6", photo.map["city"]);
                 createElement(imgMeta, doc, "7", photo.map["street"]);
                 createElement(imgMeta, doc, "8", photo.map["date"]);
                 createElement(imgMeta, doc, "9", "keywords");
@@ -340,7 +352,7 @@ namespace PeopleApp.Core
             return sb.ToString();
         }
 
-        public static string MetadataToXml(Dictionary<string, string> map, string filename, out string fullAddress)
+        public static string MetadataToXml(Dictionary<string, string> map, string filename)
         {
             XmlDocument doc = new XmlDocument();
             // Create an XML declaration. 
@@ -357,20 +369,18 @@ namespace PeopleApp.Core
             root.AppendChild(imgMeta);
             imgMeta.SetAttribute("id_image", Path.GetFileNameWithoutExtension(filename));
 
-            string country = map["country"], city = map["city"].Split(' ')[0],
-                cp = map["city"].Split(' ')[1], department = map["department"],
-                street = map["street"];
+           
             // create metaName node
-            createElement(imgMeta, doc, "1", Helpers.Settings.UserId);
+            createElement(imgMeta, doc, "1", Settings.UserId);
             createElement(imgMeta, doc, "2", map["lat"]);
             createElement(imgMeta, doc, "3", map["lng"]);
-            createElement(imgMeta, doc, "4", country);
-            createElement(imgMeta, doc, "5", map["cityCP"]);
-            createElement(imgMeta, doc, "6", department);
-            createElement(imgMeta, doc, "7", street);
+            createElement(imgMeta, doc, "4", map["country"]);
+            createElement(imgMeta, doc, "5", map["department"]);
+            createElement(imgMeta, doc, "6", map["city"]);
+            createElement(imgMeta, doc, "7", map["street"]);
             createElement(imgMeta, doc, "8", map["date"]);
             createElement(imgMeta, doc, "9", "keywords");
-            fullAddress = "{country}:{city}:{cp}:{department}:{street}";
+            
             root.AppendChild(imgMeta);
             
             doc.AppendChild(root);
